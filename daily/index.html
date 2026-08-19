@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>博士雷达 · 每日研究日报</title>
+<link rel="stylesheet" href="daily.css">
+</head>
+<body>
+
+<!-- ============================================================
+     NAV — fixed top bar, mosaic style (inherits roadshow language)
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">
+      <span class="mark"></span>
+      <span class="brand-text">博士雷达<br><span class="brand-sub">每日研究日报</span></span>
+    </a>
+
+    <ul class="nav-tabs" id="toolTabs" role="tablist">
+      <li><button class="tab active" data-tab="overview" role="tab">今日总览</button></li>
+      <li><button class="tab" data-tab="resonance" role="tab">多周期共振</button></li>
+      <li><button class="tab" data-tab="rankings" role="tab">五榜日报</button></li>
+      <li><button class="tab" data-tab="divergence" role="tab">背离 + TD9</button></li>
+      <li><button class="tab" data-tab="skdj" role="tab">SKDJ 观察池</button></li>
+      <li><button class="tab" data-tab="statuschain" role="tab">底部状态链</button></li>
+    </ul>
+
+    <div class="nav-right">
+      <button class="nav-cal" id="calOpenBtn" aria-haspopup="dialog">
+        <span class="cal-ico">▦</span> 历史日报
+      </button>
+      <a href="../roadshow/index.html" class="nav-back">← 产品主页</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     STATUS BAR — date / report status / scan count / data / asof
+     ============================================================ -->
+<div class="statusbar">
+  <div class="statusbar-inner">
+    <div class="sb-item">
+      <span class="sb-label">日期</span>
+      <span class="sb-value" id="sbDate">2026-08-19</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-label">报告状态</span>
+      <span class="sb-value tag tag-demo" id="sbStatus">演示占位</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-label">扫描股票</span>
+      <span class="sb-value" id="sbScan">100 <span class="sb-unit">只</span></span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-label">数据状态</span>
+      <span class="sb-value tag tag-mute" id="sbData">占位 · 未接真实</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-label">行情截至</span>
+      <span class="sb-value" id="sbAsof">占位</span>
+    </div>
+  </div>
+  <div class="demo-banner" id="demoBanner">
+    <strong>本页为演示占位数据，非真实行情。</strong>
+    仅用于展示页面结构与交互框架，所有数字、股票、状态均为占位，不代表任何市场判断。
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN — switchable panels
+     ============================================================ -->
+<main class="main" id="main">
+
+  <!-- ============ PANEL: 今日总览 ============ -->
+  <section class="panel is-active" id="panel-overview" role="tabpanel">
+    <header class="panel-head">
+      <span class="sec-label on-bone">01 · 今日总览</span>
+      <h2 class="sec-title">今天先看谁，<span class="em-cobalt">一目了然</span>。</h2>
+      <p class="sec-lead" id="overviewLead">把五个工具的结果汇总成一组查看顺序。下方数字均为占位，正式运行后会从各工具报告自动填入。</p>
+    </header>
+
+    <!-- summary mosaic: 7 cards -->
+    <div class="summary-grid">
+      <div class="sum sum-cobalt">
+        <span class="sum-label">报告完成状态</span>
+        <span class="sum-value" data-summary="complete">演示占位</span>
+        <span class="sum-note" data-summary-note="complete">未来读取 manifest</span>
+      </div>
+      <div class="sum">
+        <span class="sum-label">扫描股票</span>
+        <span class="sum-value" data-summary="scanCount">100<span class="sum-unit">只</span></span>
+        <span class="sum-note" data-summary-note="scanCount">ND100 股票池</span>
+      </div>
+      <div class="sum">
+        <span class="sum-label">五榜重点</span>
+        <span class="sum-value" data-summary="rankingFocus">—</span>
+        <span class="sum-note" data-summary-note="rankingFocus">占位 · 待接入</span>
+      </div>
+      <div class="sum sum-vermillion">
+        <span class="sum-label">背离 / TD9</span>
+        <span class="sum-value" data-summary="divergence">—</span>
+        <span class="sum-note" data-summary-note="divergence">占位 · 待接入</span>
+      </div>
+      <div class="sum">
+        <span class="sum-label">SKDJ 观察</span>
+        <span class="sum-value" data-summary="skdjObserve">—</span>
+        <span class="sum-note" data-summary-note="skdjObserve">占位 · 待接入</span>
+      </div>
+      <div class="sum sum-ink">
+        <span class="sum-label">状态链</span>
+        <span class="sum-value" data-summary="statusCount">—</span>
+        <span class="sum-note" data-summary-note="statusCount">占位 · 待接入</span>
+      </div>
+      <div class="sum sum-warn">
+        <span class="sum-label">数据异常</span>
+        <span class="sum-value" data-summary="exceptions">无异常</span>
+        <span class="sum-note" data-summary-note="exceptions">占位 · 待接入</span>
+      </div>
+    </div>
+
+    <!-- cross-tool comparison table -->
+    <div class="cmp-wrap">
+      <div class="cmp-head">
+        <div class="cmp-title">
+          <span class="sec-label on-bone">02 · 跨工具股票对比</span>
+          <p class="cmp-sub" id="cmpSub">把同一只股票在五个工具里的证据并排展示。空值显示为「无结果」。下方为占位行，正式接入后读取 CSV 合并。</p>
+        </div>
+        <div class="cmp-tools">
+          <label class="cmp-search">
+            <span class="cmp-search-ico">⌕</span>
+            <input type="search" id="cmpSearch" placeholder="搜索股票代码 / 名称" autocomplete="off">
+          </label>
+          <span class="cmp-count" id="cmpCount">占位 8 行</span>
+        </div>
+      </div>
+
+      <div class="cmp-table-scroll">
+        <table class="cmp-table" id="cmpTable">
+          <thead>
+            <tr>
+              <th class="th-ticker sortable" data-sort="ticker" data-dir="asc">股票 <span class="sort-ico">↕</span></th>
+              <th class="sortable" data-sort="resonance">多周期共振 <span class="sort-ico">↕</span></th>
+              <th class="sortable" data-sort="rankings">五榜排名 <span class="sort-ico">↕</span></th>
+              <th class="sortable" data-sort="divergence">背离 / TD9 <span class="sort-ico">↕</span></th>
+              <th class="sortable" data-sort="skdj">SKDJ <span class="sort-ico">↕</span></th>
+              <th class="sortable" data-sort="statuschain">状态链 <span class="sort-ico">↕</span></th>
+              <th class="th-view">查看</th>
+            </tr>
+          </thead>
+          <tbody id="cmpBody">
+            <!-- rows injected by daily.js from DEMO_ROWS -->
+          </tbody>
+        </table>
+      </div>
+      <p class="cmp-foot" id="cmpFoot">占位说明：表格数据为演示用静态行，演示「有信号 / 无结果 / 多工具命中」三种情况。空单元格统一显示「无结果」，不显示「无信号」。</p>
+    </div>
+  </section>
+
+  <!-- ============ PANEL: 多周期共振 ============ -->
+  <section class="panel" id="panel-resonance" role="tabpanel" hidden>
+    <article class="detail">
+      <header class="detail-head detail-head-cobalt">
+        <span class="detail-num">TOOL 01</span>
+        <h2 class="detail-title">多周期共振</h2>
+        <p class="detail-role">60 分钟、日线、周线是否形成一致的观察背景。输出分层与行情截至日期，数据不足会明确标出。</p>
+      </header>
+      <div class="detail-meta">
+        <div class="meta-row"><span class="meta-k">报告状态</span><span class="meta-v tag tag-demo" data-tool-status="resonance">演示占位</span></div>
+        <div class="meta-row"><span class="meta-k">数据来源</span><span class="meta-v" data-tool-source="resonance">占位 · 未来接入 nd100_resonance_YYYYMMDD.csv</span></div>
+        <div class="meta-row"><span class="meta-k">行情截至</span><span class="meta-v" data-tool-asof="resonance">占位</span></div>
+      </div>
+      <div class="detail-body">
+        <p class="detail-empty" data-tool-body="resonance">本区域为占位结构。正式接入后，这里会展示该工具当日的关键分层结果摘要（共振 / 单边 / 数据不足）。</p>
+      </div>
+      <div class="detail-actions">
+        <a class="btn btn-primary" href="#" data-report-link="resonance" onclick="return false;">打开完整报告 ↗</a>
+        <button class="btn btn-ghost" data-back="overview">← 返回今日总览</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ PANEL: 五榜日报 ============ -->
+  <section class="panel" id="panel-rankings" role="tabpanel" hidden>
+    <article class="detail">
+      <header class="detail-head detail-head-vermillion">
+        <span class="detail-num">TOOL 02</span>
+        <h2 class="detail-title">五榜日报</h2>
+        <p class="detail-role">标的很多时，把它们分到不同查看顺序：已确认、背离观察、强趋势待触发、潜力、风险噪音。</p>
+      </header>
+      <div class="detail-meta">
+        <div class="meta-row"><span class="meta-k">报告状态</span><span class="meta-v tag tag-demo" data-tool-status="rankings">演示占位</span></div>
+        <div class="meta-row"><span class="meta-k">数据来源</span><span class="meta-v" data-tool-source="rankings">占位 · 未来接入 five_rankings_YYYYMMDD_daily.csv</span></div>
+        <div class="meta-row"><span class="meta-k">行情截至</span><span class="meta-v" data-tool-asof="rankings">占位</span></div>
+      </div>
+      <div class="detail-body">
+        <p class="detail-empty" data-tool-body="rankings">本区域为占位结构。正式接入后，这里会展示五个榜单各自的命中数量与代表标的入口。</p>
+      </div>
+      <div class="detail-actions">
+        <a class="btn btn-primary" href="#" data-report-link="rankings" onclick="return false;">打开完整报告 ↗</a>
+        <button class="btn btn-ghost" data-back="overview">← 返回今日总览</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ PANEL: 背离 + TD9 ============ -->
+  <section class="panel" id="panel-divergence" role="tabpanel" hidden>
+    <article class="detail">
+      <header class="detail-head detail-head-ink">
+        <span class="detail-num">TOOL 03</span>
+        <h2 class="detail-title">背离 + TD9</h2>
+        <p class="detail-role">价格与动能是否出现值得人工复核的异常组合。它是观察提示，不是反转预测。</p>
+      </header>
+      <div class="detail-meta">
+        <div class="meta-row"><span class="meta-k">报告状态</span><span class="meta-v tag tag-demo" data-tool-status="divergence">演示占位</span></div>
+        <div class="meta-row"><span class="meta-k">数据来源</span><span class="meta-v" data-tool-source="divergence">占位 · 未来接入 divergence_td9_YYYYMMDD.csv</span></div>
+        <div class="meta-row"><span class="meta-k">行情截至</span><span class="meta-v" data-tool-asof="divergence">占位</span></div>
+      </div>
+      <div class="detail-body">
+        <p class="detail-empty" data-tool-body="divergence">本区域为占位结构。正式接入后，这里会展示底背离 / 顶背离 / TD9 计数的命中清单与场景分类。</p>
+      </div>
+      <div class="detail-actions">
+        <a class="btn btn-primary" href="#" data-report-link="divergence" onclick="return false;">打开完整报告 ↗</a>
+        <button class="btn btn-ghost" data-back="overview">← 返回今日总览</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ PANEL: SKDJ 观察池 ============ -->
+  <section class="panel" id="panel-skdj" role="tabpanel" hidden>
+    <article class="detail">
+      <header class="detail-head detail-head-bone2">
+        <span class="detail-num">TOOL 04</span>
+        <h2 class="detail-title">SKDJ 观察池</h2>
+        <p class="detail-role">超跌、回调、超买或普通区，当前处于哪种观察场景。候选公式与数据不足必须明确标出，不包装成已验证指标。</p>
+      </header>
+      <div class="detail-meta">
+        <div class="meta-row"><span class="meta-k">报告状态</span><span class="meta-v tag tag-demo" data-tool-status="skdj">演示占位</span></div>
+        <div class="meta-row"><span class="meta-k">数据来源</span><span class="meta-v" data-tool-source="skdj">占位 · 未来接入 skdj_YYYYMMDD_daily.csv</span></div>
+        <div class="meta-row"><span class="meta-k">行情截至</span><span class="meta-v" data-tool-asof="skdj">占位</span></div>
+      </div>
+      <div class="detail-body">
+        <p class="detail-empty" data-tool-body="skdj">本区域为占位结构。正式接入后，这里会展示超跌 / 低位上穿 / 超买 / 高位下穿 / 普通区 / 数据不足六类场景分组。</p>
+      </div>
+      <div class="detail-actions">
+        <a class="btn btn-primary" href="#" data-report-link="skdj" onclick="return false;">打开完整报告 ↗</a>
+        <button class="btn btn-ghost" data-back="overview">← 返回今日总览</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ PANEL: 底部状态链 ============ -->
+  <section class="panel" id="panel-statuschain" role="tabpanel" hidden>
+    <article class="detail">
+      <header class="detail-head detail-head-cobalt">
+        <span class="detail-num">TOOL 05</span>
+        <h2 class="detail-title">底部状态链</h2>
+        <p class="detail-role">这只股票跨几天走到哪一步，何时失效或继续观察。状态机记录 OBSERVE → BASE → TRIGGER → CONFIRM，失效优先于预测。</p>
+      </header>
+      <div class="detail-meta">
+        <div class="meta-row"><span class="meta-k">报告状态</span><span class="meta-v tag tag-demo" data-tool-status="statuschain">演示占位</span></div>
+        <div class="meta-row"><span class="meta-k">数据来源</span><span class="meta-v" data-tool-source="statuschain">占位 · 未来接入 status_chain.sqlite</span></div>
+        <div class="meta-row"><span class="meta-k">行情截至</span><span class="meta-v" data-tool-asof="statuschain">占位</span></div>
+      </div>
+      <div class="detail-body">
+        <p class="detail-empty" data-tool-body="statuschain">本区域为占位结构。正式接入后，这里会展示活跃状态链数量、各状态分布与链回放入口。</p>
+      </div>
+      <div class="detail-actions">
+        <a class="btn btn-primary" href="#" data-report-link="statuschain" onclick="return false;">打开完整报告 ↗</a>
+        <button class="btn btn-ghost" data-back="overview">← 返回今日总览</button>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     CALENDAR DRAWER — history daily reports
+     ============================================================ -->
+<div class="cal-overlay" id="calOverlay" hidden>
+  <div class="cal-drawer" id="calDrawer" role="dialog" aria-modal="true" aria-label="历史日报日历">
+    <header class="cal-head">
+      <h3 class="cal-title">历史日报</h3>
+      <button class="cal-close" id="calCloseBtn" aria-label="关闭">✕</button>
+    </header>
+
+    <div class="cal-nav">
+      <button class="cal-arrow" id="calPrev" aria-label="上个月">‹</button>
+      <span class="cal-month" id="calMonthLabel">2026 年 8 月</span>
+      <button class="cal-arrow" id="calNext" aria-label="下个月">›</button>
+    </div>
+
+    <div class="cal-week">
+      <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+    </div>
+    <div class="cal-grid" id="calGrid">
+      <!-- cells injected by daily.js -->
+    </div>
+
+    <div class="cal-legend">
+      <span class="lg lg-full"><i></i>完整日报</span>
+      <span class="lg lg-part"><i></i>部分报告</span>
+      <span class="lg lg-hist"><i></i>只有历史文件</span>
+      <span class="lg lg-miss"><i></i>数据缺失</span>
+      <span class="lg lg-none"><i></i>无日报</span>
+    </div>
+
+    <p class="cal-note" id="calNote">占位说明：日历日期与状态均为演示占位，点击有日报的日期未来会打开 output/daily_dashboard_YYYYMMDD.html。当前不连接真实文件。</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     FOOTER — boundary reminder (same spirit as roadshow)
+     ============================================================ -->
+<footer class="footer">
+  <p class="footer-statement">
+    它是<span class="em-cobalt">研究工作流</span>，<br>不是<span class="em">自动交易系统</span>。
+  </p>
+  <ul class="footer-rules">
+    <li>不预测涨跌</li>
+    <li>不连接券商</li>
+    <li>不自动下单</li>
+    <li>候选规则待验证</li>
+  </ul>
+  <p class="footer-meta">博士雷达 · 每日研究日报 · 本页可本地双击打开，断网可用 · 当前为框架演示占位</p>
+</footer>
+
+<script src="data/daily_data.js"></script>
+<script src="daily.js"></script>
+</body>
+</html>

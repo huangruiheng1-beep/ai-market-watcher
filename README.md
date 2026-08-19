@@ -8,6 +8,7 @@
 
 - GitHub 仓库：<https://github.com/huangruiheng1-beep/ai-market-watcher>
 - 路演网页：<https://huangruiheng1-beep.github.io/ai-market-watcher/roadshow/>
+- 每日研究日报入口：<https://huangruiheng1-beep.github.io/ai-market-watcher/daily/>
 - 第一版 ZIP：<https://github.com/huangruiheng1-beep/ai-market-watcher/releases>
 
 ## 它包含什么
