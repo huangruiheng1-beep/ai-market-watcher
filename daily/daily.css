@@ -838,6 +838,23 @@ button { font-family: inherit; }
   line-height: 1.6;
 }
 
+/* Embedded canonical report inside each tool panel. */
+.detail-summary {
+  margin-bottom: 1rem;
+  text-align: left;
+  max-width: none;
+  border: 0;
+  padding: 0;
+  font-size: 0.92rem;
+}
+.report-frame {
+  display: block;
+  width: 100%;
+  min-height: 920px;
+  border: 1px solid var(--line, #c7c0b3);
+  background: var(--bone);
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
