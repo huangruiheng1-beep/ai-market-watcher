@@ -504,7 +504,8 @@ button { font-family: inherit; }
 .detail {
   border: 2px solid var(--ink);
   background: var(--bone);
-  max-width: 880px;
+  max-width: none;
+  width: 100%;
 }
 .detail-head {
   padding: 2rem 1.8rem;
@@ -850,7 +851,7 @@ button { font-family: inherit; }
 .report-frame {
   display: block;
   width: 100%;
-  min-height: 920px;
+  min-height: 1120px;
   border: 1px solid var(--line, #c7c0b3);
   background: var(--bone);
 }
