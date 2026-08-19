@@ -37,12 +37,12 @@ def market_asof(path: Path) -> str:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="AI 投研市场观察助手·小范围真实行情路演")
+    ap = argparse.ArgumentParser(description="AI 投研市场观察助手·可配置股票池的真实行情运行入口")
     group = ap.add_mutually_exclusive_group()
     group.add_argument("--tickers",
-                       help="逗号分隔的股票代码；路演建议 5–10 只")
-    group.add_argument("--limit", type=int, default=5,
-                       help="未指定 --tickers 时，只扫描当前纳指100清单的前 N 只；路演可用 5 或 10")
+                       help="逗号分隔的股票代码；可传入本批股票，路演演示可用 5–10 只")
+    group.add_argument("--limit", type=int, default=50,
+                       help="未指定 --tickers 时，扫描当前默认股票池的前 N 只；正式运行默认每批 50 只，路演可显式缩小")
     ap.add_argument("--tag", default="roadshow", help="输出文件名标记")
     args = ap.parse_args()
 
