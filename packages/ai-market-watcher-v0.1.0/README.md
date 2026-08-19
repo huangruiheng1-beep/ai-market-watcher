@@ -1,14 +1,8 @@
-# 博士雷达 · AI 投研市场观察助手
+# AI 投研市场观察助手
 
-“博士雷达”是本项目的对外名称。它是一个面向纳斯达克 100 的本地市场观察工作流，把多周期趋势、五榜单、背离/TD9、SKDJ 与跨日状态追踪串联起来，帮助用户确定“今天先看谁”以及“这只股票的状态正在怎样变化”。
+一个面向纳斯达克 100 的本地市场观察工作流。它把多周期趋势、五榜单、背离/TD9、SKDJ 与跨日状态追踪串联起来，帮助用户确定“今天先看谁”以及“这只股票的状态正在怎样变化”。
 
 > 本项目只整理观察顺序和状态过程，不预测涨跌，不构成任何交易指令或投资建议。
-
-## 公开入口
-
-- GitHub 仓库：<https://github.com/huangruiheng1-beep/ai-market-watcher>
-- 路演网页：<https://huangruiheng1-beep.github.io/ai-market-watcher/roadshow/>
-- 第一版 ZIP：<https://github.com/huangruiheng1-beep/ai-market-watcher/releases>
 
 ## 它包含什么
 

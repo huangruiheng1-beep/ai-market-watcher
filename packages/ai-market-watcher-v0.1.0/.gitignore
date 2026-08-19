@@ -1,0 +1,28 @@
+# Local credentials: never commit
+.env
+.env.*
+!.env.example
+private/
+credentials/
+*.key
+*.pem
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Market cache and generated state
+cache/
+output/*
+!output/.gitkeep
+*.sqlite
+*.sqlite3
+
+# Local/editor noise
+.DS_Store
+.idea/
+.vscode/
+*.log

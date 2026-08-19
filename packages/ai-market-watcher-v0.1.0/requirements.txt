@@ -1,0 +1,5 @@
+numpy>=2.0,<3
+pandas>=2.2,<4
+pyarrow>=17,<26
+requests>=2.31,<3
+lxml>=5,<7

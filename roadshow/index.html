@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 投研市场观察助手 · Market Watcher</title>
+<style>
+/* ============================================================
+   MOSAIC DESIGN SYSTEM — 4 COLORS
+   Ink #0B1120 · Bone #F5EFE0 · Cobalt #1E40AF · Vermillion #DC2626
+   ============================================================ */
+:root {
+  --ink: #0B1120;
+  --ink-2: #161E33;
+  --bone: #F5EFE0;
+  --bone-2: #EDE4D0;
+  --cobalt: #1E40AF;
+  --cobalt-2: #2952E0;
+  --vermillion: #DC2626;
+  --vermillion-2: #B91C1C;
+
+  --text-on-ink: #F5EFE0;
+  --text-on-bone: #0B1120;
+  --text-on-cobalt: #F5EFE0;
+  --text-on-vermillion: #F5EFE0;
+
+  --gap: clamp(1.2rem, 2.5vw, 2.4rem);
+  --gap-sm: clamp(0.6rem, 1.2vw, 1.1rem);
+  --pad-x: clamp(1.5rem, 6vw, 5rem);
+  --pad-y: clamp(3rem, 8vw, 7rem);
+
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bone);
+  color: var(--text-on-bone);
+  line-height: 1.55;
+  font-size: clamp(16px, 1.05vw, 18px);
+  font-weight: 400;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--vermillion); color: var(--bone); }
+
+a { color: inherit; text-decoration: none; }
+
+/* ============================================================
+   MOSAIC TILE PATTERN — the signature background texture
+   ============================================================ */
+.mosaic-bg {
+  background-color: var(--bone);
+  background-image:
+    linear-gradient(var(--ink) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+  opacity: 0.04;
+}
+
+/* ============================================================
+   NAV — sticky, mosaic block style
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--text-on-ink);
+  border-bottom: 3px solid var(--vermillion);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem var(--pad-x);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+.nav-brand .mark {
+  width: 22px; height: 22px;
+  background: var(--vermillion);
+  display: inline-block;
+}
+.nav-brand .mark::after {
+  content: "";
+  display: block;
+  width: 11px; height: 22px;
+  background: var(--cobalt);
+  margin-left: 11px;
+}
+.nav-links {
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+  align-items: center;
+}
+.nav-links a {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.15s ease;
+}
+.nav-links a:hover { background: var(--cobalt); }
+.lang-toggle {
+  display: flex;
+  border: 2px solid var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.lang-toggle button {
+  background: transparent;
+  color: var(--bone);
+  border: none;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: 0.05em;
+  transition: all 0.15s ease;
+}
+.lang-toggle button.active {
+  background: var(--vermillion);
+  color: var(--bone);
+}
+.lang-toggle button:not(.active):hover {
+  background: var(--bone);
+  color: var(--ink);
+}
+
+/* nav-right wraps burger + lang on small screens */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* hamburger button — hidden on desktop */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 34px; height: 34px;
+  background: transparent;
+  border: 2px solid var(--bone);
+  cursor: pointer;
+  padding: 6px;
+}
+.nav-burger span {
+  display: block;
+  height: 2px;
+  background: var(--bone);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.nav-burger[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-burger[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* MOBILE NAV — dropdown panel below the bar */
+@media (max-width: 720px) {
+  .nav-burger { display: flex; }
+  .nav-links {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--ink-2);
+    border-bottom: 3px solid var(--vermillion);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-links.open { max-height: 420px; }
+  .nav-links li { width: 100%; border-top: 1px solid rgba(245,239,224,0.08); }
+  .nav-links a { padding: 0.9rem var(--pad-x); font-size: 0.9rem; }
+  .nav-brand span:last-child { font-size: 0.82rem; }
+}
+
+/* ============================================================
+   HERO — full bleed mosaic tile composition
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: var(--ink);
+  color: var(--text-on-ink);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 6rem var(--pad-x) var(--pad-y);
+}
+/* mosaic tile field as hero backdrop */
+.hero-tiles {
+  position: absolute;
+  top: 0; right: 0;
+  width: 55%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 2px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.hero-tiles span {
+  background: var(--ink-2);
+}
+/* randomly assign the 4 mosaic colors */
+.hero-tiles span.c-cobalt { background: var(--cobalt); }
+.hero-tiles span.c-vermillion { background: var(--vermillion); }
+.hero-tiles span.c-bone { background: var(--bone); opacity: 0.08; }
+.hero-tiles span.c-ink { background: var(--ink-2); }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+}
+.hero-kicker {
+  display: inline-block;
+  background: var(--vermillion);
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 1.8rem;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 .accent { color: var(--vermillion); }
+.hero h1 .accent-2 { color: var(--cobalt-2); }
+.hero-sub {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  line-height: 1.5;
+  color: rgba(245, 239, 224, 0.75);
+  max-width: 30ch;
+  margin-bottom: 2.4rem;
+}
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid currentColor;
+  transition: all 0.18s ease;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--vermillion);
+  color: var(--bone);
+  border-color: var(--vermillion);
+}
+.btn-primary:hover { background: var(--vermillion-2); border-color: var(--vermillion-2); }
+.btn-ghost {
+  background: transparent;
+  color: var(--bone);
+  border-color: var(--bone);
+}
+.btn-ghost:hover { background: var(--bone); color: var(--ink); }
+
+/* ============================================================
+   SECTION — generic
+   ============================================================ */
+section { position: relative; }
+.sec { padding: var(--pad-y) var(--pad-x); }
+.sec-inner { max-width: 1200px; margin: 0 auto; }
+
+.sec-ink { background: var(--ink); color: var(--text-on-ink); }
+.sec-bone { background: var(--bone); color: var(--text-on-bone); }
+.sec-cobalt { background: var(--cobalt); color: var(--text-on-cobalt); }
+.sec-vermillion { background: var(--vermillion); color: var(--text-on-vermillion); }
+
+.sec-label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.7rem;
+  margin-bottom: 1.5rem;
+}
+.sec-label.on-ink { background: var(--cobalt); color: var(--bone); }
+.sec-label.on-bone { background: var(--ink); color: var(--bone); }
+.sec-label.on-cobalt { background: var(--vermillion); color: var(--bone); }
+.sec-label.on-vermillion { background: var(--ink); color: var(--bone); }
+
+.sec-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2rem;
+  max-width: 18ch;
+}
+.sec-title .em-vermillion { color: var(--vermillion); }
+.sec-title .em-cobalt { color: var(--cobalt-2); }
+.sec-bone .sec-title .em-cobalt { color: var(--cobalt); }
+.sec-ink .sec-title .em-cobalt { color: #60A5FA; }
+
+.sec-lead {
+  font-size: clamp(1rem, 1.4vw, 1.18rem);
+  line-height: 1.6;
+  max-width: 60ch;
+  opacity: 0.85;
+  margin-bottom: 2.5rem;
+}
+
+/* ============================================================
+   PROBLEM — 3 statements in mosaic blocks
+   ============================================================ */
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  margin-top: 2rem;
+}
+.problem-tile {
+  background: var(--bone);
+  padding: 2.2rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.problem-tile:nth-child(1) { background: var(--bone); }
+.problem-tile:nth-child(2) { background: var(--bone-2); }
+.problem-tile:nth-child(3) { background: var(--vermillion); color: var(--text-on-vermillion); }
+.problem-tile .num {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  opacity: 0.6;
+}
+.problem-tile h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+.problem-tile p { font-size: 0.95rem; opacity: 0.8; line-height: 1.5; }
+
+@media (max-width: 720px) {
+  .problem-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   WORKFLOW — horizontal flow
+   ============================================================ */
+.flow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin-top: 2rem;
+  border: 2px solid currentColor;
+}
+.flow-step {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  border-right: 2px solid currentColor;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 140px;
+  justify-content: center;
+}
+.flow-step:last-child { border-right: none; }
+.flow-step .step-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.5;
+  letter-spacing: 0.15em;
+}
+.flow-step .step-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.flow-step:nth-child(odd) { background: rgba(0,0,0,0.08); }
+.sec-ink .flow-step:nth-child(odd) { background: rgba(255,255,255,0.05); }
+
+.flow-step:nth-child(1) { background: var(--cobalt); color: var(--bone); }
+.flow-step:nth-child(3) { background: var(--vermillion); color: var(--bone); }
+.flow-step:nth-child(5) { background: var(--cobalt); color: var(--bone); }
+
+@media (max-width: 720px) {
+  .flow { grid-template-columns: 1fr; }
+  .flow-step { border-right: none; border-bottom: 2px solid currentColor; }
+}
+
+/* ============================================================
+   TOOLS — 5 tool mosaic
+   ============================================================ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 2px;
+  margin-top: 2rem;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+.tool {
+  padding: 1.8rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  position: relative;
+}
+.tool-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  opacity: 0.5;
+}
+.tool h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+.tool .role {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.tool p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.85;
+  margin-top: auto;
+}
+
+/* asymmetric mosaic layout — 5 tiles across 6 columns */
+.tool-1 { grid-column: 1 / 3; grid-row: 1; background: var(--cobalt); color: var(--bone); }
+.tool-2 { grid-column: 3 / 5; grid-row: 1; background: var(--bone); }
+.tool-3 { grid-column: 5 / 7; grid-row: 1; background: var(--vermillion); color: var(--bone); }
+.tool-4 { grid-column: 1 / 4; grid-row: 2; background: var(--bone-2); }
+.tool-5 { grid-column: 4 / 7; grid-row: 2; background: var(--ink); color: var(--bone); }
+
+@media (max-width: 820px) {
+  .tools-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
+  .tool-1, .tool-2, .tool-3, .tool-4, .tool-5 { grid-column: span 1; grid-row: auto; }
+  .tool-1 { grid-column: 1 / 3; }
+}
+
+/* ============================================================
+   STATUS CHAIN — 3 day tiles
+   ============================================================ */
+.days {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  margin-top: 2rem;
+}
+.day {
+  padding: 2rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 200px;
+}
+.day-1 { background: var(--bone); }
+.day-2 { background: var(--cobalt); color: var(--bone); }
+.day-3 { background: var(--vermillion); color: var(--bone); }
+
+.day-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.day h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+.day .state {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--ink);
+  color: var(--bone);
+  align-self: flex-start;
+  letter-spacing: 0.05em;
+}
+.day-2 .state, .day-3 .state { background: var(--bone); color: var(--ink); }
+.day p { font-size: 0.88rem; opacity: 0.8; line-height: 1.5; }
+
+@media (max-width: 720px) {
+  .days { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   DEMO — commands + video
+   ============================================================ */
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  margin-top: 2rem;
+}
+.demo-cmds {
+  background: var(--ink-2);
+  color: var(--bone);
+  padding: 2rem 1.6rem;
+}
+.demo-cmds h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+.code-block {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--ink);
+  border-left: 3px solid var(--vermillion);
+  padding: 0.9rem 1rem;
+  margin: 0.6rem 0;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+.code-block .prompt { color: var(--cobalt-2); }
+.code-block .flag { color: #FBBF24; }
+.code-block .note {
+  display: block;
+  font-size: 0.78rem;
+  opacity: 0.55;
+  margin-top: 0.4rem;
+  font-family: var(--font-body);
+}
+
+.demo-video {
+  background: var(--ink);
+  padding: 2rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+.video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background:
+    linear-gradient(45deg, var(--ink-2) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--ink-2) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--ink-2) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--ink-2) 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+  background-color: var(--cobalt);
+  border: 2px solid var(--bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--bone);
+}
+.video-frame .play {
+  width: 56px; height: 56px;
+  background: var(--vermillion);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  transition: transform 0.2s ease;
+}
+.video-frame:hover .play { transform: scale(1.08); }
+.video-frame .v-title { font-weight: 800; font-size: 1.05rem; }
+.video-frame .v-sub { font-size: 0.82rem; opacity: 0.7; }
+
+@media (max-width: 820px) {
+  .demo-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   INSTALL — step tiles + API
+   ============================================================ */
+.install-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  margin-top: 2rem;
+}
+.install-block {
+  padding: 2rem 1.6rem;
+}
+.install-block.install { background: var(--bone); }
+.install-block.api { background: var(--bone-2); }
+
+.install-block h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+}
+.install-block .sub {
+  font-size: 0.88rem;
+  opacity: 0.7;
+  margin-bottom: 1.2rem;
+}
+
+.steps {
+  list-style: none;
+  counter-reset: step;
+}
+.steps li {
+  counter-increment: step;
+  padding: 0.6rem 0 0.6rem 2.2rem;
+  position: relative;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  border-bottom: 1px dashed rgba(11,17,32,0.15);
+}
+.steps li:last-child { border-bottom: none; }
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0; top: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--ink);
+  color: var(--bone);
+  padding: 0.15rem 0.4rem;
+  letter-spacing: 0.05em;
+}
+
+.api-note {
+  background: var(--ink);
+  color: var(--bone);
+  padding: 1rem 1.2rem;
+  margin-top: 1rem;
+  border-left: 3px solid var(--vermillion);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.api-note strong { color: var(--cobalt-2); }
+
+@media (max-width: 820px) {
+  .install-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   GITHUB ACTION — big CTA block
+   ============================================================ */
+.cta-block {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 2px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  margin-top: 2rem;
+}
+.cta-main {
+  background: var(--vermillion);
+  color: var(--bone);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+}
+.cta-main h3 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2.2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.cta-main .repo-url {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: var(--ink);
+  padding: 0.5rem 0.8rem;
+  align-self: flex-start;
+  border-left: 3px solid var(--bone);
+}
+.cta-side {
+  background: var(--ink);
+  color: var(--bone);
+  padding: 2rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  justify-content: center;
+}
+.cta-side .label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cobalt-2);
+}
+.cta-side .value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+.cta-side .desc { font-size: 0.85rem; opacity: 0.65; line-height: 1.5; }
+
+@media (max-width: 820px) {
+  .cta-block { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   BOUNDARIES — 4 rules
+   ============================================================ */
+.rules {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--bone-2);
+  border: 2px solid var(--ink);
+  margin-top: 2rem;
+}
+.rule {
+  background: var(--bone);
+  padding: 1.8rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 4px solid var(--vermillion);
+}
+.rule:nth-child(2) { border-top-color: var(--cobalt); }
+.rule:nth-child(3) { border-top-color: var(--vermillion); }
+.rule:nth-child(4) { border-top-color: var(--cobalt); }
+.rule .x {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: var(--vermillion);
+  line-height: 1;
+}
+.rule h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.rule p { font-size: 0.82rem; opacity: 0.7; line-height: 1.4; }
+
+@media (max-width: 720px) {
+  .rules { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  background: var(--ink);
+  color: var(--bone);
+  padding: var(--pad-y) var(--pad-x) 2rem;
+  text-align: center;
+}
+.footer-statement {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.3;
+  max-width: 24ch;
+  margin: 0 auto 2rem;
+  letter-spacing: -0.01em;
+}
+.footer-statement .em { color: var(--vermillion); }
+.footer-statement .em-2 { color: var(--cobalt-2); }
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  opacity: 0.5;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   MOBILE TUNING — phone screens (≤720px)
+   ============================================================ */
+@media (max-width: 720px) {
+  /* hero: tiles become a faint background pattern, content sits on top full-width */
+  .hero {
+    min-height: 92vh;
+    padding: 5.5rem var(--pad-x) 3.5rem;
+  }
+  .hero-tiles {
+    width: 100%;
+    opacity: 0.32;
+    /* keep 8×10 to match the 80 generated tiles; tiles just get narrower */
+  }
+  .hero-content { max-width: 100%; }
+  .hero h1 { font-size: clamp(2.1rem, 9vw, 2.8rem); }
+  .hero-sub { font-size: 1rem; max-width: 100%; }
+  .hero-ctas .btn { padding: 0.8rem 1.2rem; font-size: 0.8rem; }
+
+  /* section spacing tightens */
+  .sec { padding: clamp(2.5rem, 10vw, 4rem) var(--pad-x); }
+  .sec-title { font-size: clamp(1.7rem, 7vw, 2.2rem); }
+  .sec-lead { font-size: 0.98rem; margin-bottom: 1.8rem; }
+
+  /* problem tiles stack (already 1fr) — trim padding */
+  .problem-tile { padding: 1.5rem 1.3rem; }
+  .problem-tile h3 { font-size: 1.25rem; }
+
+  /* tools: 2-col mosaic on phone */
+  .tools-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
+  .tool-1, .tool-2, .tool-3, .tool-4, .tool-5 {
+    grid-column: span 1; grid-row: auto;
+  }
+  .tool-1 { grid-column: 1 / 3; } /* hero tool full width on top */
+  .tool { padding: 1.4rem 1.2rem; }
+  .tool h3 { font-size: 1.15rem; }
+
+  /* flow already stacks — make steps horizontal scroll on phone */
+  .flow {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .flow-step {
+    border-right: 2px solid currentColor;
+    border-bottom: none;
+    min-width: 150px;
+  }
+
+  /* days stack — already 1fr */
+  .day { padding: 1.6rem 1.3rem; min-height: auto; }
+
+  /* demo: code blocks scroll horizontally, never break layout */
+  .demo-cmds, .demo-video { padding: 1.6rem 1.3rem; }
+  .code-block { font-size: 0.78rem; padding: 0.8rem 0.9rem; }
+
+  /* install: inline code wraps instead of overflowing */
+  .install-block { padding: 1.6rem 1.3rem; }
+  .steps li { padding: 0.5rem 0 0.5rem 2rem; font-size: 0.88rem; word-break: break-word; }
+  .steps li code { display: inline-block; font-size: 0.76rem; word-break: break-all; max-width: 100%; }
+
+  /* cta side blocks stack — already handled */
+  .cta-main { padding: 2rem 1.5rem; }
+  .cta-main h3 { font-size: 1.7rem; }
+  .cta-side { padding: 1.6rem 1.3rem; }
+
+  /* rules: 2-col on phone (already set) */
+  .rule { padding: 1.4rem 1rem; }
+
+  /* footer statement shrinks */
+  .footer-statement { font-size: clamp(1.3rem, 5vw, 1.7rem); }
+}
+
+/* very small phones (≤380px) */
+@media (max-width: 380px) {
+  .nav-brand span:last-child { display: none; } /* keep only the mark on tiny bars */
+  .lang-toggle button { padding: 0.35rem 0.45rem; }
+  .hero h1 { font-size: 1.9rem; }
+  .hero-ctas { flex-direction: column; align-items: stretch; }
+  .hero-ctas .btn { justify-content: center; }
+}
+
+/* ============================================================
+   i18n — language switching
+   ============================================================ */
+/* The page uses .t-zh/.t-en for bilingual copy. Do not hide the <html>
+   root itself: it also carries the document language attribute. */
+html[lang^="zh"] [lang="zh"] { display: revert; }
+html[lang^="en"] [lang="en"] { display: revert; }
+/* inline spans */
+.t-zh, .t-en { display: none; }
+html[lang^="zh"] .t-zh { display: inline; }
+html[lang^="en"] .t-en { display: inline; }
+
+/* ============================================================
+   reveal animation
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">
+      <span class="mark"></span>
+      <span><span class="t-zh">市场观察助手</span><span class="t-en">Market Watcher</span></span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#problem"><span class="t-zh">问题</span><span class="t-en">Problem</span></a></li>
+      <li><a href="#workflow"><span class="t-zh">工作流</span><span class="t-en">Workflow</span></a></li>
+      <li><a href="#tools"><span class="t-zh">五个工具</span><span class="t-en">Tools</span></a></li>
+      <li><a href="#days"><span class="t-zh">三日状态</span><span class="t-en">3-Day</span></a></li>
+      <li><a href="#demo"><span class="t-zh">现场演示</span><span class="t-en">Live Demo</span></a></li>
+      <li><a href="#install"><span class="t-zh">安装</span><span class="t-en">Install</span></a></li>
+      <li><a href="#github"><span class="t-zh">GitHub</span><span class="t-en">GitHub</span></a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-burger" id="navBurger" aria-label="menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="lang-toggle" role="group" aria-label="language">
+        <button data-lang="zh" class="active">中</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero" id="top">
+  <div class="hero-tiles" aria-hidden="true"></div>
+  <div class="hero-content">
+    <span class="hero-kicker"><span class="t-zh">现场运行 · 连续追踪 · 事后回放</span><span class="t-en">Run Live · Track Daily · Replay Later</span></span>
+    <h1>
+      <span class="t-zh">把零散信号，<br>变成可<span class="accent">现场运行</span>的<br>观察<span class="accent-2">过程</span>。</span>
+      <span class="t-en">Turn scattered signals<br>into a <span class="accent">live-run</span><br>observation <span class="accent-2">process</span>.</span>
+    </h1>
+    <p class="hero-sub">
+      <span class="t-zh">输入一组美股标的，现场抓取真实行情，得到一份可解释的查看顺序与跨日状态。</span>
+      <span class="t-en">Enter a set of US tickers, pull live quotes on the spot, and get an explainable watch order plus multi-day state.</span>
+    </p>
+    <div class="hero-ctas">
+      <a href="#demo" class="btn btn-primary">
+        <span class="t-zh">现场看它怎么跑 →</span><span class="t-en">Watch it run live →</span>
+      </a>
+      <a href="#github" class="btn btn-ghost">
+        <span class="t-zh">下载并试用</span><span class="t-en">Download & try</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     PROBLEM
+     ============================================================ -->
+<section class="sec sec-bone" id="problem">
+  <div class="sec-inner">
+    <span class="sec-label on-bone">01 · <span class="t-zh">问题</span><span class="t-en">Problem</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">数据很多，但<span class="em-vermillion">今天先看谁</span>没有答案。</span>
+      <span class="t-en">Lots of data, but <span class="em-vermillion">who to look at first</span> has no answer.</span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">指标脚本给你一个数字，研报给你一个结论。但今天该优先复核哪只、它这几天走到了哪一步、什么时候该停止观察——这些过程性的问题，最容易丢。</span>
+      <span class="t-en">Indicator scripts give a number, sell-side reports give a conclusion. But which ticker to review first today, what step it has reached across days, and when to stop watching—these process questions keep getting lost.</span>
+    </p>
+    <div class="problem-grid">
+      <div class="problem-tile">
+        <span class="num">01</span>
+        <h3><span class="t-zh">指标很多</span><span class="t-en">Many indicators</span></h3>
+        <p><span class="t-zh">RSI、MACD、TD9、SKDJ、多周期——每天都能算出一堆，但谁优先看？</span><span class="t-en">RSI, MACD, TD9, SKDJ, multi-timeframe—plenty computed daily, but which first?</span></p>
+      </div>
+      <div class="problem-tile">
+        <span class="num">02</span>
+        <h3><span class="t-zh">报告很多</span><span class="t-en">Many reports</span></h3>
+        <p><span class="t-zh">每日 PDF、Excel、截图，但跨天以后哪只还在观察、哪只已经失效，没有记忆。</span><span class="t-en">Daily PDFs, sheets, screenshots—yet across days nothing remembers which ticker is still under watch or already failed.</span></p>
+      </div>
+      <div class="problem-tile">
+        <span class="num">03</span>
+        <h3><span class="t-zh">顺序丢了</span><span class="t-en">Order is lost</span></h3>
+        <p><span class="t-zh">工具的价值不是给出"买/卖"，而是把查看顺序和状态过程整理出来，留下可回放的研究记忆。</span><span class="t-en">The value isn't a buy/sell call—it's organising the watch order and state process into replayable research memory.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WORKFLOW
+     ============================================================ -->
+<section class="sec sec-ink" id="workflow">
+  <div class="sec-inner">
+    <span class="sec-label on-ink">02 · <span class="t-zh">真实工作流</span><span class="t-en">Workflow</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">输入少量标的，<br>现场得到<span class="em-cobalt">结构化结果</span>。</span>
+      <span class="t-en">Enter a few tickers,<br>get <span class="em-cobalt">structured results</span> live.</span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">网站本身不保存 API Key，不在浏览器前端暴露私钥。真实 API 运行在你本地的 Python 入口中，结果生成后由 AI 按固定顺序解释。</span>
+      <span class="t-en">The site never stores your API key or exposes secrets in the browser. The real API runs inside your local Python entry; after results land, the AI explains them in a fixed order.</span>
+    </p>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="step-num">STEP 01</span>
+        <span class="step-label"><span class="t-zh">输入 5–10 只股票</span><span class="t-en">Enter 5–10 tickers</span></span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">STEP 02</span>
+        <span class="step-label">Twelve Data<br><span class="t-zh">真实行情</span><span class="t-en">live quotes</span></span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">STEP 03</span>
+        <span class="step-label"><span class="t-zh">五个观察工具</span><span class="t-en">5 observation tools</span></span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">STEP 04</span>
+        <span class="step-label"><span class="t-zh">结构化结果</span><span class="t-en">Structured output</span></span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">STEP 05</span>
+        <span class="step-label"><span class="t-zh">AI 解释</span><span class="t-en">AI explains</span><br><span class="t-zh">结果/证据/缺口/下一步</span><span class="t-en">result/evidence/gap/next</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TOOLS
+     ============================================================ -->
+<section class="sec sec-bone" id="tools">
+  <div class="sec-inner">
+    <span class="sec-label on-bone">03 · <span class="t-zh">五个工具</span><span class="t-en">Five Tools</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">指标是<span class="em-cobalt">证据</span>，<br>状态是<span class="em-vermillion">过程</span>。</span>
+      <span class="t-en">Indicators are <span class="em-cobalt">evidence</span>,<br>state is the <span class="em-vermillion">process</span>.</span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">五个工具各自提供证据，状态链把证据串成可回放的研究过程。每个工具只写用途、输出、边界。</span>
+      <span class="t-en">Each tool supplies evidence; the status chain stitches evidence into a replayable research process. Each tool below states purpose, output, and boundary.</span>
+    </p>
+    <div class="tools-grid">
+      <div class="tool tool-1">
+        <span class="tool-num">TOOL 01</span>
+        <span class="role"><span class="t-zh">多周期共振</span><span class="t-en">Multi-timeframe resonance</span></span>
+        <h3><span class="t-zh">方向是否一致</span><span class="t-en">Is direction aligned</span></h3>
+        <p><span class="t-zh">60 分钟、日线、周线是否形成一致的观察背景。输出分层与行情截至日期，数据不足会明确标出。</span><span class="t-en">Whether 60-min, daily, and weekly form a consistent observation backdrop. Outputs layering and data-as-of; insufficient data is flagged.</span></p>
+      </div>
+      <div class="tool tool-2">
+        <span class="tool-num">TOOL 02</span>
+        <span class="role"><span class="t-zh">五榜单</span><span class="t-en">Five rankings</span></span>
+        <h3><span class="t-zh">今天先看谁</span><span class="t-en">Who to watch today</span></h3>
+        <p><span class="t-zh">标的很多时，把它们分到不同查看顺序：已确认、背离观察、强趋势待触发、潜力、风险噪音。</span><span class="t-en">When tickers pile up, sort them into watch orders: confirmed, divergence-watch, strong-trend-pending, potential, risk-noise.</span></p>
+      </div>
+      <div class="tool tool-3">
+        <span class="tool-num">TOOL 03</span>
+        <span class="role"><span class="t-zh">背离 + TD9</span><span class="t-en">Divergence + TD9</span></span>
+        <h3><span class="t-zh">动能是否疲劳</span><span class="t-en">Is momentum tired</span></h3>
+        <p><span class="t-zh">价格与动能是否出现值得人工复核的异常组合。它是观察提示，不是反转预测。</span><span class="t-en">Whether price and momentum show anomalous combos worth manual review. It is an observation hint, not a reversal forecast.</span></p>
+      </div>
+      <div class="tool tool-4">
+        <span class="tool-num">TOOL 04</span>
+        <span class="role"><span class="t-zh">SKDJ</span><span class="t-en">SKDJ</span></span>
+        <h3><span class="t-zh">属于哪类场景</span><span class="t-en">Which scenario</span></h3>
+        <p><span class="t-zh">超跌、回调、超买或普通区，当前处于哪种观察场景。候选公式与数据不足必须明确标出，不包装成已验证指标。</span><span class="t-en">Oversold, pullback, overbought, or neutral—which scenario applies now. Candidate formulas and insufficient data are flagged, never dressed as verified.</span></p>
+      </div>
+      <div class="tool tool-5">
+        <span class="tool-num">TOOL 05</span>
+        <span class="role"><span class="t-zh">状态链</span><span class="t-en">Status chain</span></span>
+        <h3><span class="t-zh">走到哪一步</span><span class="t-en">Which step reached</span></h3>
+        <p><span class="t-zh">这只股票跨几天走到哪一步，何时失效或继续观察。状态机记录 OBSERVE → BASE → TRIGGER → CONFIRM，失效优先于预测。</span><span class="t-en">Which step a ticker has reached across days, when it fails or keeps being watched. State machine logs OBSERVE → BASE → TRIGGER → CONFIRM; invalidation precedes prediction.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3-DAY STATUS
+     ============================================================ -->
+<section class="sec sec-cobalt" id="days">
+  <div class="sec-inner">
+    <span class="sec-label on-cobalt">04 · <span class="t-zh">三日状态链</span><span class="t-en">3-Day Chain</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">从单日信号，<br>到<span class="" style="color:var(--bone);background:var(--vermillion);padding:0 0.3em;">连续状态</span>。</span>
+      <span class="t-en">From single-day signal,<br>to <span class="" style="color:var(--bone);background:var(--vermillion);padding:0 0.3em;">continuous state</span>.</span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">不是只展示一个漂亮指标，而是展示研究过程如何留下记忆。每处显示真实 data_asof，不手工写死结果。</span>
+      <span class="t-en">Not just a pretty indicator, but how the research process leaves a memory. Every cell shows the real data_asof—no hand-written results.</span>
+    </p>
+    <div class="days">
+      <div class="day day-1">
+        <span class="day-tag">DAY 01</span>
+        <h3><span class="t-zh">进入观察</span><span class="t-en">Enter OBSERVE</span></h3>
+        <span class="state">OBSERVE</span>
+        <p><span class="t-zh">首日左侧信号出现，进入观察池。记录信号来源与失效线。</span><span class="t-en">Day one a left-side signal appears, ticker enters the watch pool. Source and invalidation line are recorded.</span></p>
+      </div>
+      <div class="day day-2">
+        <span class="day-tag">DAY 02</span>
+        <h3><span class="t-zh">可能筑底</span><span class="t-en">Maybe BASE</span></h3>
+        <span class="state">BASE</span>
+        <p><span class="t-zh">结构改善，进入 BASE 筑底。写定失效线，等待触发位。</span><span class="t-en">Structure improves, ticker enters BASE. Invalidation line is set, awaiting the trigger level.</span></p>
+      </div>
+      <div class="day day-3">
+        <span class="day-tag">DAY 03</span>
+        <h3><span class="t-zh">推进/失效/待观察</span><span class="t-en">Advance / Fail / Hold</span></h3>
+        <span class="state">CONFIRM / INVALID</span>
+        <p><span class="t-zh">可能推进到 TRIGGER→CONFIRM，可能回破失效开新 episode，也可能仍待观察。所有路径都被记录。</span><span class="t-en">May advance to TRIGGER→CONFIRM, may break and fail (opening a new episode), or may still hold. All paths are logged.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LIVE DEMO + VIDEO
+     ============================================================ -->
+<section class="sec sec-ink" id="demo">
+  <div class="sec-inner">
+    <span class="sec-label on-ink">05 · <span class="t-zh">现场真实演示</span><span class="t-en">Live Demo</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">今天不放截图，<br><span class="em-vermillion">现场跑出来</span>。</span>
+      <span class="t-en">No screenshots today,<br><span class="em-vermillion">run it live</span>.</span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">路演时讲到这里切换终端，启动后不等待全量结果，继续讲五个工具；扫描完成后切到浏览器打开本次生成的 HTML。</span>
+      <span class="t-en">At the roadshow, switch to the terminal here. Don't wait for full results—keep narrating the five tools; once the scan finishes, switch to the browser to open this run's HTML.</span>
+    </p>
+    <div class="demo-grid">
+      <div class="demo-cmds">
+        <h3><span class="t-zh">两条命令</span><span class="t-en">Two commands</span></h3>
+        <div class="code-block"><span class="prompt">$</span> python run_live.py <span class="flag">--tickers</span> AAPL,MSFT,NVDA,META,AMZN
+<span class="note"><span class="t-zh">优先保证直播节奏的 5 只输入</span><span class="t-en">5-ticker input preferred for livestream pace</span></span></div>
+        <div class="code-block"><span class="prompt">$</span> python run_live.py <span class="flag">--limit</span> 5
+<span class="note"><span class="t-zh">备用：扩大本次输入范围，不改变扫描规则</span><span class="t-en">Fallback: widen input, scan rules unchanged</span></span></div>
+        <div class="code-block"><span class="prompt">$</span> python run_live.py <span class="flag">--limit</span> 10
+<span class="note"><span class="t-zh">扩大到 10 只的备用命令</span><span class="t-en">Optional 10-ticker command</span></span></div>
+        <p style="font-size:0.85rem;opacity:0.65;margin-top:0.8rem;">
+          <span class="t-zh">真实结果来自 run_live.py → output/ → 浏览器打开本次生成结果。</span>
+          <span class="t-en">Real results come from run_live.py → output/ → browser opens this run's result.</span>
+        </p>
+      </div>
+      <div class="demo-video">
+        <span class="sec-label on-ink" style="background:var(--vermillion);color:var(--bone);"><span class="t-zh">现场演示视频</span><span class="t-en">Demo Video</span></span>
+        <div class="video-frame">
+          <div class="play">▶</div>
+          <span class="v-title"><span class="t-zh">15 分钟路演录屏</span><span class="t-en">15-min roadshow recording</span></span>
+          <span class="v-sub">
+            <span class="t-zh">视频地址待发布 · 占位符，不编造链接</span>
+            <span class="t-en">Video URL pending · placeholder, no fabricated link</span>
+          </span>
+        </div>
+        <p style="font-size:0.82rem;opacity:0.6;line-height:1.5;">
+          <span class="t-zh">未提供最终视频地址前使用占位符，不伪造播放量、用户数、收益率或媒体评价。</span>
+          <span class="t-en">Until a final video URL is supplied, this stays a placeholder. No fake play counts, users, returns, or media quotes.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     INSTALL + API
+     ============================================================ -->
+<section class="sec sec-bone" id="install">
+  <div class="sec-inner">
+    <span class="sec-label on-bone">06 · <span class="t-zh">安装与 API 获取</span><span class="t-en">Install & API</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">路演现场不教安装，<br><span class="em-cobalt">这里自己读</span>。</span>
+      <span class="t-en">Install isn't taught on stage,<br><span class="em-cobalt">read it here</span>.</span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">安装步骤和 API 获取只写在公开版，路演时间全部留给五个工具和三日真实数据的解释。</span>
+      <span class="t-en">Install steps and API signup live only in the public version—roadshow time belongs to the five tools and the three-day real data.</span>
+    </p>
+    <div class="install-grid">
+      <div class="install-block install">
+        <h3><span class="t-zh">安装说明</span><span class="t-en">Installation</span></h3>
+        <p class="sub"><span class="t-zh">本地双击或 GitHub Pages 都能用，断网也能打开。</span><span class="t-en">Works locally and on GitHub Pages, even offline.</span></p>
+        <ol class="steps">
+          <li><span class="t-zh">克隆仓库</span><span class="t-en">Clone the repo</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">git clone &lt;GitHub 仓库地址&gt;</code></li>
+          <li><span class="t-zh">进入目录</span><span class="t-en">Enter the directory</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">cd ai-market-watcher</code></li>
+          <li><span class="t-zh">创建虚拟环境</span><span class="t-en">Create a venv</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">python3 -m venv .venv</code></li>
+          <li><span class="t-zh">激活环境</span><span class="t-en">Activate it</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">source .venv/bin/activate</code></li>
+          <li><span class="t-zh">安装依赖</span><span class="t-en">Install dependencies</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">python -m pip install -r requirements.txt</code></li>
+          <li><span class="t-zh">运行演示（离线备用）</span><span class="t-en">Run the demo (offline fallback)</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">python run_demo.py</code></li>
+        </ol>
+      </div>
+      <div class="install-block api">
+        <h3><span class="t-zh">API 获取说明</span><span class="t-en">API Setup</span></h3>
+        <p class="sub"><span class="t-zh">真实行情来自 Twelve Data，免费额度即可起步。</span><span class="t-en">Live quotes come from Twelve Data; the free tier is enough to start.</span></p>
+        <ol class="steps">
+          <li><span class="t-zh">访问官方价格页</span><span class="t-en">Open the pricing page</span><br><code style="font-family:var(--font-mono);font-size:0.82rem;background:var(--ink);color:var(--bone);padding:0.15rem 0.4rem;">https://twelvedata.com/pricing</code></li>
+          <li><span class="t-zh">注册账号并生成 API Key</span><span class="t-en">Sign up and generate an API key</span></li>
+          <li><span class="t-zh">把 Key 放进本地 .env 或受保护凭据文件</span><span class="t-en">Put the key in local .env or a protected credentials file</span></li>
+          <li><span class="t-zh">确认 Key 不进代码、报告或 GitHub</span><span class="t-en">Make sure the key never enters code, reports, or GitHub</span></li>
+        </ol>
+        <div class="api-note">
+          <strong><span class="t-zh">边界声明：</span><span class="t-en">Boundary:</span></strong>
+          <span class="t-zh">网站本身不保存 API Key，不在浏览器前端直接暴露私钥。真实 API 运行在用户本地的 Python 入口中。</span>
+          <span class="t-en">The site never stores your API key or exposes secrets in the browser. The real API runs inside your local Python entry.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GITHUB ACTION
+     ============================================================ -->
+<section class="sec sec-ink" id="github">
+  <div class="sec-inner">
+    <span class="sec-label on-ink">07 · <span class="t-zh">GitHub 行动区</span><span class="t-en">GitHub Action</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">Star · Clone · <span class="em-vermillion">读 README</span></span>
+      <span class="t-en">Star · Clone · <span class="em-vermillion">Read README</span></span>
+    </h2>
+    <p class="sec-lead">
+      <span class="t-zh">第一版已经公开：打开仓库，先读 README，再按离线演示或现场运行步骤试用。</span>
+      <span class="t-en">Version 1 is public: read the README, then try the offline demo or live workflow.</span>
+    </p>
+    <div class="cta-block">
+      <div class="cta-main">
+        <h3><span class="t-zh">下载工具，<br>本地跑一遍</span><span class="t-en">Download,<br>run it locally</span></h3>
+        <span class="repo-url">github.com/huangruiheng1-beep/ai-market-watcher</span>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:0.4rem;">
+          <a href="https://github.com/huangruiheng1-beep/ai-market-watcher" class="btn btn-ghost" style="border-color:var(--bone);">★ Star</a>
+          <a href="https://github.com/huangruiheng1-beep/ai-market-watcher#readme" class="btn btn-ghost" style="border-color:var(--bone);"><span class="t-zh">打开 README</span><span class="t-en">README</span></a>
+          <a href="https://huangruiheng1-beep.github.io/ai-market-watcher/roadshow/" class="btn btn-ghost" style="border-color:var(--bone);"><span class="t-zh">打开网页</span><span class="t-en">Open site</span></a>
+        </div>
+      </div>
+      <div class="cta-side">
+        <span class="label"><span class="t-zh">克隆入口</span><span class="t-en">Clone entry</span></span>
+        <span class="value">git clone https://github.com/huangruiheng1-beep/ai-market-watcher.git</span>
+        <span class="desc"><span class="t-zh">复制仓库地址到本地，按上面的安装步骤执行。</span><span class="t-en">Clone the repo locally and follow the install steps above.</span></span>
+      </div>
+      <div class="cta-side">
+        <span class="label"><span class="t-zh">Release 下载</span><span class="t-en">Release download</span></span>
+        <a class="value" href="https://github.com/huangruiheng1-beep/ai-market-watcher/releases">.zip / .tar.gz ↗</a>
+        <span class="desc"><span class="t-zh">不装 git 也能用：从 Releases 下载打包好的发行版。</span><span class="t-en">No git? Download the packaged release from Releases.</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BOUNDARIES
+     ============================================================ -->
+<section class="sec sec-bone" id="boundaries">
+  <div class="sec-inner">
+    <span class="sec-label on-bone">08 · <span class="t-zh">边界与收束</span><span class="t-en">Boundaries</span></span>
+    <h2 class="sec-title">
+      <span class="t-zh">它是研究工作流，<br>不是<span class="em-vermillion">自动交易系统</span>。</span>
+      <span class="t-en">It's a research workflow,<br>not an <span class="em-vermillion">auto-trading system</span>.</span>
+    </h2>
+    <div class="rules">
+      <div class="rule">
+        <span class="x">✕</span>
+        <h4><span class="t-zh">不预测涨跌</span><span class="t-en">No price prediction</span></h4>
+        <p><span class="t-zh">只输出查看顺序与状态，不给方向判断。</span><span class="t-en">Only outputs watch order and state, never direction calls.</span></p>
+      </div>
+      <div class="rule">
+        <span class="x">✕</span>
+        <h4><span class="t-zh">不连接券商</span><span class="t-en">No broker link</span></h4>
+        <p><span class="t-zh">不接交易接口，不下传输单。</span><span class="t-en">No trading interface, no order routing.</span></p>
+      </div>
+      <div class="rule">
+        <span class="x">✕</span>
+        <h4><span class="t-zh">不自动下单</span><span class="t-en">No auto-orders</span></h4>
+        <p><span class="t-zh">所有动作都需要人工确认与执行。</span><span class="t-en">Every action needs manual confirmation and execution.</span></p>
+      </div>
+      <div class="rule">
+        <span class="x">!</span>
+        <h4><span class="t-zh">候选规则待验证</span><span class="t-en">Candidate rules</span></h4>
+        <p><span class="t-zh">部分参数仍是候选规则，需要继续验证。</span><span class="t-en">Some parameters remain candidate rules pending validation.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <p class="footer-statement">
+    <span class="t-zh">把零散信号，变成<br>可以<span class="em">现场运行</span>、<span class="em-2">连续追踪</span>、事后回放的<br>观察过程。</span>
+    <span class="t-en">Turn scattered signals into an observation process<br>that <span class="em">runs live</span>, <span class="em-2">tracks daily</span>, and replays later.</span>
+  </p>
+  <p class="footer-meta">
+    AI 投研市场观察助手 · Market Watcher · <span class="t-zh">本页面可本地双击打开，断网可用</span><span class="t-en">opens locally, works offline</span>
+  </p>
+</footer>
+
+<script>
+/* ============================================================
+   LANGUAGE TOGGLE
+   ============================================================ */
+(function () {
+  var html = document.documentElement;
+  var buttons = document.querySelectorAll('.lang-toggle button');
+
+  function setLang(lang) {
+    html.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    buttons.forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+    });
+    try { localStorage.setItem('mw-lang', lang); } catch (e) {}
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      setLang(b.getAttribute('data-lang'));
+    });
+  });
+
+  // restore preference
+  try {
+    var saved = localStorage.getItem('mw-lang');
+    if (saved) setLang(saved);
+  } catch (e) {}
+})();
+
+/* ============================================================
+   MOBILE MENU — hamburger toggle + close on link tap
+   ============================================================ */
+(function () {
+  var burger = document.getElementById('navBurger');
+  var links = document.getElementById('navLinks');
+  if (!burger || !links) return;
+
+  function toggle(open) {
+    var isOpen = open !== undefined ? open : !links.classList.contains('open');
+    links.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  burger.addEventListener('click', function () { toggle(); });
+
+  // close the panel when a link is tapped (so the section is visible)
+  links.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { toggle(false); });
+  });
+
+  // close on resize back to desktop
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 720) toggle(false);
+  });
+})();
+
+/* ============================================================
+   HERO MOSAIC TILES — programmatically assign 4 colors
+   ============================================================ */
+(function () {
+  var field = document.querySelector('.hero-tiles');
+  if (!field) return;
+  // a deliberate, hand-tuned pattern across 80 tiles (8 cols x 10 rows)
+  // 0 = ink-2 (gap), 1 = cobalt, 2 = vermillion, 3 = bone-tint
+  var pattern = [
+    3,0,1,0,0,2,0,3,
+    0,1,0,3,2,0,1,0,
+    2,0,3,1,0,3,0,1,
+    0,3,0,0,1,0,2,0,
+    1,0,2,0,3,2,0,0,
+    0,2,0,1,0,0,3,2,
+    3,0,0,2,1,0,0,3,
+    0,1,3,0,0,2,1,0,
+    2,0,1,3,0,0,2,1,
+    0,3,0,0,2,1,3,0
+  ];
+  var cls = ['', 'c-cobalt', 'c-vermillion', 'c-bone'];
+  pattern.forEach(function (v) {
+    var s = document.createElement('span');
+    if (cls[v]) s.className = cls[v];
+    field.appendChild(s);
+  });
+})();
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.sec, .problem-tile, .tool, .day, .flow-step, .rule, .cta-main, .cta-side, .install-block, .demo-cmds, .demo-video')
+    .forEach(function (el) {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+})();
+</script>
+
+</body>
+</html>
