@@ -974,7 +974,7 @@ html[lang^="en"] .t-en { display: inline; }
       <li><a href="#problem"><span class="t-zh">问题</span><span class="t-en">Problem</span></a></li>
       <li><a href="#workflow"><span class="t-zh">工作流</span><span class="t-en">Workflow</span></a></li>
       <li><a href="#tools"><span class="t-zh">工具与路线</span><span class="t-en">Tools & Roadmap</span></a></li>
-      <li><a href="#days"><span class="t-zh">三日状态</span><span class="t-en">3-Day</span></a></li>
+      <li><a href="#days"><span class="t-zh">底部状态链</span><span class="t-en">Bottom Status Chain</span></a></li>
       <li><a href="#demo"><span class="t-zh">现场演示</span><span class="t-en">Live Demo</span></a></li>
       <li><a href="#install"><span class="t-zh">安装</span><span class="t-en">Install</span></a></li>
       <li><a href="#github"><span class="t-zh">GitHub</span><span class="t-en">GitHub</span></a></li>
@@ -1062,8 +1062,8 @@ html[lang^="en"] .t-en { display: inline; }
       <span class="t-en">Enter a stock universe,<br>get <span class="em-cobalt">structured results</span> in batches.</span>
     </h2>
     <p class="sec-lead">
-      <span class="t-zh">网站本身不保存 API Key，不在浏览器前端暴露私钥。Agent 启动后按批次抓取行情，正式运行默认每批 50 只；路演才临时缩小输入以控制等待时间。</span>
-      <span class="t-en">The site never stores your API key or exposes secrets in the browser. Once started, the Agent fetches quotes in batches—50 tickers per batch by default; only the roadshow temporarily uses a smaller input to reduce waiting.</span>
+      <span class="t-zh">网站本身不保存 API Key，不在浏览器前端暴露私钥。Agent 启动后按批次抓取行情；理论上一个免费账号每天可扫描约 800 只股票的实时数据，实际以服务商当日额度和频率限制为准。</span>
+      <span class="t-en">The site never stores your API key or exposes secrets in the browser. Once started, the Agent fetches quotes in batches; in theory, one free account can scan about 800 stocks of live data per day, subject to the provider's daily quota and rate limits.</span>
     </p>
     <div class="flow">
       <div class="flow-step">
@@ -1150,34 +1150,34 @@ html[lang^="en"] .t-en { display: inline; }
 </section>
 
 <!-- ============================================================
-     3-DAY STATUS
+     BOTTOM STATUS CHAIN
      ============================================================ -->
 <section class="sec sec-cobalt" id="days">
   <div class="sec-inner">
-    <span class="sec-label on-cobalt">04 · <span class="t-zh">三日状态链</span><span class="t-en">3-Day Chain</span></span>
+    <span class="sec-label on-cobalt">04 · <span class="t-zh">底部状态链</span><span class="t-en">Bottom Status Chain</span></span>
     <h2 class="sec-title">
-      <span class="t-zh">从单日信号，<br>到<span class="" style="color:var(--bone);background:var(--vermillion);padding:0 0.3em;">连续状态</span>。</span>
-      <span class="t-en">From single-day signal,<br>to <span class="" style="color:var(--bone);background:var(--vermillion);padding:0 0.3em;">continuous state</span>.</span>
+      <span class="t-zh">从单日信号，<br>到<span class="" style="color:var(--bone);background:var(--ink);padding:0 0.3em;">连续状态</span>。</span>
+      <span class="t-en">From single-day signal,<br>to <span class="" style="color:var(--bone);background:var(--ink);padding:0 0.3em;">continuous state</span>.</span>
     </h2>
     <p class="sec-lead">
-      <span class="t-zh">不是只展示一个漂亮指标，而是展示研究过程如何留下记忆。每处显示真实 data_asof，不手工写死结果。</span>
-      <span class="t-en">Not just a pretty indicator, but how the research process leaves a memory. Every cell shows the real data_asof—no hand-written results.</span>
+      <span class="t-zh">这是可以连续运行多天的底部状态追踪器。下面的三格只是星期天路演用来解释状态变化的示例，不是产品只能追踪三天。</span>
+      <span class="t-en">This bottom status tracker can run across as many days as the workflow continues. The three cards below are only a Sunday roadshow example, not a three-day product limit.</span>
     </p>
     <div class="days">
       <div class="day day-1">
-        <span class="day-tag">DAY 01</span>
+        <span class="day-tag">EXAMPLE 01</span>
         <h3><span class="t-zh">进入观察</span><span class="t-en">Enter OBSERVE</span></h3>
         <span class="state">OBSERVE</span>
         <p><span class="t-zh">首日左侧信号出现，进入观察池。记录信号来源与失效线。</span><span class="t-en">Day one a left-side signal appears, ticker enters the watch pool. Source and invalidation line are recorded.</span></p>
       </div>
       <div class="day day-2">
-        <span class="day-tag">DAY 02</span>
+        <span class="day-tag">EXAMPLE 02</span>
         <h3><span class="t-zh">可能筑底</span><span class="t-en">Maybe BASE</span></h3>
         <span class="state">BASE</span>
         <p><span class="t-zh">结构改善，进入 BASE 筑底。写定失效线，等待触发位。</span><span class="t-en">Structure improves, ticker enters BASE. Invalidation line is set, awaiting the trigger level.</span></p>
       </div>
       <div class="day day-3">
-        <span class="day-tag">DAY 03</span>
+        <span class="day-tag">EXAMPLE 03</span>
         <h3><span class="t-zh">推进/失效/待观察</span><span class="t-en">Advance / Fail / Hold</span></h3>
         <span class="state">CONFIRM / INVALID</span>
         <p><span class="t-zh">可能推进到 TRIGGER→CONFIRM，可能回破失效开新 episode，也可能仍待观察。所有路径都被记录。</span><span class="t-en">May advance to TRIGGER→CONFIRM, may break and fail (opening a new episode), or may still hold. All paths are logged.</span></p>
@@ -1238,12 +1238,12 @@ html[lang^="en"] .t-en { display: inline; }
   <div class="sec-inner">
     <span class="sec-label on-bone">06 · <span class="t-zh">安装与 API 获取</span><span class="t-en">Install & API</span></span>
     <h2 class="sec-title">
-      <span class="t-zh">路演现场不教安装，<br><span class="em-cobalt">这里自己读</span>。</span>
-      <span class="t-en">Install isn't taught on stage,<br><span class="em-cobalt">read it here</span>.</span>
+      <span class="t-zh">安装和配置，<br><span class="em-cobalt">从这里开始</span>。</span>
+      <span class="t-en">Install and configure,<br><span class="em-cobalt">start here</span>.</span>
     </h2>
     <p class="sec-lead">
-      <span class="t-zh">安装步骤和 API 获取只写在公开版，路演时间全部留给五个工具和三日真实数据的解释。</span>
-      <span class="t-en">Install steps and API signup live only in the public version—roadshow time belongs to the five tools and the three-day real data.</span>
+      <span class="t-zh">安装只需做一次。配置自己的数据源 Key 后，每次启动 Agent 都会按批次抓取行情、更新底部状态链并生成报告。</span>
+      <span class="t-en">Install once. After configuring your own data-source key, each Agent run fetches quotes in batches, updates the bottom status chain, and generates reports.</span>
     </p>
     <div class="install-grid">
       <div class="install-block install">
