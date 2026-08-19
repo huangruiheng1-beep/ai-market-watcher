@@ -26,3 +26,8 @@ output/*
 .idea/
 .vscode/
 *.log
+
+# Internal handoff and release notes stay local
+docs/WB_KIMI_ROADSHOW_BRIEF.md
+docs/RELEASE_CANDIDATE_CHECK.md
+roadshow/*PPT制作计划.md

@@ -32,7 +32,6 @@ FILES = (
     "demo_data/skdj_demo.csv",
     "demo_data/status_chain_board_real_sample.html",
     "docs/ARCHITECTURE.md",
-    "docs/WB_KIMI_ROADSHOW_BRIEF.md",
     "divergence_td9_scanner.py",
     "five_rankings_daily.py",
     "nd100_resonance_scanner.py",
