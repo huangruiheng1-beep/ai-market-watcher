@@ -7,7 +7,7 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 |---|---|
 | `.env.example` | `8eb82ae51512431523ef551d4fba944821abbbaf91ef3ba1c5b2560b07197a3e` |
 | `.gitignore` | `937424c46f8b3c79361d490a6c55b11f2c528d1815186f8a9311651db257a9b5` |
-| `README.md` | `d93bcdb684c0afee7caecae3eff2bf9519c5c745450e4be012525a52003b4f3a` |
+| `README.md` | `0a9b415cb59c68c1c8e938600ff3abf48b9bee8ad266a27d4d8f71e7c2c3e424` |
 | `demo_data/README.md` | `219a5eb7679524d7562c9b37175860e21fe25a203865e42c5c12a4e72e84eb18` |
 | `demo_data/divergence_td9_demo.csv` | `09842c93fd387db2f76ffa140e592b6ec901a02b7c82caced0fad7c559eb261f` |
 | `demo_data/five_rankings_demo.csv` | `ee1100aa403ff134fb9ff8ad50eef4953da843617c652c21bc7b06309456de43` |

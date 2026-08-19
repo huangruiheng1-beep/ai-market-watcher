@@ -520,7 +520,7 @@ section { position: relative; }
   gap: 0.8rem;
   min-height: 200px;
 }
-.day-1 { background: var(--bone); }
+.day-1 { background: var(--ink); color: var(--bone); }
 .day-2 { background: var(--cobalt); color: var(--bone); }
 .day-3 { background: var(--vermillion); color: var(--bone); }
 
@@ -549,7 +549,9 @@ section { position: relative; }
   letter-spacing: 0.05em;
 }
 .day-2 .state, .day-3 .state { background: var(--bone); color: var(--ink); }
+.day-1 .state { background: var(--vermillion); color: var(--bone); }
 .day p { font-size: 0.88rem; opacity: 0.8; line-height: 1.5; }
+.status-note { margin-top: 0.9rem; font-size: 0.82rem; line-height: 1.5; opacity: 0.72; }
 
 @media (max-width: 720px) {
   .days { grid-template-columns: 1fr; }
@@ -1160,8 +1162,8 @@ html[lang^="en"] .t-en { display: inline; }
       <span class="t-en">From single-day signal,<br>to <span class="" style="color:var(--bone);background:var(--ink);padding:0 0.3em;">continuous state</span>.</span>
     </h2>
     <p class="sec-lead">
-      <span class="t-zh">这是可以连续运行多天的底部状态追踪器。下面的三格只是星期天路演用来解释状态变化的示例，不是产品只能追踪三天。</span>
-      <span class="t-en">This bottom status tracker can run across as many days as the workflow continues. The three cards below are only a Sunday roadshow example, not a three-day product limit.</span>
+      <span class="t-zh">这是可以连续运行多天的底部状态追踪器，状态会随着每次扫描持续累积。</span>
+      <span class="t-en">This bottom status tracker can run across as many days as the workflow continues, accumulating state with each scan.</span>
     </p>
     <div class="days">
       <div class="day day-1">
@@ -1183,6 +1185,10 @@ html[lang^="en"] .t-en { display: inline; }
         <p><span class="t-zh">可能推进到 TRIGGER→CONFIRM，可能回破失效开新 episode，也可能仍待观察。所有路径都被记录。</span><span class="t-en">May advance to TRIGGER→CONFIRM, may break and fail (opening a new episode), or may still hold. All paths are logged.</span></p>
       </div>
     </div>
+    <p class="status-note">
+      <span class="t-zh">说明：下面三格只是星期天路演用来解释状态变化的示例，不是产品只能追踪三天。</span>
+      <span class="t-en">Note: the three cards below are only a Sunday roadshow example, not a three-day product limit.</span>
+    </p>
   </div>
 </section>
 
@@ -1242,8 +1248,8 @@ html[lang^="en"] .t-en { display: inline; }
       <span class="t-en">Install and configure,<br><span class="em-cobalt">start here</span>.</span>
     </h2>
     <p class="sec-lead">
-      <span class="t-zh">安装只需做一次。配置自己的数据源 Key 后，每次启动 Agent 都会按批次抓取行情、更新底部状态链并生成报告。</span>
-      <span class="t-en">Install once. After configuring your own data-source key, each Agent run fetches quotes in batches, updates the bottom status chain, and generates reports.</span>
+      <span class="t-zh">安装只需做一次。配置自己的数据源 Key 后，每次启动 Agent 都会按批次抓取行情、更新底部状态链并生成报告。本工具不绑定某一个 Agent，可配合 Codex、Claude、WorkBuddy 等支持终端和本地文件的 Agent 使用。</span>
+      <span class="t-en">Install once. After configuring your own data-source key, each Agent run fetches quotes in batches, updates the bottom status chain, and generates reports. The workflow is not tied to one Agent and can be used with Codex, Claude, WorkBuddy, and other agents that support terminals and local files.</span>
     </p>
     <div class="install-grid">
       <div class="install-block install">
