@@ -9,7 +9,7 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `.gitignore` | `b3b8f35a75d7c1f4be9024fcdb53e1b59a540d32ae84000503d0cbf77b16cee5` |
 | `DATE_POLICY.md` | `a34a770014743adf040f079f5ad814441acc54e81a0c360206614e2a3b9707c2` |
 | `PROJECT_CONTEXT.md` | `609272cc32537332704b8fffa575446c1203330f0d9101283bd1e581bfc227bb` |
-| `README.md` | `ee288e782904ce19df45c99d5eaef87e2eed460dc21bab9cc54923e82117b4d8` |
+| `README.md` | `078d97dec815c772555680f3a231a4ff60d742b28208ec24a7f14ebe2f7344fa` |
 | `demo_data/README.md` | `219a5eb7679524d7562c9b37175860e21fe25a203865e42c5c12a4e72e84eb18` |
 | `demo_data/divergence_td9_demo.csv` | `09842c93fd387db2f76ffa140e592b6ec901a02b7c82caced0fad7c559eb261f` |
 | `demo_data/five_rankings_demo.csv` | `ee1100aa403ff134fb9ff8ad50eef4953da843617c652c21bc7b06309456de43` |
@@ -23,9 +23,9 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `nd100_resonance_scanner.py` | `48c8d3f37dcac783af06c15515fbb391aa29a4360f902c5bb40ab466d7dbd92b` |
 | `publish_daily_reports.py` | `3d87615bd8ae5394cf60c295ecf760d863dbc71fd9eb5075117c36d5ebe00152` |
 | `requirements.txt` | `9c8b6a3b299d8e8ddfb5f6387f59ce7f8d26a76f44f73b68a2a308e1d8764ecf` |
-| `run_daily.py` | `a2078f88e419ac7b2254e414e6f2e14e0f3aa854d2acb4fddc6b2cbf885e26cb` |
+| `run_daily.py` | `4899885e88d3a306a2b0d9c627a32914bfe81d6d4faa17b06706a59a6a3d01ad` |
 | `run_demo.py` | `cafeb1ef9d2c5e0c975f08cf478990e7d308394cb4c546033c2d6243f0076377` |
-| `run_live.py` | `df88a09161d8fab712a653215a74ce7210b120ca69a897de292e47b2a830c8fd` |
+| `run_live.py` | `f9bfe7cda07fab7103665efc4a98f567bed4776d8e95f80447285a4a6cb26bdf` |
 | `run_nd100_t9_workflow.py` | `6afc57021b6d01a31ad08973c8d549a78b43a061cb57f202751cf239775684ab` |
 | `scripts/build_release.py` | `88fd2a213993ddde013731c264563ae9569d04d08451a95e5fb46e5a6d4f3bc3` |
 | `scripts/migrate_report_dates.py` | `28e2ff187b5b85e96463b4dcf6b6f5270a3ec90103b814a08e50b4e392334c63` |
@@ -33,7 +33,7 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `status_chain_ingest.py` | `f4254be588563e85b1a41ac84efc2b186c025a0c5e685a1c42822156d8c88d72` |
 | `status_chain_rules.py` | `d4b514eff05210194cd552d2785d5f750a4a92ea930eb9a26e0e3574ed5f466d` |
 | `status_chain_tracker.py` | `235d416ef144d20af3ce581704f9c16209ca5d65ee93a3129a854d60e8f7e2f6` |
-| `tests/test_run_daily.py` | `533fecc53488a221696905459bddd7e16c19cafd99227d09b9043feb1145d590` |
+| `tests/test_run_daily.py` | `e438dc00c7fb41c16c2f5e277a62e6132ed16ae5597b604ce994cd36fa93efab` |
 | `tests/test_skdj_scanner.py` | `1ed67d260e29f134cd8c7932c50a8a4d3200af0e4912d985a5e5d2ba6df906c6` |
 | `tests/test_status_chain.py` | `d2478564391bc1ca1cd1e5e6495d9f16969b088858e38d59b4d1e3fa47f7fd41` |
 | `tests/validate_release.py` | `fe35c307c759b39f2a3998dd9d8316cc53d29abd27d3bfb8954afe34ac1daab4` |

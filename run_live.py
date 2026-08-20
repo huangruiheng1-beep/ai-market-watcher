@@ -13,11 +13,12 @@ from zoneinfo import ZoneInfo
 from datetime import datetime
 
 from nd100_resonance_scanner import load_twelve_data_key
-from run_daily import csv_market_date
+from run_daily import csv_market_date, daily_report_complete
 
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "output"
+RESUME_MARKER = OUT / ".live-workflow-resume.json"
 
 
 def run(*args: str) -> None:
@@ -45,6 +46,28 @@ def main() -> int:
 
     OUT.mkdir(parents=True, exist_ok=True)
     py = sys.executable
+
+    # A sleep, terminal close or Agent restart may leave the canonical ND100
+    # input after acquisition. Resume that exact input before making another
+    # API request.
+    if RESUME_MARKER.is_file():
+        try:
+            state = json.loads(RESUME_MARKER.read_text(encoding="utf-8"))
+            pending = Path(state["nd100_input"]).expanduser().resolve()
+            pending_date = csv_market_date(pending)
+        except (OSError, KeyError, TypeError, ValueError, RuntimeError, json.JSONDecodeError):
+            RESUME_MARKER.unlink(missing_ok=True)
+        else:
+            if daily_report_complete(pending_date):
+                print(f"[reuse] {pending_date} 正式日报已完成，清理续跑标记。")
+                RESUME_MARKER.unlink(missing_ok=True)
+                return 0
+            print(f"[resume] 接管中断后的 ND100 输入: {pending}")
+            run(py, "run_daily.py", "--nd100-input", str(pending),
+                "--retry", str(args.retry), "--retry-delay", str(args.retry_delay))
+            RESUME_MARKER.unlink(missing_ok=True)
+            return 0
+
     resonance = None
     market_date = None
     for attempt in range(args.retry + 1):
@@ -91,8 +114,13 @@ def main() -> int:
     formal_resonance_manifest.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    RESUME_MARKER.write_text(
+        json.dumps({"nd100_input": str(formal_resonance), "market_date": market_date}, indent=2) + "\n",
+        encoding="utf-8",
+    )
     run(py, "run_daily.py", "--nd100-input", str(formal_resonance),
         "--retry", str(args.retry), "--retry-delay", str(args.retry_delay))
+    RESUME_MARKER.unlink(missing_ok=True)
 
     print("\n[live roadshow ready]")
     print(f"  market_date: {market_date}")

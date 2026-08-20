@@ -33,6 +33,37 @@ class WorkflowError(RuntimeError):
     pass
 
 
+def daily_expected_outputs(market_date: str) -> list[Path]:
+    return [
+        OUTPUT / f"five_rankings_{market_date}_daily.csv",
+        OUTPUT / f"five_rankings_{market_date}_daily.html",
+        OUTPUT / f"five_rankings_{market_date}_daily_manifest.json",
+        OUTPUT / f"skdj_{market_date}_daily.csv",
+        OUTPUT / f"skdj_{market_date}_daily.html",
+        OUTPUT / f"skdj_{market_date}_daily_manifest.json",
+        OUTPUT / f"status_chain_board_{market_date}.html",
+        OUTPUT / "daily" / market_date,
+        OUTPUT / "daily" / market_date / f"divergence_td9_{market_date}.csv",
+        OUTPUT / "daily" / market_date / f"divergence_td9_{market_date}.html",
+        OUTPUT / "daily" / market_date / f"divergence_td9_{market_date}_manifest.json",
+    ]
+
+
+def daily_report_complete(market_date: str) -> bool:
+    if not all(path.exists() for path in daily_expected_outputs(market_date)):
+        return False
+    for manifest in (
+        OUTPUT / f"five_rankings_{market_date}_daily_manifest.json",
+        OUTPUT / f"skdj_{market_date}_daily_manifest.json",
+    ):
+        try:
+            if json.loads(manifest.read_text(encoding="utf-8")).get("report_date") != market_date:
+                return False
+        except (OSError, json.JSONDecodeError):
+            return False
+    return True
+
+
 def normalize_market_date(value: str) -> str:
     raw = value.strip()[:10].replace("-", "")
     if not re.fullmatch(r"20\d{6}", raw):
@@ -70,17 +101,8 @@ def csv_market_date(path: Path) -> str:
 
 
 def assert_no_existing_formal_report(market_date: str) -> None:
-    candidates = [
-        OUTPUT / f"nd100_resonance_{market_date}.csv",
-        OUTPUT / f"five_rankings_{market_date}_daily.csv",
-        OUTPUT / f"skdj_{market_date}_daily.csv",
-        OUTPUT / "daily" / market_date,
-    ]
-    existing = [str(path) for path in candidates if path.exists()]
-    if existing:
-        raise WorkflowError(
-            f"日期门禁：{market_date} 已有正式产物，禁止覆盖: {', '.join(existing)}"
-        )
+    if daily_report_complete(market_date):
+        raise WorkflowError(f"日期门禁：{market_date} 已有完整正式日报，自动复用而不是覆盖")
 
 
 @contextmanager
@@ -91,7 +113,18 @@ def single_instance():
     try:
         lock.mkdir()
     except FileExistsError as exc:
-        raise WorkflowError(f"已有日报任务运行中: {lock}") from exc
+        pid_path = lock / "pid"
+        try:
+            pid = int(pid_path.read_text(encoding="ascii").strip())
+            os.kill(pid, 0)
+        except (FileNotFoundError, ValueError, ProcessLookupError):
+            shutil.rmtree(lock, ignore_errors=True)
+            lock.mkdir()
+            print(f"[resume] 清理过期日报锁: {lock}")
+        except PermissionError:
+            raise WorkflowError(f"无法确认日报锁状态，拒绝并发运行: {lock}") from exc
+        else:
+            raise WorkflowError(f"已有日报任务运行中: {lock} pid={pid}") from exc
     try:
         (lock / "pid").write_text(str(os.getpid()), encoding="ascii")
         yield
@@ -130,17 +163,9 @@ def patch_manifest(path: Path, market_date: str) -> None:
 
 
 def verify_outputs(market_date: str, run_dir: Path) -> None:
-    expected = [
-        OUTPUT / f"five_rankings_{market_date}_daily.csv",
-        OUTPUT / f"five_rankings_{market_date}_daily.html",
-        OUTPUT / f"five_rankings_{market_date}_daily_manifest.json",
-        OUTPUT / f"skdj_{market_date}_daily.csv",
-        OUTPUT / f"skdj_{market_date}_daily.html",
-        OUTPUT / f"skdj_{market_date}_daily_manifest.json",
-        OUTPUT / f"status_chain_board_{market_date}.html",
+    expected = daily_expected_outputs(market_date) + [
         run_dir / f"divergence_td9_{market_date}_t9.csv",
         run_dir / f"divergence_td9_{market_date}_t9.html",
-        OUTPUT / "daily" / market_date,
     ]
     missing = [str(path) for path in expected if not path.exists()]
     if missing:
@@ -162,46 +187,75 @@ def run_reports(inputs: list[Path], market_date: str, cache_only: bool, run_id: 
     for path in inputs:
         input_args += ["--nd100-input", str(path)]
 
-    run_command(py, "five_rankings_daily.py", *input_args,
-                "--output-tag", tag)
-    five_csv = rename_tagged("five_rankings", tag, market_date, ".csv", f"five_rankings_{market_date}_daily.csv")
-    rename_tagged("five_rankings", tag, market_date, ".html", f"five_rankings_{market_date}_daily.html")
-    five_manifest = rename_tagged("five_rankings", tag, market_date, "_manifest.json", f"five_rankings_{market_date}_daily_manifest.json")
-    patch_manifest(five_manifest, market_date)
+    five_csv = OUTPUT / f"five_rankings_{market_date}_daily.csv"
+    five_parts = [
+        five_csv,
+        OUTPUT / f"five_rankings_{market_date}_daily.html",
+        OUTPUT / f"five_rankings_{market_date}_daily_manifest.json",
+    ]
+    if all(path.exists() for path in five_parts):
+        print(f"[resume] 五榜单已完成，跳过: {market_date}")
+    else:
+        run_command(py, "five_rankings_daily.py", *input_args,
+                    "--output-tag", tag)
+        five_csv = rename_tagged("five_rankings", tag, market_date, ".csv", f"five_rankings_{market_date}_daily.csv")
+        rename_tagged("five_rankings", tag, market_date, ".html", f"five_rankings_{market_date}_daily.html")
+        five_manifest = rename_tagged("five_rankings", tag, market_date, "_manifest.json", f"five_rankings_{market_date}_daily_manifest.json")
+        patch_manifest(five_manifest, market_date)
 
     run_dir = OUTPUT / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
     t9_args = [py, "run_nd100_t9_workflow.py", *input_args, "--run-id", run_id]
     if cache_only:
         t9_args.append("--cache-only")
-    run_command(*t9_args)
-    t9_matches = sorted(run_dir.glob("divergence_td9_*_t9.csv"))
-    if len(t9_matches) != 1:
-        raise WorkflowError(f"无法唯一定位 T9 CSV: {[str(path) for path in t9_matches]}")
-    t9_csv = run_dir / f"divergence_td9_{market_date}_t9.csv"
-    if t9_matches[0] != t9_csv:
-        t9_matches[0].rename(t9_csv)
-    t9_html_matches = sorted(run_dir.glob("divergence_td9_*_t9.html"))
-    if len(t9_html_matches) != 1:
-        raise WorkflowError(f"无法唯一定位 T9 HTML: {[str(path) for path in t9_html_matches]}")
-    t9_html = run_dir / f"divergence_td9_{market_date}_t9.html"
-    if t9_html_matches[0] != t9_html:
-        t9_html_matches[0].rename(t9_html)
-    run_manifest = run_dir / "run_manifest.json"
-    if run_manifest.is_file():
-        payload = json.loads(run_manifest.read_text(encoding="utf-8"))
-        payload["report_date"] = market_date
-        payload["market_date"] = f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}"
-        run_manifest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    existing_t9 = sorted(
+        path for path in (OUTPUT / "runs").glob("*")
+        if path.is_dir()
+        and (path / f"divergence_td9_{market_date}_t9.csv").is_file()
+        and (path / f"divergence_td9_{market_date}_t9.html").is_file()
+    )
+    if existing_t9:
+        run_dir = existing_t9[-1]
+        t9_csv = run_dir / f"divergence_td9_{market_date}_t9.csv"
+        print(f"[resume] T9 已完成，继续使用: {run_dir}")
+    else:
+        run_command(*t9_args)
+        t9_matches = sorted(run_dir.glob("divergence_td9_*_t9.csv"))
+        if len(t9_matches) != 1:
+            raise WorkflowError(f"无法唯一定位 T9 CSV: {[str(path) for path in t9_matches]}")
+        t9_csv = run_dir / f"divergence_td9_{market_date}_t9.csv"
+        if t9_matches[0] != t9_csv:
+            t9_matches[0].rename(t9_csv)
+        t9_html_matches = sorted(run_dir.glob("divergence_td9_*_t9.html"))
+        if len(t9_html_matches) != 1:
+            raise WorkflowError(f"无法唯一定位 T9 HTML: {[str(path) for path in t9_html_matches]}")
+        t9_html = run_dir / f"divergence_td9_{market_date}_t9.html"
+        if t9_html_matches[0] != t9_html:
+            t9_html_matches[0].rename(t9_html)
+        run_manifest = run_dir / "run_manifest.json"
+        if run_manifest.is_file():
+            payload = json.loads(run_manifest.read_text(encoding="utf-8"))
+            payload["report_date"] = market_date
+            payload["market_date"] = f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}"
+            run_manifest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     skdj_args = [py, "skdj_scanner.py", *input_args, "--cache-only", "--output-tag", tag]
     if not cache_only:
         skdj_args.remove("--cache-only")
-    run_command(*skdj_args)
-    skdj_csv = rename_tagged("skdj", tag, market_date, ".csv", f"skdj_{market_date}_daily.csv")
-    rename_tagged("skdj", tag, market_date, ".html", f"skdj_{market_date}_daily.html")
-    skdj_manifest = rename_tagged("skdj", tag, market_date, "_manifest.json", f"skdj_{market_date}_daily_manifest.json")
-    patch_manifest(skdj_manifest, market_date)
+    skdj_csv = OUTPUT / f"skdj_{market_date}_daily.csv"
+    skdj_parts = [
+        skdj_csv,
+        OUTPUT / f"skdj_{market_date}_daily.html",
+        OUTPUT / f"skdj_{market_date}_daily_manifest.json",
+    ]
+    if all(path.exists() for path in skdj_parts):
+        print(f"[resume] SKDJ 已完成，跳过: {market_date}")
+    else:
+        run_command(*skdj_args)
+        skdj_csv = rename_tagged("skdj", tag, market_date, ".csv", f"skdj_{market_date}_daily.csv")
+        rename_tagged("skdj", tag, market_date, ".html", f"skdj_{market_date}_daily.html")
+        skdj_manifest = rename_tagged("skdj", tag, market_date, "_manifest.json", f"skdj_{market_date}_daily_manifest.json")
+        patch_manifest(skdj_manifest, market_date)
 
     db = OUTPUT / "status_chain.sqlite"
     reports = ",".join(str(path) for path in (*inputs, five_csv, t9_csv, skdj_csv))
