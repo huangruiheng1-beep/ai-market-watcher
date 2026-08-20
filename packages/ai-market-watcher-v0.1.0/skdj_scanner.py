@@ -435,7 +435,7 @@ CSS = """
   * { box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
          background: #f6f7f9; color: #1c2733; margin: 0; padding: 24px; }
-  .wrap { max-width: 1060px; margin: 0 auto; }
+  .wrap { max-width: none; margin: 0 auto; }
   .hd { display:flex; justify-content:space-between; align-items:flex-end;
         border-bottom: 3px solid #2c3e50; padding-bottom: 12px; margin-bottom: 18px; }
   .hd h1 { font-size: 23px; margin:0; font-weight:800; }
@@ -473,7 +473,7 @@ CSS = """
   .card .tk { font-size:17px; font-weight:800; }
   .card .lab { font-size:11.5px; color:#9a6b00; background:#fff8e6; border-radius:6px;
                padding:3px 9px; margin-left:8px; }
-  .card .vals { font-size:12.5px; color:#46535f; }
+  .card .vals { font-size:14px; color:#46535f; }
   .card .vals b { color:#1c2733; }
   .card .meta { font-size:11.5px; color:#8a96a3; margin-top:4px; }
   .empty { color:#8a96a3; font-size:12.5px; padding:6px 2px; }

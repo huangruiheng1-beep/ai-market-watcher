@@ -775,6 +775,15 @@ def _episode_chain_html(db, ticker):
 
 
 def _ticker_rows(db, rows):
+    state_label = {
+        "OBSERVE": "观察中",
+        "BASE": "底部形成",
+        "TRIGGER": "条件触发",
+        "CONFIRM": "已确认",
+        "INVALID": "已失效",
+        "EXPIRED": "已过期",
+        "NOISE": "噪音",
+    }
     out = []
     for r in rows:
         lt = _last_transition(db, r["ticker"])
@@ -783,7 +792,8 @@ def _ticker_rows(db, rows):
         inv = r["invalidation_level"]
         inv_s = f"{inv:.4f}" if inv is not None else "—"
         out.append(
-            f"<tr><td><span class='badge' style='background:{col}'>{st}</span>"
+            f"<tr><td><span class='badge' style='background:{col}'>{state_label.get(st, st)}"
+            f" <small>({st})</small></span>"
             f" {r['ticker']}</td>"
             f"<td>{r['current_state_since'] or ''}</td><td>{inv_s}</td>"
             f"<td>{(lt['trigger_signal'] if lt else '') or ''}</td>"
@@ -823,8 +833,8 @@ def gen_board_html(db, asof: Optional[str] = None) -> str:
 <style>
 body{{font-family:-apple-system,"PingFang SC",sans-serif;margin:20px;color:#222;background:#fafafa}}
 h1{{font-size:20px}} h2{{font-size:16px;margin-top:24px;border-left:4px solid #1F6FB0;padding-left:8px}}
-table{{border-collapse:collapse;width:100%;background:#fff;margin:8px 0;font-size:13px}}
-th,td{{border:1px solid #e0e0e0;padding:6px 8px;text-align:left;vertical-align:top}}
+table{{border-collapse:collapse;width:100%;background:#fff;margin:8px 0;font-size:14px}}
+th,td{{border:1px solid #e0e0e0;padding:8px 10px;text-align:left;vertical-align:top}}
 th{{background:#f0f4f8}} .badge{{color:#fff;padding:2px 8px;border-radius:3px;font-size:12px;margin-right:6px}}
 .detail{{color:#555;font-size:12px;max-width:320px;word-break:break-all}}
 .disclaimer{{background:#fff3cd;border:1px solid #ffe08a;padding:10px;border-radius:4px;margin:12px 0;font-size:13px;color:#856404;font-weight:bold}}
