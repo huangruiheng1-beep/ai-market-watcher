@@ -33,6 +33,43 @@ class WorkflowError(RuntimeError):
     pass
 
 
+def input_tickers(paths: list[Path]) -> list[str]:
+    tickers: list[str] = []
+    seen: set[str] = set()
+    for path in paths:
+        with path.open(newline="", encoding="utf-8-sig") as handle:
+            rows = list(csv.DictReader(handle))
+        current = [str(row.get("ticker") or "").strip().upper() for row in rows]
+        current = [ticker for ticker in current if ticker]
+        if len(current) != len(set(current)):
+            raise WorkflowError(f"输入文件存在重复 ticker: {path}")
+        for ticker in current:
+            if ticker in seen:
+                raise WorkflowError(f"批次之间存在重复 ticker: {ticker}")
+            seen.add(ticker)
+            tickers.append(ticker)
+    if not tickers:
+        raise WorkflowError("ND100 输入没有可用 ticker")
+    return tickers
+
+
+def validate_existing_scope(market_date: str, expected: set[str]) -> None:
+    checks = [
+        (OUTPUT / f"five_rankings_{market_date}_daily_manifest.json", "五榜单", "ticker_count", "tickers"),
+        (OUTPUT / f"skdj_{market_date}_daily_manifest.json", "SKDJ", "input_ticker_count", "input_tickers"),
+    ]
+    for manifest, label, count_key, tickers_key in checks:
+        if not manifest.is_file():
+            continue
+        payload = json.loads(manifest.read_text(encoding="utf-8"))
+        actual = {str(value).strip().upper() for value in payload.get(tickers_key, []) if str(value).strip()}
+        if payload.get(count_key) != len(expected) or actual != expected:
+            raise WorkflowError(
+                f"{label}与本次 ND100 输入范围不一致：应为 {len(expected)} 只，"
+                f"实际为 {payload.get(count_key)} 只；请不要复用旧报告，先清理/归档旧派生报告后重跑。"
+            )
+
+
 def daily_expected_outputs(market_date: str) -> list[Path]:
     return [
         OUTPUT / f"five_rankings_{market_date}_daily.csv",
@@ -196,8 +233,10 @@ def run_reports(inputs: list[Path], market_date: str, cache_only: bool, run_id: 
     if all(path.exists() for path in five_parts):
         print(f"[resume] 五榜单已完成，跳过: {market_date}")
     else:
-        run_command(py, "five_rankings_daily.py", *input_args,
-                    "--output-tag", tag)
+        five_args = [*input_args, "--output-tag", tag]
+        if cache_only:
+            five_args.append("--cache-only")
+        run_command(py, "five_rankings_daily.py", *five_args)
         five_csv = rename_tagged("five_rankings", tag, market_date, ".csv", f"five_rankings_{market_date}_daily.csv")
         rename_tagged("five_rankings", tag, market_date, ".html", f"five_rankings_{market_date}_daily.html")
         five_manifest = rename_tagged("five_rankings", tag, market_date, "_manifest.json", f"five_rankings_{market_date}_daily_manifest.json")
@@ -293,9 +332,11 @@ def main(argv: list[str] | None = None) -> int:
     if len(dates) != 1:
         raise SystemExit(f"日期门禁：输入批次日期不一致: {sorted(dates)}")
     market_date = dates.pop()
+    expected_tickers = set(input_tickers(inputs))
 
     try:
         with single_instance():
+            validate_existing_scope(market_date, expected_tickers)
             assert_no_existing_formal_report(market_date)
             run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
             for attempt in range(args.retry + 1):

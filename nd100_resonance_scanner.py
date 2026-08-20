@@ -239,8 +239,8 @@ def download_batch_with_retry(tickers, interval, period, max_retry=4):
     raise RuntimeError(f"Twelve Data {interval} 批量请求重试失败")
 
 
-def load_batch_or_download(tickers, interval, period, use_cache=True):
-    """读取仍在有效期内的缓存，其余股票在一次批量请求中更新。"""
+def load_batch_or_download(tickers, interval, period, use_cache=True, cache_only=False):
+    """读取有效缓存；cache_only 时允许复用已有历史缓存且不请求 API。"""
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     now = datetime.now(NY_TZ)
     result = {}
@@ -250,7 +250,7 @@ def load_batch_or_download(tickers, interval, period, use_cache=True):
         cache_file = CACHE_DIR / f"{tk}_{interval}.parquet"
         try:
             age = now.timestamp() - cache_file.stat().st_mtime
-            if use_cache and 0 <= age <= ttl:
+            if use_cache and (cache_only or 0 <= age <= ttl):
                 df = pd.read_parquet(cache_file)
                 if df is not None and len(df) > 0:
                     result[tk] = df

@@ -56,7 +56,7 @@ def load_or_download(ticker, interval, period, use_cache=True):
     return load_batch_or_download([ticker], interval, period, use_cache).get(ticker)
 
 
-def cache_status(tickers, use_cache):
+def cache_status(tickers, use_cache, cache_only=False):
     """记录本次扫描开始前各周期缓存状态，不泄露凭据。"""
     now = datetime.now().timestamp()
     ttl = {"60m": 5 * 60, "1d": 30 * 60, "1wk": 60 * 60}
@@ -67,7 +67,7 @@ def cache_status(tickers, use_cache):
             path = CACHE_DIR / f"{tk}_{interval}.parquet"
             try:
                 age = now - path.stat().st_mtime
-                if use_cache and 0 <= age <= ttl[interval] and path.stat().st_size > 0:
+                if use_cache and (cache_only or 0 <= age <= ttl[interval]) and path.stat().st_size > 0:
                     valid += 1
             except OSError:
                 pass
@@ -675,12 +675,12 @@ RANKINGS = [
 RANK_NAME = {r[0]: r[1] for r in RANKINGS}
 
 
-def scan(tickers, use_cache=True):
+def scan(tickers, use_cache=True, cache_only=False):
     """批量读取三个周期后，再逐只评分，避免逐股触发 API 限速。"""
     rows = []
     total = len(tickers)
     data = {
-        interval: load_batch_or_download(tickers, interval, period, use_cache)
+        interval: load_batch_or_download(tickers, interval, period, use_cache, cache_only)
         for interval, _, period in TIMEFRAMES
     }
     scan.last_meta = {
@@ -1032,6 +1032,7 @@ def main():
     ap.add_argument("--output-tag", help="追加到输出文件名，避免覆盖同日历史报告")
     ap.add_argument("--output-dir", help="输出目录；默认 output/")
     ap.add_argument("--no-cache", action="store_true", help="忽略本地缓存重新下载")
+    ap.add_argument("--cache-only", action="store_true", help="只读取现有缓存，缺失数据不请求 API")
     args = ap.parse_args()
 
     output_dir = Path(args.output_dir) if args.output_dir else OUTPUT_DIR
@@ -1047,6 +1048,8 @@ def main():
         source_files = []
         tickers = [r["ticker"] for r in rows]
     else:
+        if args.cache_only and args.no_cache:
+            ap.error("--cache-only 和 --no-cache 不能同时使用")
         use_cache = not args.no_cache
         cache_meta = {}
         input_paths = [Path(p).resolve() for p in (args.nd100_input or [])]
@@ -1073,10 +1076,10 @@ def main():
             source_label = "真实行情（API/缓存） · 当前ND100成分清单"
         print(f"\n=== 五榜单日报扫描 · ND100（真实数据）===")
         print(f"标的数: {len(tickers)}  周期: 60min/日线/周线  EMA: {EMA_FAST}/{EMA_SLOW}\n")
-        cache_meta = cache_status(tickers, use_cache)
+        cache_meta = cache_status(tickers, use_cache, args.cache_only)
         for interval, info in cache_meta.items():
             print(f"  [{interval}] {info['state']}")
-        rows = scan(tickers, use_cache)
+        rows = scan(tickers, use_cache, args.cache_only)
         print("\n[公司名] 获取中...")
         names = get_company_names([r["ticker"] for r in rows])
 
