@@ -1,1 +1,1 @@
-b2f411b5a6b77f03e0a8c2c15bc36132cca2ec9f018bf675de689c99d4828f8b  ai-market-watcher-v0.1.0.zip
+5e8cc7ba36ead145ed4dcaefd63f3aa59f383fa96727fc32b7f679bf205a371b  ai-market-watcher-v0.1.0.zip
