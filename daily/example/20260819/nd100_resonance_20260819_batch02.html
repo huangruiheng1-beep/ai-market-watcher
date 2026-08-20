@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ND100 多周期共振扫描 · 2026-08-19</title>
+<style>
+  :root {--bg:#f7f7f4;--card:#fff;--txt:#1a1a1a;--mut:#666;--bd:#e5e5e0;
+    --up:#c0392b;--dn:#1e8449;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.6;padding:24px;max-width:1100px;margin:0 auto}
+  .hd{border-bottom:2px solid #333;padding-bottom:14px;margin-bottom:20px}
+  .hd h1{font-size:22px;font-weight:600}
+  .hd .sub{color:var(--mut);font-size:13px;margin-top:4px}
+  .hd .meta{float:right;text-align:right;color:var(--mut);font-size:12px}
+  .hd .meta b{color:var(--txt)}
+  .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 28px}
+  .card{background:var(--card);border-radius:10px;padding:16px 14px;border-left:4px solid #ccc;
+    box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .card-num{font-size:30px;font-weight:700;line-height:1}
+  .card-name{font-size:14px;font-weight:600;margin-top:6px}
+  .card-desc{font-size:11px;color:var(--mut);margin-top:4px}
+  .lsec{background:var(--card);border-radius:10px;padding:18px 20px;margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .lsec h2{font-size:16px;font-weight:600;margin-bottom:12px}
+  .cnt{color:var(--mut);font-weight:400;font-size:13px}
+  .empty{color:var(--mut);font-size:13px;padding:8px 0}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--mut);font-weight:500;font-size:11px;
+    padding:8px 10px;border-bottom:1px solid var(--bd);text-transform:uppercase;letter-spacing:.5px}
+  td{padding:9px 10px;border-bottom:1px solid #f0f0ec;vertical-align:middle}
+  tr:hover td{background:#fafaf7}
+  .tk{font-weight:600;font-size:13px}
+  .nm{display:block;font-weight:400;font-size:11px;color:var(--mut);margin-top:1px}
+  .num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#444}
+  .chg{font-family:ui-monospace,monospace;font-weight:600}
+  .up{color:var(--up)} .down{color:var(--dn)}
+  .badge{display:inline-block;width:26px;height:22px;line-height:22px;text-align:center;
+    border-radius:5px;font-size:12px;font-weight:600}
+  .b{background:#eaf3de;color:#27500a}
+  .s{background:#fcebfa;color:#791f1f;background:#fcebeb}
+  .f{background:#f1efe8;color:#444}
+  .ft{margin-top:24px;padding-top:14px;border-top:1px solid var(--bd);
+    color:var(--mut);font-size:11px;line-height:1.7}
+  @media(max-width:680px){.summary{grid-template-columns:repeat(2,1fr)}}
+</style></head>
+<body>
+  <div class='hd'>
+    <div class='meta'>扫描时间<b><br>2026-08-19 03:38 ET</b><br>标的数<b> 50</b></div>
+    <h1>ND100 多周期共振扫描</h1>
+    <div class='sub'>60min / 日线 / 周线 · EMA(20/60) 排列方向 · 三周期同向 = 共振</div>
+  </div>
+  <div class='summary'>
+      <div class='card' style='border-left-color:#1D9E75'>
+        <div class='card-num' style='color:#1D9E75'>16</div>
+        <div class='card-name'>多头共振</div>
+        <div class='card-desc'>3 个周期 EMA20 全部在 EMA60 之上</div>
+      </div>
+      <div class='card' style='border-left-color:#D85A30'>
+        <div class='card-num' style='color:#D85A30'>3</div>
+        <div class='card-name'>空头共振</div>
+        <div class='card-desc'>3 个周期 EMA20 全部在 EMA60 之下</div>
+      </div>
+      <div class='card' style='border-left-color:#639922'>
+        <div class='card-num' style='color:#639922'>12</div>
+        <div class='card-name'>偏多</div>
+        <div class='card-desc'>2 多 1 空，尚未完全共振</div>
+      </div>
+      <div class='card' style='border-left-color:#BA7517'>
+        <div class='card-num' style='color:#BA7517'>18</div>
+        <div class='card-name'>偏空</div>
+        <div class='card-desc'>1 多 2 空，尚未完全共振</div>
+      </div>
+      <div class='card' style='border-left-color:#888780'>
+        <div class='card-num' style='color:#888780'>1</div>
+        <div class='card-name'>待定</div>
+        <div class='card-desc'>存在均线走平或数据不足</div>
+      </div></div>
+
+      <section class='lsec'>
+        <h2 style='color:#1D9E75'>多头共振 <span class='cnt'>(16)</span></h2>
+
+        <table class='ltab'>
+          <thead><tr>
+            <th>标的</th><th>日涨跌</th>
+            <th>60min</th><th>日线</th><th>周线</th>
+            <th>60min价</th><th>日线价</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class='tk'>LRCX<span class='nm'></span></td>
+              <td class='chg down'>-4.63%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>328.15</td>
+              <td class='num'>327.92</td>
+            </tr>
+            <tr>
+              <td class='tk'>LITE<span class='nm'></span></td>
+              <td class='chg down'>-9.87%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>872.43</td>
+              <td class='num'>873.31</td>
+            </tr>
+            <tr>
+              <td class='tk'>MRVL<span class='nm'></span></td>
+              <td class='chg down'>-7.82%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>216.03</td>
+              <td class='num'>216.0</td>
+            </tr>
+            <tr>
+              <td class='tk'>MU<span class='nm'></span></td>
+              <td class='chg down'>-7.02%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>941.5</td>
+              <td class='num'>940.76</td>
+            </tr>
+            <tr>
+              <td class='tk'>NBIS<span class='nm'></span></td>
+              <td class='chg down'>-7.60%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>248.47</td>
+              <td class='num'>248.43</td>
+            </tr>
+            <tr>
+              <td class='tk'>NVDA<span class='nm'></span></td>
+              <td class='chg down'>-2.34%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>219.8</td>
+              <td class='num'>219.74</td>
+            </tr>
+            <tr>
+              <td class='tk'>PLTR<span class='nm'></span></td>
+              <td class='chg down'>-0.59%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>171.59</td>
+              <td class='num'>171.54</td>
+            </tr>
+            <tr>
+              <td class='tk'>PANW<span class='nm'></span></td>
+              <td class='chg down'>-0.43%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>374.12</td>
+              <td class='num'>374.14</td>
+            </tr>
+            <tr>
+              <td class='tk'>REGN<span class='nm'></span></td>
+              <td class='chg up'>+0.53%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>810.24</td>
+              <td class='num'>810.24</td>
+            </tr>
+            <tr>
+              <td class='tk'>STX<span class='nm'></span></td>
+              <td class='chg down'>-9.16%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>903.39</td>
+              <td class='num'>903.68</td>
+            </tr>
+            <tr>
+              <td class='tk'>SHOP<span class='nm'></span></td>
+              <td class='chg down'>-1.39%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>146.6</td>
+              <td class='num'>146.58</td>
+            </tr>
+            <tr>
+              <td class='tk'>SBUX<span class='nm'></span></td>
+              <td class='chg down'>-1.77%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>106.02</td>
+              <td class='num'>106.01</td>
+            </tr>
+            <tr>
+              <td class='tk'>TTWO<span class='nm'></span></td>
+              <td class='chg up'>+0.33%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>242.41</td>
+              <td class='num'>242.4</td>
+            </tr>
+            <tr>
+              <td class='tk'>TER<span class='nm'></span></td>
+              <td class='chg down'>-8.77%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>403.79</td>
+              <td class='num'>404.29</td>
+            </tr>
+            <tr>
+              <td class='tk'>VRTX<span class='nm'></span></td>
+              <td class='chg up'>+2.45%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>527.98</td>
+              <td class='num'>528.19</td>
+            </tr>
+            <tr>
+              <td class='tk'>WBD<span class='nm'></span></td>
+              <td class='chg up'>+1.97%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>28.5</td>
+              <td class='num'>28.48</td>
+            </tr></tbody>
+        </table>
+      </section>
+      <section class='lsec'>
+        <h2 style='color:#D85A30'>空头共振 <span class='cnt'>(3)</span></h2>
+
+        <table class='ltab'>
+          <thead><tr>
+            <th>标的</th><th>日涨跌</th>
+            <th>60min</th><th>日线</th><th>周线</th>
+            <th>60min价</th><th>日线价</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class='tk'>META<span class='nm'></span></td>
+              <td class='chg down'>-4.45%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>543.73</td>
+              <td class='num'>543.67</td>
+            </tr>
+            <tr>
+              <td class='tk'>MSTR<span class='nm'></span></td>
+              <td class='chg down'>-5.28%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>92.55</td>
+              <td class='num'>92.52</td>
+            </tr>
+            <tr>
+              <td class='tk'>PDD<span class='nm'></span></td>
+              <td class='chg up'>+0.38%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>87.25</td>
+              <td class='num'>87.27</td>
+            </tr></tbody>
+        </table>
+      </section>
+      <section class='lsec'>
+        <h2 style='color:#639922'>偏多 <span class='cnt'>(12)</span></h2>
+
+        <table class='ltab'>
+          <thead><tr>
+            <th>标的</th><th>日涨跌</th>
+            <th>60min</th><th>日线</th><th>周线</th>
+            <th>60min价</th><th>日线价</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class='tk'>MAR<span class='nm'></span></td>
+              <td class='chg up'>+0.21%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>357.43</td>
+              <td class='num'>357.33</td>
+            </tr>
+            <tr>
+              <td class='tk'>MDLZ<span class='nm'></span></td>
+              <td class='chg up'>+0.77%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>62.67</td>
+              <td class='num'>62.66</td>
+            </tr>
+            <tr>
+              <td class='tk'>MNST<span class='nm'></span></td>
+              <td class='chg up'>+4.09%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>47.4</td>
+              <td class='num'>47.38</td>
+            </tr>
+            <tr>
+              <td class='tk'>PCAR<span class='nm'></span></td>
+              <td class='chg down'>-2.16%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>128.03</td>
+              <td class='num'>128.02</td>
+            </tr>
+            <tr>
+              <td class='tk'>PAYX<span class='nm'></span></td>
+              <td class='chg up'>+1.17%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>119.92</td>
+              <td class='num'>119.93</td>
+            </tr>
+            <tr>
+              <td class='tk'>PYPL<span class='nm'></span></td>
+              <td class='chg down'>-0.07%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>60.43</td>
+              <td class='num'>60.43</td>
+            </tr>
+            <tr>
+              <td class='tk'>RKLB<span class='nm'></span></td>
+              <td class='chg down'>-3.56%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>79.16</td>
+              <td class='num'>79.16</td>
+            </tr>
+            <tr>
+              <td class='tk'>ROP<span class='nm'></span></td>
+              <td class='chg up'>+1.14%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>394.17</td>
+              <td class='num'>394.17</td>
+            </tr>
+            <tr>
+              <td class='tk'>ROST<span class='nm'></span></td>
+              <td class='chg up'>+0.47%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>236.31</td>
+              <td class='num'>236.38</td>
+            </tr>
+            <tr>
+              <td class='tk'>SNDK<span class='nm'></span></td>
+              <td class='chg down'>-9.01%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>1625.0</td>
+              <td class='num'>1625.78</td>
+            </tr>
+            <tr>
+              <td class='tk'>WMT<span class='nm'></span></td>
+              <td class='chg up'>+0.76%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>115.21</td>
+              <td class='num'>115.2</td>
+            </tr>
+            <tr>
+              <td class='tk'>WDC<span class='nm'></span></td>
+              <td class='chg down'>-7.43%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>496.0</td>
+              <td class='num'>496.16</td>
+            </tr></tbody>
+        </table>
+      </section>
+      <section class='lsec'>
+        <h2 style='color:#BA7517'>偏空 <span class='cnt'>(18)</span></h2>
+
+        <table class='ltab'>
+          <thead><tr>
+            <th>标的</th><th>日涨跌</th>
+            <th>60min</th><th>日线</th><th>周线</th>
+            <th>60min价</th><th>日线价</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class='tk'>KLAC<span class='nm'></span></td>
+              <td class='chg down'>-5.33%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>194.86</td>
+              <td class='num'>194.79</td>
+            </tr>
+            <tr>
+              <td class='tk'>KHC<span class='nm'></span></td>
+              <td class='chg up'>+0.28%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>24.82</td>
+              <td class='num'>24.82</td>
+            </tr>
+            <tr>
+              <td class='tk'>LIN<span class='nm'></span></td>
+              <td class='chg up'>+0.92%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>478.63</td>
+              <td class='num'>478.7</td>
+            </tr>
+            <tr>
+              <td class='tk'>MELI<span class='nm'></span></td>
+              <td class='chg down'>-0.47%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>1779.42</td>
+              <td class='num'>1779.14</td>
+            </tr>
+            <tr>
+              <td class='tk'>MCHP<span class='nm'></span></td>
+              <td class='chg down'>-2.58%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>78.19</td>
+              <td class='num'>78.19</td>
+            </tr>
+            <tr>
+              <td class='tk'>MSFT<span class='nm'></span></td>
+              <td class='chg up'>+0.27%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>481.93</td>
+              <td class='num'>481.63</td>
+            </tr>
+            <tr>
+              <td class='tk'>MPWR<span class='nm'></span></td>
+              <td class='chg down'>-5.85%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>1333.85</td>
+              <td class='num'>1333.18</td>
+            </tr>
+            <tr>
+              <td class='tk'>NFLX<span class='nm'></span></td>
+              <td class='chg up'>+2.30%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>77.79</td>
+              <td class='num'>77.77</td>
+            </tr>
+            <tr>
+              <td class='tk'>NXPI<span class='nm'></span></td>
+              <td class='chg down'>-1.79%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>228.75</td>
+              <td class='num'>228.56</td>
+            </tr>
+            <tr>
+              <td class='tk'>ORLY<span class='nm'></span></td>
+              <td class='chg up'>+0.59%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>90.77</td>
+              <td class='num'>90.76</td>
+            </tr>
+            <tr>
+              <td class='tk'>ODFL<span class='nm'></span></td>
+              <td class='chg down'>-1.87%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>207.93</td>
+              <td class='num'>208.0</td>
+            </tr>
+            <tr>
+              <td class='tk'>PEP<span class='nm'></span></td>
+              <td class='chg up'>+1.37%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>140.11</td>
+              <td class='num'>140.13</td>
+            </tr>
+            <tr>
+              <td class='tk'>QCOM<span class='nm'></span></td>
+              <td class='chg down'>-1.23%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>160.27</td>
+              <td class='num'>160.19</td>
+            </tr>
+            <tr>
+              <td class='tk'>SNPS<span class='nm'></span></td>
+              <td class='chg down'>-2.13%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>404.46</td>
+              <td class='num'>404.41</td>
+            </tr>
+            <tr>
+              <td class='tk'>TMUS<span class='nm'></span></td>
+              <td class='chg up'>+1.46%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>182.76</td>
+              <td class='num'>182.75</td>
+            </tr>
+            <tr>
+              <td class='tk'>TSLA<span class='nm'></span></td>
+              <td class='chg down'>-0.72%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>336.89</td>
+              <td class='num'>336.87</td>
+            </tr>
+            <tr>
+              <td class='tk'>TXN<span class='nm'></span></td>
+              <td class='chg down'>-3.77%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td class='num'>272.14</td>
+              <td class='num'>272.24</td>
+            </tr>
+            <tr>
+              <td class='tk'>TRI<span class='nm'></span></td>
+              <td class='chg up'>+1.85%</td>
+              <td><span class='badge s'>空</span></td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge s'>空</span></td>
+              <td class='num'>100.93</td>
+              <td class='num'>100.89</td>
+            </tr></tbody>
+        </table>
+      </section>
+      <section class='lsec'>
+        <h2 style='color:#888780'>待定 <span class='cnt'>(1)</span></h2>
+
+        <table class='ltab'>
+          <thead><tr>
+            <th>标的</th><th>日涨跌</th>
+            <th>60min</th><th>日线</th><th>周线</th>
+            <th>60min价</th><th>日线价</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class='tk'>SPCX<span class='nm'></span></td>
+              <td class='chg down'>-1.98%</td>
+              <td><span class='badge b'>多</span></td>
+              <td><span class='badge'>-</span></td>
+              <td><span class='badge'>-</span></td>
+              <td class='num'>143.34</td>
+              <td class='num'>nan</td>
+            </tr></tbody>
+        </table>
+      </section>
+  <div class='ft'>
+    <b>读图说明</b>：<span class='badge b'>多</span> EMA20&gt;EMA60（多头排列）；
+    <span class='badge s'>空</span> EMA20&lt;EMA60（空头排列）；
+    <span class='badge f'>平</span> 均线走平。<br>
+    <b>使用方式</b>：本报告只输出"查看顺序"，不构成买卖建议。多头共振优先复核做多逻辑，
+    空头共振优先复核做空/规避逻辑，偏多/偏空等待周期收敛。<br>
+    <b>风险提示</b>：均线共振只反映趋势现状，不预测拐点；追入已走远的共振需配合结构、量能与风险维度复核。<br>
+    生成自 nd100_resonance_scanner.py · 对应 PPT《数字资产市场观察助手》趋势与多周期模块
+  </div>
+</body></html>

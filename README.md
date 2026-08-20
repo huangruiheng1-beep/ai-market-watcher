@@ -118,6 +118,8 @@ Agent 启动 → 每批 50 只 → Twelve Data 真实行情 → 4 个扫描器 �
 
 本地个人使用时，Daily 入口位于 `本地/daily/index.html`，7 天复盘入口位于 `本地/review/index.html`。GitHub Pages 保持现有地址不变；公开页面只保留上述一次案例快照，不同步本地 SQLite、缓存或后续个人日报。
 
+日报整理采用两层结构：`output/runs/` 保留 T9 的原始运行证据，`output/daily/YYYYMMDD/` 汇总当天面向阅读的正式报告。`publish_daily_reports.py` 只复制报告，不重新扫描或请求行情。
+
 ## 当前边界
 
 - SKDJ 参数、失效线容差、走远阈值等仍属候选规则，尚未完成充分历史验证。

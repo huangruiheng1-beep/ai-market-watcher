@@ -1,13 +1,13 @@
 {
   "report_date": "20260819",
-  "created_at": "2026-08-19T16:27:04",
-  "source_type": "nd100_csv",
-  "nd100_input_files": [
-    "output/nd100_resonance_20260819.csv",
-    "output/nd100_resonance_20260819_batch02.csv"
-  ],
-  "ticker_count": 100,
-  "tickers": [
+  "created_at": "2026-08-19T03:38:34-04:00",
+  "universe_type": "nasdaq100",
+  "universe_count_before_exclusion": 102,
+  "completed_input_files": {
+    "output/nd100_resonance_20260819.csv": 50
+  },
+  "completed_ticker_count": 50,
+  "excluded_completed_tickers": [
     "ADBE",
     "AMD",
     "ABNB",
@@ -57,7 +57,10 @@
     "INTC",
     "INTU",
     "ISRG",
-    "KDP",
+    "KDP"
+  ],
+  "scan_ticker_count": 50,
+  "scan_tickers": [
     "KLAC",
     "KHC",
     "LRCX",
@@ -109,30 +112,14 @@
     "WBD",
     "WDC"
   ],
-  "nd100_input_rows": {
-    "output/nd100_resonance_20260819.csv": 50,
-    "output/nd100_resonance_20260819_batch02.csv": 50
-  },
-  "market_data_access": {
-    "60m": {
-      "state": "全部使用有效缓存",
-      "valid_cache_count": 100
-    },
-    "1d": {
-      "state": "全部使用有效缓存",
-      "valid_cache_count": 100
-    },
-    "1wk": {
-      "state": "全部使用有效缓存",
-      "valid_cache_count": 100
-    }
-  },
-  "market_data_asof_by_interval": {
-    "60m": "2026-08-18 15:30 ET",
-    "1d": "2026-08-18 00:00 ET",
-    "1wk": "2026-08-17 00:00 ET"
-  },
-  "market_data_policy": "受保护 Twelve Data API；优先使用有效缓存，过期或缺失时请求 API",
+  "scan_limit": 50,
+  "scan_mode": "remaining_after_completed_input",
+  "data_access_policy": "优先使用有效缓存；缺失或过期时请求受保护 Twelve Data API",
   "historical_demo_files_used": false,
-  "note": "报告生成日不等于每只股票的行情截至日；具体截至时间以底层缓存/API数据为准。"
+  "market_data_asof_by_interval": {
+    "60min": "2026-08-18 15:30 ET",
+    "日线": "2026-08-18 00:00 ET",
+    "周线": "2026-08-17 00:00 ET"
+  },
+  "note": "报告生成日期不等于行情截至日期；本 manifest 记录本次输入和排除集合，防止续跑重复。"
 }

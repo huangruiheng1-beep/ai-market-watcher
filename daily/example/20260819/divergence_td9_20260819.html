@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang='zh-CN'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>背离 + TD9 扫描器 · ND100</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+         background: #f4f5f7; color: #1c2733; margin: 0; padding: 24px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  .hd { display:flex; justify-content:space-between; align-items:flex-end;
+        border-bottom: 3px solid #2c3e50; padding-bottom: 12px; margin-bottom: 18px; }
+  .hd h1 { font-size: 24px; margin:0; font-weight:800; letter-spacing:.3px; }
+  .hd .sub { font-size: 12.5px; color:#6b7785; margin-top:6px; }
+  .hd .meta { text-align:right; font-size:12px; color:#6b7785; line-height:1.6; }
+  .hd .meta b { color:#1c2733; }
+  .src { font-size:11px; background:#eef2f7; color:#3b556f; padding:2px 8px;
+         border-radius:10px; margin-left:8px; vertical-align:middle; }
+  .discipline { background:#fff8e6; border:1px solid #f3d98b; border-left:4px solid #e0a800;
+                border-radius:8px; padding:12px 16px; margin-bottom:18px; font-size:13px; line-height:1.7; }
+  .discipline b { color:#9a6b00; }
+  .stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  .stat { flex:1; min-width:120px; background:#fff; border-radius:10px; padding:14px 16px;
+          box-shadow:0 1px 3px rgba(0,0,0,.06); border-top:3px solid #cbd3dc; }
+  .stat .n { font-size:26px; font-weight:800; }
+  .stat .l { font-size:12px; color:#6b7785; margin-top:2px; }
+  .stat.bull { border-top-color:#c0392b; } .stat.bull .n { color:#c0392b; }
+  .stat.bear { border-top-color:#27865a; } .stat.bear .n { color:#27865a; }
+  .stat.td { border-top-color:#2c6fbf; } .stat.td .n { color:#2c6fbf; }
+  .stat.prog { border-top-color:#8e6bb0; } .stat.prog .n { color:#8e6bb0; }
+  .sec { margin:22px 0 10px; font-size:16px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .sec .tag { font-size:11px; font-weight:600; padding:2px 9px; border-radius:10px; color:#fff; }
+  .sec.bull .tag { background:#c0392b; } .sec.bear .tag { background:#27865a; }
+  .sec.prog .tag { background:#8e6bb0; } .sec.both .tag { background:#b9770e; }
+  .card { background:#fff; border-radius:10px; padding:14px 16px; margin-bottom:12px;
+          box-shadow:0 1px 3px rgba(0,0,0,.06); border-left:4px solid #cbd3dc; }
+  .card.bull { border-left-color:#c0392b; }
+  .card.bear { border-left-color:#27865a; }
+  .card.both { border-left-color:#b9770e; }
+  .card .chd { display:flex; justify-content:space-between; align-items:baseline; }
+  .card .tk { font-size:17px; font-weight:800; }
+  .card .nm { font-size:12px; color:#8a96a3; margin-left:6px; }
+  .card .px { font-size:12.5px; color:#6b7785; text-align:right; }
+  .card .px b { color:#1c2733; }
+  .badges { margin:10px 0 4px; display:flex; flex-wrap:wrap; gap:8px; }
+  .badge { font-size:12px; padding:5px 10px; border-radius:7px; font-weight:600; }
+  .badge.bull { background:#fdecea; color:#c0392b; border:1px solid #f3c5c0; }
+  .badge.bear { background:#e8f5ee; color:#27865a; border:1px solid #bfe3cd; }
+  .badge .bar { display:inline-block; height:5px; border-radius:3px; vertical-align:middle; margin-left:6px; }
+  .badge.bull .bar { background:#c0392b; } .badge.bear .bar { background:#27865a; }
+  .detail { font-size:12.5px; color:#46535f; margin:3px 0 0 2px; }
+  .levels { display:flex; gap:18px; margin-top:8px; font-size:12px; flex-wrap:wrap; }
+  .levels span b { font-weight:700; }
+  .lv-confirm { color:#27865a; } .lv-invalid { color:#c0392b; }
+  .wait { margin-top:8px; font-size:11.5px; color:#9a6b00; background:#fff8e6;
+          border-radius:6px; padding:5px 10px; display:inline-block; }
+  .empty { color:#8a96a3; font-size:12.5px; padding:6px 2px; }
+  .foot { margin-top:26px; font-size:11.5px; color:#8a96a3; line-height:1.7;
+          border-top:1px solid #e2e7ec; padding-top:12px; }
+</style></head>
+<body><div class='wrap'>
+  <div class='hd'>
+    <div>
+      <h1>背离 + TD9 扫描器 <span class='src'>yfinance 实盘</span></h1>
+      <div class='sub'>RSI/MACD 双线背离 · 价量背离 · TD Sequential · 只输出「动能疲劳 / 反转观察区」，不预测涨跌</div>
+    </div>
+    <div class='meta'>生成时间<b><br>2026-08-19 16:28</b><br>扫描 <b>31</b> 只 · ND100</div>
+  </div>
+
+  <div class='discipline'>
+    <b>⚠ 核心纪律（照抄 PPT 第 10 页）：</b>背离与 TD9 只负责「提醒动能疲劳」，<b>不负责买卖</b>。
+    每一个信号都标注了 <b>突破确认位</b> 与 <b>跌破失效位</b>——价格没确认前，它只是观察项，不是交易指令。
+    TD9 计数到 9 只是「进入疲劳区」，不代表马上反转，历史上经常「背了又背」。
+  </div>
+
+  <div class='stats'>
+    <div class='stat bull'><div class='n'>13</div><div class='l'>偏多提醒（底背离/TD9买）</div></div>
+    <div class='stat bear'><div class='n'>24</div><div class='l'>偏空提醒（顶背离/TD9卖）</div></div>
+    <div class='stat td'><div class='n'>9</div><div class='l'>TD9 已抵达 9</div></div>
+    <div class='stat prog'><div class='n'>0</div><div class='l'>TD9 进行中</div></div>
+  </div>
+
+  <div class='sec bull'><span class='tag'>BULL</span>偏多提醒 · 左侧观察（底背离 / TD9买） · 13 只</div><div class='card both'>
+    <div class='chd'><span><span class='tk'>LITE</span><span class='nm'></span></span><div class='px'>收盘 <b>873.31</b>  -9.87%<br>RSI 53.2 · MACD柱 16.5016 · 偏离EMA4.0% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>RSI顶背离<span class='bar' style='width:42px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:28px'></span></div></div>
+    <div class='detail'>· 价格新高 6.9%，RSI 降低 26.2（79.3→53.2）</div><div class='detail'>· 价格新低 -13.8%，MACD 抬高 2.2（-40.9→-38.8）</div><div class='detail'>· 价格新高 6.9%，MACD 降低 109.9（84.7→-25.2）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>594.84</b></span><span class='lv-invalid'>跌破失效 <b>837.56</b></span><span class='lv-confirm'>突破确认 <b>999.67</b></span><span class='lv-invalid'>跌破失效 <b>602.35</b></span><span class='lv-confirm'>突破确认 <b>594.84</b></span><span class='lv-invalid'>跌破失效 <b>837.56</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>MRVL</span><span class='nm'></span></span><div class='px'>收盘 <b>216.0</b>  -7.82%<br>RSI 50.3 · MACD柱 4.3542 · 偏离EMA0.9% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bull'>底量背离<span class='bar' style='width:23px'></span></div></div>
+    <div class='detail'>· 价格新高 126.1%，RSI 降低 24.7（68.2→43.5）</div><div class='detail'>· 价格新高 126.1%，MACD 降低 16.1（1.8→-14.3）</div><div class='detail'>· 价格新低 -13.2%，成交量萎缩 26%（抛压衰竭）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>162.9</b></span><span class='lv-invalid'>跌破失效 <b>210.99</b></span><span class='lv-confirm'>突破确认 <b>162.9</b></span><span class='lv-invalid'>跌破失效 <b>210.99</b></span><span class='lv-confirm'>突破确认 <b>240.18</b></span><span class='lv-invalid'>跌破失效 <b>163.4</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bull'>
+    <div class='chd'><span><span class='tk'>MSTR</span><span class='nm'></span></span><div class='px'>收盘 <b>92.52</b>  -5.28%<br>RSI 43.7 · MACD柱 0.4173 · 偏离EMA-4.1% · TD1/9</div></div>
+    <div class='badges'><div class='badge bull'>RSI底背离<span class='bar' style='width:46px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:45px'></span></div></div>
+    <div class='detail'>· 价格新低 -20.5%，RSI 抬高 8.7（30.4→39.1）</div><div class='detail'>· 价格新低 -20.5%，MACD 抬高 6.6（-12.5→-5.9）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>105.5</b></span><span class='lv-invalid'>跌破失效 <b>91.67</b></span><span class='lv-confirm'>突破确认 <b>105.5</b></span><span class='lv-invalid'>跌破失效 <b>91.67</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>PANW</span><span class='nm'></span></span><div class='px'>收盘 <b>374.14</b>  -0.43%<br>RSI 59.8 · MACD柱 0.8615 · 偏离EMA3.4% · TD3/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:40px'></span></div><div class='badge bull'>底量背离<span class='bar' style='width:8px'></span></div></div>
+    <div class='detail'>· 价格新高 19.4%，RSI 降低 16.3（83.7→67.4）</div><div class='detail'>· 价格新高 19.4%，MACD 降低 4.0（25.1→21.0）</div><div class='detail'>· 价格新低 -2.0%，成交量萎缩 33%（抛压衰竭）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>308.54</b></span><span class='lv-invalid'>跌破失效 <b>358.68</b></span><span class='lv-confirm'>突破确认 <b>308.54</b></span><span class='lv-invalid'>跌破失效 <b>358.68</b></span><span class='lv-confirm'>突破确认 <b>398.88</b></span><span class='lv-invalid'>跌破失效 <b>314.15</b></span><span class='lv-confirm'>突破确认 <b>374.14</b></span><span class='lv-invalid'>跌破失效 <b>385.04</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>CRWD</span><span class='nm'></span></span><div class='px'>收盘 <b>212.92</b>  -0.46%<br>RSI 57.7 · MACD柱 0.3088 · 偏离EMA2.6% · TD3/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div><div class='badge bear'>RSI顶背离<span class='bar' style='width:34px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:23px'></span></div><div class='badge bull'>底量背离<span class='bar' style='width:10px'></span></div></div>
+    <div class='detail'>· 价格新高 7.8%，RSI 降低 17.2（86.7→69.5）</div><div class='detail'>· 价格新高 7.8%，MACD 降低 7.9（17.3→9.4）</div><div class='detail'>· 价格新低 -4.2%，成交量萎缩 23%（抛压衰竭）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>174.14</b></span><span class='lv-invalid'>跌破失效 <b>210.73</b></span><span class='lv-confirm'>突破确认 <b>174.14</b></span><span class='lv-invalid'>跌破失效 <b>210.73</b></span><span class='lv-confirm'>突破确认 <b>227.5</b></span><span class='lv-invalid'>跌破失效 <b>179.38</b></span><span class='lv-confirm'>突破确认 <b>212.92</b></span><span class='lv-invalid'>跌破失效 <b>225.16</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>PLTR</span><span class='nm'></span></span><div class='px'>收盘 <b>171.54</b>  -0.59%<br>RSI 65.7 · MACD柱 2.3383 · 偏离EMA9.7% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div><div class='badge bull'>RSI底背离<span class='bar' style='width:25px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:14px'></span></div><div class='badge bull'>底量背离<span class='bar' style='width:6px'></span></div></div>
+    <div class='detail'>· 价格新低 -11.1%，RSI 抬高 4.6（38.7→43.3）</div><div class='detail'>· 价格新低 -7.7%，MACD 抬高 0.4（-1.9→-1.5）</div><div class='detail'>· 价格新低 -3.6%，成交量萎缩 11%（抛压衰竭）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>180.18</b></span><span class='lv-invalid'>跌破失效 <b>122.26</b></span><span class='lv-confirm'>突破确认 <b>180.18</b></span><span class='lv-invalid'>跌破失效 <b>122.26</b></span><span class='lv-confirm'>突破确认 <b>180.18</b></span><span class='lv-invalid'>跌破失效 <b>122.26</b></span><span class='lv-confirm'>突破确认 <b>171.54</b></span><span class='lv-invalid'>跌破失效 <b>179.01</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>PDD</span><span class='nm'></span></span><div class='px'>收盘 <b>87.27</b>  +0.38%<br>RSI 50.4 · MACD柱 -0.5252 · 偏离EMA-0.2% · TD6/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div><div class='badge bull'>RSI底背离<span class='bar' style='width:40px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:34px'></span></div><div class='badge bear'>顶量背离<span class='bar' style='width:17px'></span></div></div>
+    <div class='detail'>· 价格新低 -14.1%，RSI 抬高 13.0（33.7→46.7）</div><div class='detail'>· 价格新低 -17.9%，MACD 抬高 1.2（-1.1→0.1）</div><div class='detail'>· 价格新高 7.3%，成交量萎缩 40%（上涨无量）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>93.19</b></span><span class='lv-invalid'>跌破失效 <b>82.66</b></span><span class='lv-confirm'>突破确认 <b>93.19</b></span><span class='lv-invalid'>跌破失效 <b>82.66</b></span><span class='lv-confirm'>突破确认 <b>83.65</b></span><span class='lv-invalid'>跌破失效 <b>93.0</b></span><span class='lv-confirm'>突破确认 <b>87.27</b></span><span class='lv-invalid'>跌破失效 <b>91.03</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>REGN</span><span class='nm'></span></span><div class='px'>收盘 <b>810.24</b>  +0.53%<br>RSI 78.5 · MACD柱 2.8361 · 偏离EMA6.6% · TD2/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:39px'></span></div><div class='badge bull'>RSI底背离<span class='bar' style='width:32px'></span></div></div>
+    <div class='detail'>· 价格新低 -5.1%，RSI 抬高 19.6（29.3→48.9）</div><div class='detail'>· 价格新低 -11.1%，MACD 抬高 16.7（-8.3→8.4）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>821.02</b></span><span class='lv-invalid'>跌破失效 <b>651.18</b></span><span class='lv-confirm'>突破确认 <b>821.02</b></span><span class='lv-invalid'>跌破失效 <b>651.18</b></span><span class='lv-confirm'>突破确认 <b>810.24</b></span><span class='lv-invalid'>跌破失效 <b>784.36</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>WBD</span><span class='nm'></span></span><div class='px'>收盘 <b>28.48</b>  +1.97%<br>RSI 71.9 · MACD柱 0.2647 · 偏离EMA5.5% · TD9/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div><div class='badge bull'>底量背离<span class='bar' style='width:9px'></span></div></div>
+    <div class='detail'>· 价格新低 -3.5%，成交量萎缩 25%（抛压衰竭）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>28.55</b></span><span class='lv-invalid'>跌破失效 <b>25.28</b></span><span class='lv-confirm'>突破确认 <b>28.48</b></span><span class='lv-invalid'>跌破失效 <b>27.65</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card both'>
+    <div class='chd'><span><span class='tk'>FANG</span><span class='nm'></span></span><div class='px'>收盘 <b>210.02</b>  +1.81%<br>RSI 63.4 · MACD柱 1.1581 · 偏离EMA5.9% · TD7/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell(进行中)<span class='bar' style='width:35px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:24px'></span></div><div class='badge bear'>RSI顶背离<span class='bar' style='width:23px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:6px'></span></div><div class='badge bull'>RSI底背离<span class='bar' style='width:5px'></span></div><div class='badge bull'>底量背离<span class='bar' style='width:4px'></span></div></div>
+    <div class='detail'>· 价格新低 -2.8%，RSI 抬高 0.3（42.8→43.1）</div><div class='detail'>· 价格新高 12.4%，RSI 降低 0.2（68.4→68.2）</div><div class='detail'>· 价格新低 -2.8%，MACD 抬高 1.5（0.1→1.6）</div><div class='detail'>· 价格新高 12.4%，MACD 降低 1.8（5.2→3.4）</div><div class='detail'>· 价格新低 -2.2%，成交量萎缩 6%（抛压衰竭）</div><div class='detail'>· TD Sequential 计数进行中 7/9（sell），接近疲劳区</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>210.41</b></span><span class='lv-invalid'>跌破失效 <b>186.17</b></span><span class='lv-confirm'>突破确认 <b>184.8</b></span><span class='lv-invalid'>跌破失效 <b>205.49</b></span><span class='lv-confirm'>突破确认 <b>210.41</b></span><span class='lv-invalid'>跌破失效 <b>186.17</b></span><span class='lv-confirm'>突破确认 <b>184.8</b></span><span class='lv-invalid'>跌破失效 <b>205.49</b></span><span class='lv-confirm'>突破确认 <b>210.41</b></span><span class='lv-invalid'>跌破失效 <b>186.17</b></span><span class='lv-confirm'>突破确认 <b>210.02</b></span><span class='lv-invalid'>跌破失效 <b>210.02</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span><span class='wait'>⏳ 尚未抵达 9，继续观察计数是否连续完成</span>
+  </div><div class='card bull'>
+    <div class='chd'><span><span class='tk'>GILD</span><span class='nm'></span></span><div class='px'>收盘 <b>143.44</b>  +3.25%<br>RSI 69.5 · MACD柱 0.9359 · 偏离EMA6.3% · TD6/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell(进行中)<span class='bar' style='width:34px'></span></div><div class='badge bull'>RSI底背离<span class='bar' style='width:24px'></span></div><div class='badge bull'>MACD底背离<span class='bar' style='width:10px'></span></div></div>
+    <div class='detail'>· 价格新低 -3.7%，RSI 抬高 15.4（32.0→47.4）</div><div class='detail'>· 价格新低 -3.7%，MACD 抬高 2.9（-2.3→0.6）</div><div class='detail'>· TD Sequential 计数进行中 6/9（sell），接近疲劳区</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>143.89</b></span><span class='lv-invalid'>跌破失效 <b>129.31</b></span><span class='lv-confirm'>突破确认 <b>143.89</b></span><span class='lv-invalid'>跌破失效 <b>129.31</b></span><span class='lv-confirm'>突破确认 <b>143.44</b></span><span class='lv-invalid'>跌破失效 <b>143.44</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span><span class='wait'>⏳ 尚未抵达 9，继续观察计数是否连续完成</span>
+  </div><div class='card bull'>
+    <div class='chd'><span><span class='tk'>META</span><span class='nm'></span></span><div class='px'>收盘 <b>543.67</b>  -4.45%<br>RSI 36.2 · MACD柱 -3.1832 · 偏离EMA-7.5% · TD3/9</div></div>
+    <div class='badges'><div class='badge bull'>MACD底背离<span class='bar' style='width:20px'></span></div></div>
+    <div class='detail'>· 价格新低 -10.6%，MACD 抬高 0.8（-7.3→-6.5）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>612.43</b></span><span class='lv-invalid'>跌破失效 <b>539.03</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bull'>
+    <div class='chd'><span><span class='tk'>AMGN</span><span class='nm'></span></span><div class='px'>收盘 <b>425.28</b>  +1.41%<br>RSI 74.3 · MACD柱 1.5132 · 偏离EMA6.1% · TD2/9</div></div>
+    <div class='badges'><div class='badge bull'>RSI底背离<span class='bar' style='width:6px'></span></div></div>
+    <div class='detail'>· 价格新低 -3.4%，RSI 抬高 0.7（49.4→50.1）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>427.39</b></span><span class='lv-invalid'>跌破失效 <b>355.25</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='sec bear'><span class='tag'>BEAR</span>偏空提醒 · 左侧观察（顶背离 / TD9卖） · 15 只</div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>AMD</span><span class='nm'></span></span><div class='px'>收盘 <b>484.39</b>  -4.27%<br>RSI 47.5 · MACD柱 1.86 · 偏离EMA-2.0% · TD3/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div></div>
+    <div class='detail'>· 价格新高 135.4%，RSI 降低 8.6（60.9→52.3）</div><div class='detail'>· 价格新高 153.2%，MACD 降低 2.7（-4.9→-7.6）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>463.21</b></span><span class='lv-invalid'>跌破失效 <b>518.58</b></span><span class='lv-confirm'>突破确认 <b>463.21</b></span><span class='lv-invalid'>跌破失效 <b>518.58</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>ASML</span><span class='nm'></span></span><div class='px'>收盘 <b>1802.98</b>  -4.26%<br>RSI 53.9 · MACD柱 19.162 · 偏离EMA2.0% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div></div>
+    <div class='detail'>· 价格新高 18.8%，RSI 降低 12.4（64.5→52.1）</div><div class='detail'>· 价格新高 10.4%，MACD 降低 30.5（38.5→8.0）</div><div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>1530.64</b></span><span class='lv-invalid'>跌破失效 <b>1803.0</b></span><span class='lv-confirm'>突破确认 <b>1530.64</b></span><span class='lv-invalid'>跌破失效 <b>1803.0</b></span><span class='lv-confirm'>突破确认 <b>1802.98</b></span><span class='lv-invalid'>跌破失效 <b>1989.44</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span><span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>LRCX</span><span class='nm'></span></span><div class='px'>收盘 <b>327.92</b>  -4.63%<br>RSI 52.3 · MACD柱 5.6073 · 偏离EMA2.5% · TD6/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>TD9Sell(进行中)<span class='bar' style='width:34px'></span></div></div>
+    <div class='detail'>· 价格新高 33.0%，RSI 降低 8.2（58.2→50.0）</div><div class='detail'>· 价格新高 33.0%，MACD 降低 15.9（1.7→-14.2）</div><div class='detail'>· TD Sequential 计数进行中 6/9（sell），接近疲劳区</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>293.65</b></span><span class='lv-invalid'>跌破失效 <b>317.74</b></span><span class='lv-confirm'>突破确认 <b>293.65</b></span><span class='lv-invalid'>跌破失效 <b>317.74</b></span><span class='lv-confirm'>突破确认 <b>327.92</b></span><span class='lv-invalid'>跌破失效 <b>433.33</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span><span class='wait'>⏳ 尚未抵达 9，继续观察计数是否连续完成</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>MU</span><span class='nm'></span></span><div class='px'>收盘 <b>940.76</b>  -7.02%<br>RSI 52.2 · MACD柱 15.8588 · 偏离EMA2.6% · TD5/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>TD9Sell(进行中)<span class='bar' style='width:32px'></span></div></div>
+    <div class='detail'>· 价格新高 112.6%，RSI 降低 13.6（66.1→52.5）</div><div class='detail'>· 价格新高 114.5%，MACD 降低 24.5（14.0→-10.5）</div><div class='detail'>· TD Sequential 计数进行中 5/9（sell），接近疲劳区</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>737.88</b></span><span class='lv-invalid'>跌破失效 <b>990.21</b></span><span class='lv-confirm'>突破确认 <b>737.88</b></span><span class='lv-invalid'>跌破失效 <b>990.21</b></span><span class='lv-confirm'>突破确认 <b>940.76</b></span><span class='lv-invalid'>跌破失效 <b>1213.56</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span><span class='wait'>⏳ 尚未抵达 9，继续观察计数是否连续完成</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>NBIS</span><span class='nm'></span></span><div class='px'>收盘 <b>248.43</b>  -7.6%<br>RSI 56.6 · MACD柱 8.7605 · 偏离EMA11.1% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div></div>
+    <div class='detail'>· 价格新高 73.8%，RSI 降低 12.9（68.2→55.3）</div><div class='detail'>· 价格新高 73.8%，MACD 降低 11.5（5.0→-6.5）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>180.63</b></span><span class='lv-invalid'>跌破失效 <b>225.74</b></span><span class='lv-confirm'>突破确认 <b>180.63</b></span><span class='lv-invalid'>跌破失效 <b>225.74</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>STX</span><span class='nm'></span></span><div class='px'>收盘 <b>903.68</b>  -9.16%<br>RSI 53.1 · MACD柱 16.014 · 偏离EMA3.1% · TD5/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>TD9Sell(进行中)<span class='bar' style='width:32px'></span></div></div>
+    <div class='detail'>· 价格新高 97.0%，RSI 降低 10.6（60.7→50.1）</div><div class='detail'>· 价格新高 97.0%，MACD 降低 24.6（6.1→-18.5）</div><div class='detail'>· TD Sequential 计数进行中 5/9（sell），接近疲劳区</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>761.8</b></span><span class='lv-invalid'>跌破失效 <b>856.13</b></span><span class='lv-confirm'>突破确认 <b>761.8</b></span><span class='lv-invalid'>跌破失效 <b>856.13</b></span><span class='lv-confirm'>突破确认 <b>903.68</b></span><span class='lv-invalid'>跌破失效 <b>994.79</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span><span class='wait'>⏳ 尚未抵达 9，继续观察计数是否连续完成</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>TER</span><span class='nm'></span></span><div class='px'>收盘 <b>404.29</b>  -8.77%<br>RSI 54.4 · MACD柱 6.7465 · 偏离EMA4.2% · TD5/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:46px'></span></div><div class='badge bear'>TD9Sell(进行中)<span class='bar' style='width:32px'></span></div></div>
+    <div class='detail'>· 价格新高 24.8%，RSI 降低 2.1（60.2→58.1）</div><div class='detail'>· 价格新高 24.8%，MACD 降低 9.2（5.3→-3.9）</div><div class='detail'>· TD Sequential 计数进行中 5/9（sell），接近疲劳区</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>364.26</b></span><span class='lv-invalid'>跌破失效 <b>403.56</b></span><span class='lv-confirm'>突破确认 <b>364.26</b></span><span class='lv-invalid'>跌破失效 <b>403.56</b></span><span class='lv-confirm'>突破确认 <b>404.29</b></span><span class='lv-invalid'>跌破失效 <b>483.84</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span><span class='wait'>⏳ 尚未抵达 9，继续观察计数是否连续完成</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>BKR</span><span class='nm'></span></span><div class='px'>收盘 <b>64.44</b>  -0.71%<br>RSI 63.0 · MACD柱 0.366 · 偏离EMA4.0% · TD9/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div></div>
+    <div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>64.44</b></span><span class='lv-invalid'>跌破失效 <b>64.81</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>FAST</span><span class='nm'></span></span><div class='px'>收盘 <b>51.27</b>  +0.08%<br>RSI 63.9 · MACD柱 0.1033 · 偏离EMA2.8% · TD4/9</div></div>
+    <div class='badges'><div class='badge bear'>TD9Sell<span class='bar' style='width:42px'></span></div></div>
+    <div class='detail'>· TD Sequential 计数抵达 9，进入动能疲劳区（sell  exhaustion）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>51.27</b></span><span class='lv-invalid'>跌破失效 <b>52.38</b></span></div>
+    <span class='wait'>⏳ 疲劳≠反转：等价格确认，跌破 Setup 极值即失效</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>TTWO</span><span class='nm'></span></span><div class='px'>收盘 <b>242.4</b>  +0.33%<br>RSI 50.3 · MACD柱 -0.2735 · 偏离EMA-0.2% · TD4/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:35px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:31px'></span></div></div>
+    <div class='detail'>· 价格新高 16.2%，RSI 降低 4.7（65.2→60.5）</div><div class='detail'>· 价格新高 16.2%，MACD 降低 1.5（3.3→1.7）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>239.52</b></span><span class='lv-invalid'>跌破失效 <b>253.57</b></span><span class='lv-confirm'>突破确认 <b>239.52</b></span><span class='lv-invalid'>跌破失效 <b>253.57</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>KDP</span><span class='nm'></span></span><div class='px'>收盘 <b>30.79</b>  +1.68%<br>RSI 51.3 · MACD柱 0.0602 · 偏离EMA0.7% · TD4/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:27px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:14px'></span></div></div>
+    <div class='detail'>· 价格新高 7.4%，RSI 降低 12.0（67.8→55.7）</div><div class='detail'>· 价格新高 7.4%，MACD 降低 0.6（0.5→-0.1）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>28.66</b></span><span class='lv-invalid'>跌破失效 <b>31.57</b></span><span class='lv-confirm'>突破确认 <b>28.66</b></span><span class='lv-invalid'>跌破失效 <b>31.57</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>ABNB</span><span class='nm'></span></span><div class='px'>收盘 <b>183.25</b>  +2.21%<br>RSI 70.6 · MACD柱 2.1861 · 偏离EMA9.7% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:22px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:14px'></span></div></div>
+    <div class='detail'>· 价格新高 11.8%，RSI 降低 0.9（63.5→62.6）</div><div class='detail'>· 价格新高 6.2%，MACD 降低 2.3（3.6→1.3）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>148.65</b></span><span class='lv-invalid'>跌破失效 <b>153.11</b></span><span class='lv-confirm'>突破确认 <b>148.65</b></span><span class='lv-invalid'>跌破失效 <b>153.11</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>VRTX</span><span class='nm'></span></span><div class='px'>收盘 <b>528.19</b>  +2.45%<br>RSI 64.8 · MACD柱 3.0005 · 偏离EMA5.3% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>顶量背离<span class='bar' style='width:17px'></span></div></div>
+    <div class='detail'>· 价格新高 8.0%，成交量萎缩 37%（上涨无量）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>502.29</b></span><span class='lv-invalid'>跌破失效 <b>529.65</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>SBUX</span><span class='nm'></span></span><div class='px'>收盘 <b>106.01</b>  -1.77%<br>RSI 51.8 · MACD柱 0.1257 · 偏离EMA0.1% · TD1/9</div></div>
+    <div class='badges'><div class='badge bear'>顶量背离<span class='bar' style='width:16px'></span></div><div class='badge bear'>RSI顶背离<span class='bar' style='width:15px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:12px'></span></div></div>
+    <div class='detail'>· 价格新高 6.8%，RSI 降低 2.6（65.7→63.2）</div><div class='detail'>· 价格新高 6.8%，MACD 降低 0.0（1.6→1.5）</div><div class='detail'>· 价格新高 3.6%，成交量萎缩 64%（上涨无量）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>101.8</b></span><span class='lv-invalid'>跌破失效 <b>108.37</b></span><span class='lv-confirm'>突破确认 <b>101.8</b></span><span class='lv-invalid'>跌破失效 <b>108.37</b></span><span class='lv-confirm'>突破确认 <b>101.8</b></span><span class='lv-invalid'>跌破失效 <b>108.37</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='card bear'>
+    <div class='chd'><span><span class='tk'>SHOP</span><span class='nm'></span></span><div class='px'>收盘 <b>146.58</b>  -1.39%<br>RSI 58.9 · MACD柱 0.9346 · 偏离EMA4.7% · TD3/9</div></div>
+    <div class='badges'><div class='badge bear'>RSI顶背离<span class='bar' style='width:10px'></span></div><div class='badge bear'>MACD顶背离<span class='bar' style='width:8px'></span></div></div>
+    <div class='detail'>· 价格新高 5.0%，RSI 降低 1.2（63.2→62.0）</div><div class='detail'>· 价格新高 3.7%，MACD 降低 1.2（3.4→2.2）</div>
+    <div class='levels'><span class='lv-confirm'>突破确认 <b>115.27</b></span><span class='lv-invalid'>跌破失效 <b>130.28</b></span><span class='lv-confirm'>突破确认 <b>115.27</b></span><span class='lv-invalid'>跌破失效 <b>130.28</b></span></div>
+    <span class='wait'>⏳ 等待价格确认（突破确认位 / 跌破失效位）</span>
+  </div><div class='sec'><span class='tag' style='background:#9aa7b3'>QUIET</span>今日安静 · 无明显背离/TD9 · 3 只</div><div class='card none'>
+    <div class='chd'><span><span class='tk'>APP</span><span class='nm'></span></span><div class='px'>收盘 <b>307.26</b>  -1.51%<br>RSI 29.2 · MACD柱 -4.1063 · 偏离EMA-15.5% · TD1/9</div></div>
+    <div class='badges'></div>
+
+    <div class='levels'></div>
+
+  </div><div class='card none'>
+    <div class='chd'><span><span class='tk'>DXCM</span><span class='nm'></span></span><div class='px'>收盘 <b>89.6</b>  +0.95%<br>RSI 66.0 · MACD柱 0.4708 · 偏离EMA6.5% · TD2/9</div></div>
+    <div class='badges'></div>
+
+    <div class='levels'></div>
+
+  </div><div class='card none'>
+    <div class='chd'><span><span class='tk'>NVDA</span><span class='nm'></span></span><div class='px'>收盘 <b>219.74</b>  -2.34%<br>RSI 56.6 · MACD柱 1.2144 · 偏离EMA2.1% · TD1/9</div></div>
+    <div class='badges'></div>
+
+    <div class='levels'></div>
+
+  </div>
+
+  <div class='foot'>
+    方法学：RSI(14) / MACD(12,26,9) / 成交量 基于日线；背离取最近 120 根内最后两个 swing 高低点比较；
+    TD Sequential 用收盘价与前第 4 根比较连续计数。本工具为《数字资产市场观察助手》PPT 工作流的代码复刻，
+    <b>仅供观察与复盘，不构成任何投资建议</b>。数据源：yfinance 实盘。
+  </div>
+</div></body></html>
