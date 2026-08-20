@@ -1,5 +1,5 @@
 {
-  "report_date": "20260819",
+  "report_date": "20260818",
   "created_at": "2026-08-19T16:36:14",
   "timeframe": "1d",
   "formula_profile": "candidate_skdj_9_3_v1",
@@ -18,8 +18,8 @@
   "min_bars_rule": "max(60, n + 2*m + 10)",
   "source": "real",
   "input_file": [
-    "output/nd100_resonance_20260819.csv",
-    "output/nd100_resonance_20260819_batch02.csv"
+    "output/nd100_resonance_20260818.csv",
+    "output/nd100_resonance_20260818_batch02.csv"
   ],
   "input_ticker_count": 100,
   "input_tickers": [
@@ -138,5 +138,10 @@
     "待人工分类": 4,
     "普通区": 80,
     "数据不足": 2
+  },
+  "market_date": "2026-08-18",
+  "date_semantics": {
+    "report_date": "文件/行情归档日",
+    "market_date": "本次输入所覆盖的最新完整美股交易日"
   }
 }

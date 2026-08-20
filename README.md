@@ -1,5 +1,9 @@
 # 博士雷达 · AI 投研市场观察助手
 
+运行扫描前必须先读取 [DATE_POLICY.md](DATE_POLICY.md) 和通用项目背景 [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)。GitHub 仓库是供其他用户复制使用的独立版本，不依赖任何特定用户的本地 WB 工作区、缓存或报告。
+
+如需把项目背景直接复制到其他 Agent 或终端，请使用通用版：[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)。它只使用相对路径和占位符，不包含个人机器路径。
+
 “博士雷达”是本项目的对外名称。当前版本以纳斯达克 100 作为默认示例股票池，把多周期趋势、五榜单、背离/TD9、SKDJ 与跨日状态追踪串联起来；股票池可按后续版本扩展到标普 500 或其他市场范围。
 
 > 本项目只整理观察顺序和状态过程，不预测涨跌，不构成任何交易指令或投资建议。
@@ -9,7 +13,7 @@
 - GitHub 仓库：<https://github.com/huangruiheng1-beep/ai-market-watcher>
 - 路演网页：<https://huangruiheng1-beep.github.io/ai-market-watcher/roadshow/>
 - 每日研究日报入口：<https://huangruiheng1-beep.github.io/ai-market-watcher/daily/>
-- 公开案例快照：日报入口默认展示 2026-08-19 的一次真实案例；后续个人日报默认不上传。
+- 公开案例快照：日报入口默认展示 2026-08-18 的一次真实案例；后续个人日报默认不上传。
 - 第一版 ZIP：<https://github.com/huangruiheng1-beep/ai-market-watcher/releases>
 
 ## 它包含什么

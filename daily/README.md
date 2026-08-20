@@ -1,6 +1,6 @@
 # 每日研究日报统一入口 · 文件说明
 
-本目录是「博士雷达 · 每日研究日报」的前端入口。页面沿用 `roadshow/index.html` 的 MOSAIC 设计系统；当前默认展示一次 `2026-08-19` 公开案例，包含背离 + TD9，后续个人日报默认只留在本地。
+本目录是「博士雷达 · 每日研究日报」的前端入口。页面沿用 `roadshow/index.html` 的 MOSAIC 设计系统；当前默认展示一次 `2026-08-18` 公开案例，包含背离 + TD9，后续个人日报默认只留在本地。
 
 设计语言完全沿用 `../roadshow/index.html` 的 MOSAIC 设计系统（4 色：Ink / Bone / Cobalt / Vermillion），保持同一产品的视觉连续性。
 
@@ -38,14 +38,14 @@
 
 ```bash
 cd "/Users/huangruiheng/WorkBuddy/博士ppt"
-./.venv/bin/python daily_dashboard.py --date 20260819
+./.venv/bin/python daily_dashboard.py --date 20260818
 ```
 
 生成文件：
 
 ```text
 release/ai-market-watcher/daily/data/daily_data.js
-release/ai-market-watcher/daily/data/daily_data_20260819.js
+release/ai-market-watcher/daily/data/daily_data_20260818.js
 ```
 
 然后双击打开：
@@ -56,7 +56,7 @@ release/ai-market-watcher/daily/index.html
 
 入口会读取当天正式的 ND100、五榜、SKDJ 和状态链结果。带 `smoke`、`test`、`demo`、`synthetic` 的文件不会进入正式日报；缺少正式报告时会显示“未生成”。
 
-当前 2026-08-19 的验证结果：
+当前 2026-08-18 的验证结果：
 
 - 扫描股票：100 只；
 - 正式工具：4/5；

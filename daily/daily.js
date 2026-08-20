@@ -1,7 +1,7 @@
 /* 博士雷达 · 每日研究日报。数据由 daily_dashboard.py 生成到 data/daily_data.js。 */
 (function () {
   'use strict';
-  var DEMO = {isDemo:true,date:'2026-08-19',reportStatus:'演示占位',scanCount:100,dataStatus:'占位 · 未接真实',asof:'占位',summary:{complete:'—',scanCount:100,rankingFocus:'—',divergence:'—',skdjObserve:'—',statusCount:'—',exceptions:'—'},exceptions:[],tools:{},rows:[
+  var DEMO = {isDemo:true,date:'2026-08-18',reportStatus:'演示占位',scanCount:100,dataStatus:'占位 · 未接真实',asof:'占位',summary:{complete:'—',scanCount:100,rankingFocus:'—',divergence:'—',skdjObserve:'—',statusCount:'—',exceptions:'—'},exceptions:[],tools:{},rows:[
     {ticker:'AAPL',name:'Apple',resonance:'共振',rankings:'②背离观察',divergence:'底背离',skdj:'超跌',statuschain:'BASE'},
     {ticker:'NVDA',name:'NVIDIA',resonance:'共振',rankings:'①已确认',divergence:'无结果',skdj:'无结果',statuschain:'CONFIRM'},
     {ticker:'MSFT',name:'Microsoft',resonance:'单边',rankings:'③强趋势',divergence:'TD9≥9',skdj:'回调',statuschain:'OBSERVE'},
