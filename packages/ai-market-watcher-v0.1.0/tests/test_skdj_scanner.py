@@ -305,9 +305,8 @@ class TestCsvManifestMetadata(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             skdj.main(["--source", "synthetic", "--output-dir", tmp,
                        "--output-tag", "t10"])
-            today = pd.Timestamp.now().strftime("%Y%m%d")
-            csv_path = Path(tmp) / f"skdj_{today}_t10.csv"
-            man_path = Path(tmp) / f"skdj_{today}_t10_manifest.json"
+            csv_path = next(Path(tmp).glob("skdj_*_t10.csv"))
+            man_path = csv_path.with_name(csv_path.stem + "_manifest.json")
             self.assertTrue(csv_path.exists())
             self.assertTrue(man_path.exists())
 

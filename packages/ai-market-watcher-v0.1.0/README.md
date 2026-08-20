@@ -1,5 +1,9 @@
 # 博士雷达 · AI 投研市场观察助手
 
+运行扫描前必须先读取 [DATE_POLICY.md](DATE_POLICY.md) 和通用项目背景 [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)。GitHub 仓库是供其他用户复制使用的独立版本，不依赖任何特定用户的本地 WB 工作区、缓存或报告。
+
+如需把项目背景直接复制到其他 Agent 或终端，请使用通用版：[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)。它只使用相对路径和占位符，不包含个人机器路径。
+
 “博士雷达”是本项目的对外名称。当前版本以纳斯达克 100 作为默认示例股票池，把多周期趋势、五榜单、背离/TD9、SKDJ 与跨日状态追踪串联起来；股票池可按后续版本扩展到标普 500 或其他市场范围。
 
 > 本项目只整理观察顺序和状态过程，不预测涨跌，不构成任何交易指令或投资建议。
@@ -8,6 +12,8 @@
 
 - GitHub 仓库：<https://github.com/huangruiheng1-beep/ai-market-watcher>
 - 路演网页：<https://huangruiheng1-beep.github.io/ai-market-watcher/roadshow/>
+- 每日研究日报入口：<https://huangruiheng1-beep.github.io/ai-market-watcher/daily/>
+- 公开案例快照：日报入口默认展示 2026-08-18 的一次真实案例；后续个人日报默认不上传。
 - 第一版 ZIP：<https://github.com/huangruiheng1-beep/ai-market-watcher/releases>
 
 ## 它包含什么
@@ -100,6 +106,21 @@ Agent 启动 → 每批 50 只 → Twelve Data 真实行情 → 4 个扫描器 �
 
 真实行情会写入本地 `cache/` 和 `output/`，这两个目录不会被 Git 提交。底部状态追踪器的 SQLite 会在本地持续累积，可以连续运行多天，不是每天重置。
 
+## 完整日报：统一入口
+
+当 ND100 批次已经完成后，使用统一总控入口，不要分别手动启动多个扫描器：
+
+```bash
+python run_daily.py \
+  --nd100-input output/nd100_resonance_20260819_batch01.csv \
+  --nd100-input output/nd100_resonance_20260819_batch02.csv \
+  --cache-only
+```
+
+它会先读取 CSV 内的真实 `日线_数据截至`，再检查同日正式报告；日期不一致、同日已有报告或已有任务锁时会停止，不会覆盖历史结果。通过门禁后才运行五榜、T9、SKDJ、状态链和日报整理。失败可用 `--retry 2 --retry-delay 120` 重试。
+
+ND100 扫描、缓存刷新和完整日报是三个阶段。自动调度器应先完成行情获取并产出完整 ND100 CSV，再调用 `run_daily.py`；不要让定时器直接裸跑 `nd100_resonance_scanner.py`。
+
 ## 数据与隐私
 
 - API Key 只在本地读取，不写入代码、报告、日志或 SQLite。
@@ -110,16 +131,23 @@ Agent 启动 → 每批 50 只 → Twelve Data 真实行情 → 4 个扫描器 �
 
 本工具是本地终端工作流，不绑定某一个 Agent。配置好环境和数据源 Key 后，可以配合 Codex、Claude、WorkBuddy 等支持终端和本地文件操作的 Agent 使用；Agent 负责启动命令、读取报告和继续解释结果，API Key 仍只保留在用户本地。
 
+`run_daily.py` 是不依赖某个 Agent 的稳定边界：WB 只负责按计划启动它、等待它完成并汇报退出状态；GitHub 下载者可以在终端直接运行同一入口。规则、日期门禁、重试和单实例保护都在项目文件里，而不是藏在聊天提示词中。
+
+本项目不设置后台定时运行。需要开始工作时，由用户明确告诉 Agent 开始；Agent 再调用统一入口并自动处理日期、缓存和报告冲突。
+
 ## 下一阶段路线图
 
-- **7 天复盘工具（规划中）**：基于连续状态链，汇总一周内的信号、状态变化、失效与人工复核记录，形成可回放的复盘报告。
-- 7 天复盘目前尚未包含在 v0.1.0 的可运行工具中；网站提前展示它，是为了说明产品后续扩展方向，不代表当前已经交付。
+- **7 天复盘工具**：工作区已提供 `seven_day_review.py`，可基于连续状态链汇总一周内的信号、状态变化、失效与人工复核记录，形成复盘报告。当前公开 v0.1.0 压缩包仍是此前快照，未随本次工作区改动重打包。
+
+本地个人使用时，Daily 入口位于 `本地/daily/index.html`，7 天复盘入口位于 `本地/review/index.html`。GitHub Pages 保持现有地址不变；公开页面只保留上述一次案例快照，不同步本地 SQLite、缓存或后续个人日报。
+
+日报整理采用两层结构：`output/runs/` 保留 T9 的原始运行证据，`output/daily/YYYYMMDD/` 汇总当天面向阅读的正式报告。`publish_daily_reports.py` 只复制报告，不重新扫描或请求行情。
 
 ## 当前边界
 
 - SKDJ 参数、失效线容差、走远阈值等仍属候选规则，尚未完成充分历史验证。
 - 项目不连接券商，不自动下单，不承诺收益率或胜率。
-- 7 天复盘闭环仍在规划中，当前版本只提供单次扫描与跨日状态链基础能力。
+- 7 天复盘的有效性结论仍需积累真实记录；样本不足时工具会明确标记，不把部分数据当成完整验证。
 
 ## 项目资料
 

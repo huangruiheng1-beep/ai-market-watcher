@@ -6,8 +6,10 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | File | SHA-256 |
 |---|---|
 | `.env.example` | `8eb82ae51512431523ef551d4fba944821abbbaf91ef3ba1c5b2560b07197a3e` |
-| `.gitignore` | `937424c46f8b3c79361d490a6c55b11f2c528d1815186f8a9311651db257a9b5` |
-| `README.md` | `0a9b415cb59c68c1c8e938600ff3abf48b9bee8ad266a27d4d8f71e7c2c3e424` |
+| `.gitignore` | `b3b8f35a75d7c1f4be9024fcdb53e1b59a540d32ae84000503d0cbf77b16cee5` |
+| `DATE_POLICY.md` | `a34a770014743adf040f079f5ad814441acc54e81a0c360206614e2a3b9707c2` |
+| `PROJECT_CONTEXT.md` | `c365c4093caca41ee8bd4685a2e2d923db1e35a42467f88708ceffa76c7032ac` |
+| `README.md` | `f54597c93baf090c86b68b9e5670dcb03e7221b5b28e17db291c0d575a71ef05` |
 | `demo_data/README.md` | `219a5eb7679524d7562c9b37175860e21fe25a203865e42c5c12a4e72e84eb18` |
 | `demo_data/divergence_td9_demo.csv` | `09842c93fd387db2f76ffa140e592b6ec901a02b7c82caced0fad7c559eb261f` |
 | `demo_data/five_rankings_demo.csv` | `ee1100aa403ff134fb9ff8ad50eef4953da843617c652c21bc7b06309456de43` |
@@ -18,16 +20,19 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `docs/ARCHITECTURE.md` | `ffb527a8c3857cea711a8e91f7d649c1f46ba81b58d02e428f2d2ea7bfce4322` |
 | `five_rankings_daily.py` | `3b5bb6ad93b4a6696d8af79619e538477161c709a96b068b9c6f60cc24afb0ff` |
 | `nd100_resonance_scanner.py` | `e05c5dc9cbb3ba122475f7c5359df6a77ab6e71550cb0dc8da60e8ae9b9f2bc6` |
+| `publish_daily_reports.py` | `3d87615bd8ae5394cf60c295ecf760d863dbc71fd9eb5075117c36d5ebe00152` |
 | `requirements.txt` | `9c8b6a3b299d8e8ddfb5f6387f59ce7f8d26a76f44f73b68a2a308e1d8764ecf` |
+| `run_daily.py` | `a2078f88e419ac7b2254e414e6f2e14e0f3aa854d2acb4fddc6b2cbf885e26cb` |
 | `run_demo.py` | `2e8206c60b085c4b6a98555527df8a64715d0829940a1a18e00c25da3ca4b25e` |
-| `run_live.py` | `739b2f25022a7474b5cb3107e67645bb4077f326d2fcf89bdd27a73ab6399a05` |
+| `run_live.py` | `ffac7f294062c164f27df87a32d8ca941e32568aac5226c616cb946490ba4979` |
 | `run_nd100_t9_workflow.py` | `6afc57021b6d01a31ad08973c8d549a78b43a061cb57f202751cf239775684ab` |
-| `scripts/build_release.py` | `3a2c787fe5c68ce0306f71feee11eef4243932ae7ac662a2630a72125c0e9064` |
-| `skdj_scanner.py` | `af65bba4e7b77c6607fc2094a2c732270a2e6996387dd70c58529195b3c9f8e1` |
+| `scripts/build_release.py` | `3b0fe8707441884a8a60233e023765c437ceb335cbd9efcd47050cd43fd3e186` |
+| `skdj_scanner.py` | `9fe9990804159f6853c6cda68d75686b76345e0f032f8efaf906f735c552cc72` |
 | `status_chain_ingest.py` | `f4254be588563e85b1a41ac84efc2b186c025a0c5e685a1c42822156d8c88d72` |
 | `status_chain_rules.py` | `d4b514eff05210194cd552d2785d5f750a4a92ea930eb9a26e0e3574ed5f466d` |
 | `status_chain_tracker.py` | `235d416ef144d20af3ce581704f9c16209ca5d65ee93a3129a854d60e8f7e2f6` |
-| `tests/test_skdj_scanner.py` | `4271d0481eedddfc6fdc69d0e2b22c6b2b01f6052a3793714625088f7e3432db` |
+| `tests/test_run_daily.py` | `533fecc53488a221696905459bddd7e16c19cafd99227d09b9043feb1145d590` |
+| `tests/test_skdj_scanner.py` | `1ed67d260e29f134cd8c7932c50a8a4d3200af0e4912d985a5e5d2ba6df906c6` |
 | `tests/test_status_chain.py` | `d2478564391bc1ca1cd1e5e6495d9f16969b088858e38d59b4d1e3fa47f7fd41` |
 | `tests/validate_release.py` | `fe35c307c759b39f2a3998dd9d8316cc53d29abd27d3bfb8954afe34ac1daab4` |
 | `workflow_config.json` | `07e0ea61084df6f4c0410fb1b0b6e5b325b28e943c9af9140cdd5f6b631237f4` |

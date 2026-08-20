@@ -18,6 +18,11 @@ __pycache__/
 cache/
 output/*
 !output/.gitkeep
+daily/data/*.js
+!daily/data/.gitkeep
+# One deliberately published case snapshot; future personal daily data stays ignored.
+!daily/data/daily_data.js
+!daily/data/daily_data_20260819.js
 *.sqlite
 *.sqlite3
 

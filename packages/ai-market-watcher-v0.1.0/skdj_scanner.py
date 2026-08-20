@@ -608,13 +608,14 @@ def main(argv=None):
 
     output_dir = Path(args.output_dir) if args.output_dir else OUTPUT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
-    today = datetime.now().strftime("%Y%m%d")
+    scan_date = datetime.now().strftime("%Y%m%d")
     tag = f"_{args.output_tag}" if args.output_tag else ""
     profile = args.formula_profile
     p = FORMULA_PROFILES[profile]
 
     manifest = {
-        "report_date": today,
+        "report_date": scan_date,
+        "scan_date": scan_date,
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "timeframe": TIMEFRAME,
         "formula_profile": profile,
@@ -691,20 +692,28 @@ def main(argv=None):
 
     asofs = [r["data_asof"] for r in rows if r["data_asof"]]
     manifest["market_data_asof"] = max(asofs) if asofs else None
+    manifest["market_date"] = manifest["market_data_asof"][:10] if manifest["market_data_asof"] else None
+    output_date = manifest["market_date"].replace("-", "") if manifest["market_date"] else scan_date
+    manifest["report_date"] = output_date
+    manifest["scan_date"] = scan_date
+    manifest["date_semantics"] = {
+        "report_date": "文件/行情归档日",
+        "market_date": "本次输入所覆盖的最新完整美股交易日",
+    }
     manifest["pool_counts"] = {s: sum(1 for r in rows if r["scenario"] == s) for s in SCENARIO_ORDER}
     manifest["pool_counts"]["数据不足"] = sum(1 for r in rows if r["data_status"] != "ok")
 
     # CSV
-    csv_path = output_dir / f"skdj_{today}{tag}.csv"
+    csv_path = output_dir / f"skdj_{output_date}{tag}.csv"
     pd.DataFrame(rows).to_csv(csv_path, index=False, encoding="utf-8-sig")
     print(f"\n[CSV] {csv_path}")
     # HTML
-    html_path = output_dir / f"skdj_{today}{tag}.html"
+    html_path = output_dir / f"skdj_{output_date}{tag}.html"
     source_label = "演示数据 · synthetic" if args.source == "synthetic" else "真实/缓存"
     gen_html(rows, profile, html_path, source_label=source_label)
     print(f"[HTML] {html_path}")
     # manifest
-    manifest_path = output_dir / f"skdj_{today}{tag}_manifest.json"
+    manifest_path = output_dir / f"skdj_{output_date}{tag}_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2),
                              encoding="utf-8")
     print(f"[MANIFEST] {manifest_path}")
