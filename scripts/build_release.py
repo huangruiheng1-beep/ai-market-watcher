@@ -34,6 +34,7 @@ FILES = (
     "demo_data/skdj_demo.csv",
     "demo_data/status_chain_board_real_sample.html",
     "docs/ARCHITECTURE.md",
+    "docs/ROADMAP_UNIVERSE_AND_DATA_PROVIDERS.md",
     "divergence_td9_scanner.py",
     "five_rankings_daily.py",
     "nd100_resonance_scanner.py",

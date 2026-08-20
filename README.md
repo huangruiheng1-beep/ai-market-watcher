@@ -160,4 +160,5 @@ ND100 扫描、缓存刷新和完整日报是三个阶段。自动调度器应�
 ## 项目资料
 
 - [架构与文件说明](docs/ARCHITECTURE.md)
+- [全市场与可插拔数据源改版计划](docs/ROADMAP_UNIVERSE_AND_DATA_PROVIDERS.md)
 - [WB / Kimi 路演演示文件制作任务书](docs/WB_KIMI_ROADSHOW_BRIEF.md)

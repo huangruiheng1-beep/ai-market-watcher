@@ -8,8 +8,8 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `.env.example` | `8eb82ae51512431523ef551d4fba944821abbbaf91ef3ba1c5b2560b07197a3e` |
 | `.gitignore` | `b3b8f35a75d7c1f4be9024fcdb53e1b59a540d32ae84000503d0cbf77b16cee5` |
 | `DATE_POLICY.md` | `a34a770014743adf040f079f5ad814441acc54e81a0c360206614e2a3b9707c2` |
-| `PROJECT_CONTEXT.md` | `a17080d8b044acef3286030448646aa0147d75185a6b5b9be40f9006511bea11` |
-| `README.md` | `c6df6b32435c2bf13cc9c42b651c3090f2b827c7c75ad50a3c9b39dc17fa1d17` |
+| `PROJECT_CONTEXT.md` | `609272cc32537332704b8fffa575446c1203330f0d9101283bd1e581bfc227bb` |
+| `README.md` | `ee288e782904ce19df45c99d5eaef87e2eed460dc21bab9cc54923e82117b4d8` |
 | `demo_data/README.md` | `219a5eb7679524d7562c9b37175860e21fe25a203865e42c5c12a4e72e84eb18` |
 | `demo_data/divergence_td9_demo.csv` | `09842c93fd387db2f76ffa140e592b6ec901a02b7c82caced0fad7c559eb261f` |
 | `demo_data/five_rankings_demo.csv` | `ee1100aa403ff134fb9ff8ad50eef4953da843617c652c21bc7b06309456de43` |
@@ -18,6 +18,7 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `demo_data/status_chain_board_real_sample.html` | `1365d71cb2d504d45c86f7732af3317a424b37ecc476ca7a7acbd04855786eff` |
 | `divergence_td9_scanner.py` | `9f5ecb9fa3cfe985f72c3352a21fa9e4307705a68f049c8c04743adff5e826cc` |
 | `docs/ARCHITECTURE.md` | `ffb527a8c3857cea711a8e91f7d649c1f46ba81b58d02e428f2d2ea7bfce4322` |
+| `docs/ROADMAP_UNIVERSE_AND_DATA_PROVIDERS.md` | `457d685ff33897f0a049bc5893c1cac05ed6e58475cb6a08b9e6108f90896b3a` |
 | `five_rankings_daily.py` | `6f3d18596eccf356449162f4db921c8538894df95c4d9adf589115c6cf3d028b` |
 | `nd100_resonance_scanner.py` | `48c8d3f37dcac783af06c15515fbb391aa29a4360f902c5bb40ab466d7dbd92b` |
 | `publish_daily_reports.py` | `3d87615bd8ae5394cf60c295ecf760d863dbc71fd9eb5075117c36d5ebe00152` |
@@ -26,7 +27,7 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `run_demo.py` | `cafeb1ef9d2c5e0c975f08cf478990e7d308394cb4c546033c2d6243f0076377` |
 | `run_live.py` | `df88a09161d8fab712a653215a74ce7210b120ca69a897de292e47b2a830c8fd` |
 | `run_nd100_t9_workflow.py` | `6afc57021b6d01a31ad08973c8d549a78b43a061cb57f202751cf239775684ab` |
-| `scripts/build_release.py` | `1d2182660de654277f8d445c4eed2aa72972a00c4c4512235f93d2068316900b` |
+| `scripts/build_release.py` | `88fd2a213993ddde013731c264563ae9569d04d08451a95e5fb46e5a6d4f3bc3` |
 | `scripts/migrate_report_dates.py` | `28e2ff187b5b85e96463b4dcf6b6f5270a3ec90103b814a08e50b4e392334c63` |
 | `skdj_scanner.py` | `933e62d09bd219f70fed2f92a1c0d6dca028f1ce5fd46db037bfba17775a0344` |
 | `status_chain_ingest.py` | `f4254be588563e85b1a41ac84efc2b186c025a0c5e685a1c42822156d8c88d72` |
