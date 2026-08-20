@@ -24,6 +24,10 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     if DB.exists():
         DB.unlink()
+    # 只清理本 demo 自己生成的文件，避免旧的系统日期文件与固定样例混在一起。
+    for path in OUT.glob("*_demo*"):
+        if path.is_file():
+            path.unlink()
 
     py = sys.executable
     run(py, "five_rankings_daily.py", "--source", "synthetic",

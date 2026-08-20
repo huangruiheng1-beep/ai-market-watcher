@@ -550,6 +550,20 @@ def load_completed_tickers(paths):
     return list(dict.fromkeys(completed)), rows_by_file
 
 
+def frame_market_date(frame: pd.DataFrame) -> str:
+    """Derive one complete daily market date from the scan result."""
+    values = {
+        str(value).strip()[:10].replace("-", "")
+        for value in frame.get("日线_数据截至", pd.Series(dtype=str)).dropna()
+        if str(value).strip()
+    }
+    if len(values) != 1 or not next(iter(values), "").isdigit():
+        raise ValueError(f"扫描结果的日线行情日不唯一或缺失: {sorted(values)}")
+    value = next(iter(values))
+    datetime.strptime(value, "%Y%m%d")
+    return value
+
+
 def main():
     ap = argparse.ArgumentParser(description="ND100 多周期共振扫描器")
     ap.add_argument("--tickers", help="只扫指定股票，逗号分隔 (如 AAPL,MSFT)")
@@ -607,9 +621,10 @@ def main():
 
     # 输出 CSV
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    market_date = frame_market_date(df)
     today = datetime.now(NY_TZ).strftime("%Y%m%d")
     tag = f"_{args.output_tag}" if args.output_tag else ""
-    csv_path = OUTPUT_DIR / f"nd100_resonance_{today}{tag}.csv"
+    csv_path = OUTPUT_DIR / f"nd100_resonance_{market_date}{tag}.csv"
     df.to_csv(csv_path, index=False, encoding="utf-8-sig")
     print(f"\n[CSV] {csv_path}")
 
@@ -618,13 +633,15 @@ def main():
     names = get_company_names(tickers)
 
     # HTML 日报
-    html_path = OUTPUT_DIR / f"nd100_resonance_{today}{tag}.html"
-    gen_html(df, names, html_path, report_date=f"{output_date[:4]}-{output_date[4:6]}-{output_date[6:]}")
+    html_path = OUTPUT_DIR / f"nd100_resonance_{market_date}{tag}.html"
+    gen_html(df, names, html_path, report_date=f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}")
     print(f"[HTML] {html_path}")
 
-    manifest_path = OUTPUT_DIR / f"nd100_resonance_{today}{tag}_manifest.json"
+    manifest_path = OUTPUT_DIR / f"nd100_resonance_{market_date}{tag}_manifest.json"
     manifest_path.write_text(json.dumps({
-        "report_date": today,
+        "report_date": market_date,
+        "market_date": f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}",
+        "scan_date": today,
         "created_at": datetime.now(NY_TZ).isoformat(timespec="seconds"),
         "universe_type": "nasdaq100",
         "universe_count_before_exclusion": len(universe_tickers),
@@ -641,7 +658,7 @@ def main():
             cn: (df[f"{cn}_数据截至"].dropna().astype(str).max() if f"{cn}_数据截至" in df.columns else None)
             for _, cn, _ in TIMEFRAMES
         },
-        "note": "报告生成日期不等于行情截至日期；本 manifest 记录本次输入和排除集合，防止续跑重复。",
+        "note": "报告文件日期使用真实行情日；scan_date/created_at 保留实际运行时间。",
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[MANIFEST] {manifest_path}")
 

@@ -108,12 +108,20 @@ Agent 启动 → 每批 50 只 → Twelve Data 真实行情 → 4 个扫描器 �
 
 ## 完整日报：统一入口
 
+如果希望“由 Agent 启动一次就完成抓取和日报”，使用 `run_live.py`。它会先抓取 ND100，按 CSV 内的真实行情日改名，再调用完整日报入口；同日已有正式日报时自动复用，不询问、不覆盖。
+
+```bash
+python run_live.py --limit 50 --retry 1
+```
+
+下面的 `run_daily.py` 是给“已经有 ND100 CSV，只运行后续报告链”的稳定边界，不负责行情获取：
+
 当 ND100 批次已经完成后，使用统一总控入口，不要分别手动启动多个扫描器：
 
 ```bash
 python run_daily.py \
-  --nd100-input output/nd100_resonance_20260819_batch01.csv \
-  --nd100-input output/nd100_resonance_20260819_batch02.csv \
+  --nd100-input output/nd100_resonance_<market_date>_batch01.csv \
+  --nd100-input output/nd100_resonance_<market_date>_batch02.csv \
   --cache-only
 ```
 
@@ -137,7 +145,7 @@ ND100 扫描、缓存刷新和完整日报是三个阶段。自动调度器应�
 
 ## 下一阶段路线图
 
-- **7 天复盘工具**：工作区已提供 `seven_day_review.py`，可基于连续状态链汇总一周内的信号、状态变化、失效与人工复核记录，形成复盘报告。当前公开 v0.1.0 压缩包仍是此前快照，未随本次工作区改动重打包。
+- **7 天复盘工具**：工作区已提供 `seven_day_review.py`，可基于连续状态链汇总一周内的信号、状态变化、失效与人工复核记录，形成复盘报告。公开压缩包由 `scripts/build_release.py` 重新生成并经过发布内容校验。
 
 本地个人使用时，Daily 入口位于 `本地/daily/index.html`，7 天复盘入口位于 `本地/review/index.html`。GitHub Pages 保持现有地址不变；公开页面只保留上述一次案例快照，不同步本地 SQLite、缓存或后续个人日报。
 

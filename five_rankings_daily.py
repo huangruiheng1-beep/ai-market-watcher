@@ -982,6 +982,42 @@ def gen_html(rows, names, out_path, source_label="实时数据", report_date=Non
     out_path.write_text(html, encoding="utf-8")
 
 
+def input_market_date(paths: list[Path], fallback: str | None = None) -> str:
+    """Read one daily market date from all ND100 inputs."""
+    values = set()
+    for path in paths:
+        frame = pd.read_csv(path, encoding="utf-8-sig")
+        if "日线_数据截至" not in frame.columns:
+            raise ValueError(f"输入缺少日线_数据截至: {path}")
+        values.update(
+            str(value).strip()[:10].replace("-", "")
+            for value in frame["日线_数据截至"].dropna()
+            if str(value).strip()
+        )
+    if not values and fallback:
+        values = {fallback}
+    if len(values) != 1:
+        raise ValueError(f"输入的日线行情日不唯一或缺失: {sorted(values)}")
+    value = next(iter(values))
+    datetime.strptime(value, "%Y%m%d")
+    return value
+
+
+def metadata_market_date(metadata: dict, fallback: str) -> str:
+    values = {
+        str(value).strip()[:10].replace("-", "")
+        for value in metadata.get("asof_by_interval", {}).values()
+        if value
+    }
+    if not values:
+        return fallback
+    if len(values) != 1:
+        raise ValueError(f"扫描周期行情日不一致: {sorted(values)}")
+    value = next(iter(values))
+    datetime.strptime(value, "%Y%m%d")
+    return value
+
+
 # ============================================================
 # ============================================================
 # 入口
@@ -1044,9 +1080,17 @@ def main():
         print("\n[公司名] 获取中...")
         names = get_company_names([r["ticker"] for r in rows])
 
+    scan_meta = getattr(scan, "last_meta", {}) if args.source != "synthetic" else {}
+    if source_files:
+        market_date = input_market_date(input_paths)
+    elif args.source == "synthetic":
+        market_date = "20260818"
+    else:
+        market_date = metadata_market_date(scan_meta, today)
+
     # CSV
     tag = f"_{args.output_tag}" if args.output_tag else ""
-    csv_path = output_dir / f"five_rankings_{today}{tag}.csv"
+    csv_path = output_dir / f"five_rankings_{market_date}{tag}.csv"
     df_out = pd.DataFrame(rows)
     keep = ["ticker", "ranking", "direction", "reason", "resonance",
             "trend", "structure", "momentum", "volume", "risk", "left", "right",
@@ -1055,15 +1099,16 @@ def main():
     print(f"\n[CSV] {csv_path}")
 
     # HTML
-    html_path = output_dir / f"five_rankings_{today}{tag}.html"
+    html_path = output_dir / f"five_rankings_{market_date}{tag}.html"
     gen_html(rows, names, html_path, source_label=source_label,
-             report_date=f"{output_date[:4]}-{output_date[4:6]}-{output_date[6:]}")
+             report_date=f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}")
     print(f"[HTML] {html_path}")
 
-    manifest_path = output_dir / f"five_rankings_{today}{tag}_manifest.json"
-    scan_meta = getattr(scan, "last_meta", {}) if args.source != "synthetic" else {}
+    manifest_path = output_dir / f"five_rankings_{market_date}{tag}_manifest.json"
     manifest_path.write_text(json.dumps({
-        "report_date": today,
+        "report_date": market_date,
+        "market_date": f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}",
+        "scan_date": today,
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "source_type": "nd100_csv" if source_files else "nd100_component_list",
         "nd100_input_files": source_files,
@@ -1077,7 +1122,7 @@ def main():
         "market_data_asof_by_interval": scan_meta.get("asof_by_interval", {}),
         "market_data_policy": "受保护 Twelve Data API；优先使用有效缓存，过期或缺失时请求 API",
         "historical_demo_files_used": False,
-        "note": "报告生成日不等于每只股票的行情截至日；具体截至时间以底层缓存/API数据为准。",
+        "note": "报告文件日期使用真实行情日；scan_date/created_at 保留实际运行时间。",
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[MANIFEST] {manifest_path}")
 

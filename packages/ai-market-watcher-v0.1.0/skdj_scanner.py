@@ -642,6 +642,8 @@ def main(argv=None):
             "trend_context_note": "synthetic 的趋势上下文由 SYNTH_PLAN 注入，仅用于演示三类展示",
             "missing_data_tickers": [r["ticker"] for r in rows if r["data_status"] != "ok"],
         })
+        manifest["market_data_asof"] = "2026-08-18"
+        manifest["market_date"] = "2026-08-18"
     else:
         trend_map = {}
         tickers = []
@@ -694,6 +696,10 @@ def main(argv=None):
     manifest["market_data_asof"] = max(asofs) if asofs else None
     manifest["market_date"] = manifest["market_data_asof"][:10] if manifest["market_data_asof"] else None
     output_date = manifest["market_date"].replace("-", "") if manifest["market_date"] else scan_date
+    if args.source == "synthetic":
+        manifest["market_data_asof"] = "2026-08-18"
+        manifest["market_date"] = "2026-08-18"
+        output_date = "20260818"
     manifest["report_date"] = output_date
     manifest["scan_date"] = scan_date
     manifest["date_semantics"] = {

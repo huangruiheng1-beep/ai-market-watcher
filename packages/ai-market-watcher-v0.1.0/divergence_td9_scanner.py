@@ -725,9 +725,24 @@ def main():
         names = get_company_names([r["ticker"] for r in rows])
         source_label = "yfinance 实盘"
 
+    if args.source == "synthetic":
+        report_date = "20260818"
+    elif args.nd100_input:
+        with open(args.nd100_input, newline="", encoding="utf-8-sig") as f:
+            input_rows = list(csv.DictReader(f))
+        dates = {
+            str(row.get("日线_数据截至", "")).strip()[:10].replace("-", "")
+            for row in input_rows if str(row.get("日线_数据截至", "")).strip()
+        }
+        if len(dates) != 1:
+            raise SystemExit(f"输入的日线行情日不唯一或缺失: {sorted(dates)}")
+        report_date = dates.pop()
+    else:
+        report_date = today
+
     # CSV（信号明细）
     tag = f"_{args.output_tag}" if args.output_tag else ""
-    csv_path = output_dir / f"divergence_td9_{today}{tag}.csv"
+    csv_path = output_dir / f"divergence_td9_{report_date}{tag}.csv"
     flat = []
     for r in rows:
         if r.get("empty"):
@@ -744,7 +759,7 @@ def main():
     print(f"\n[CSV] {csv_path}")
 
     # HTML
-    html_path = output_dir / f"divergence_td9_{today}{tag}.html"
+    html_path = output_dir / f"divergence_td9_{report_date}{tag}.html"
     gen_html(rows, names, source_label, html_path)
     print(f"[HTML] {html_path}")
 
