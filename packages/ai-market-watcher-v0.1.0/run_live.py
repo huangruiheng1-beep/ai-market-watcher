@@ -19,6 +19,7 @@ from run_daily import csv_market_date, daily_report_complete
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "output"
 RESUME_MARKER = OUT / ".live-workflow-resume.json"
+PLAN_FILE = OUT / "workflow_plan.json"
 
 
 def run(*args: str) -> None:
@@ -26,13 +27,47 @@ def run(*args: str) -> None:
     subprocess.run(args, cwd=ROOT, check=True)
 
 
+def ask_plan_count() -> int:
+    while True:
+        try:
+            answer = input("今天准备扫描多少只股票？请输入本次计划数量：").strip()
+        except EOFError as exc:
+            raise SystemExit(
+                "需要人类先确认本次计划扫描数量；请重新启动并使用 --limit N"
+            ) from exc
+        try:
+            value = int(answer)
+        except ValueError:
+            print("请输入正整数。")
+            continue
+        if value > 0:
+            return value
+        print("数量必须大于 0。")
+
+
+def save_plan(plan_count: int, *, source: str) -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    PLAN_FILE.write_text(
+        json.dumps({
+            "created_at": datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(timespec="seconds"),
+            "plan_type": "daily_batch",
+            "planned_batch_count": plan_count,
+            "source": source,
+            "status": "planned",
+            "human_confirmed": True,
+        }, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"[plan] 已记录本次计划: {PLAN_FILE}")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="AI 投研市场观察助手·可配置股票池的真实行情运行入口")
     group = ap.add_mutually_exclusive_group()
     group.add_argument("--tickers",
                        help="逗号分隔的股票代码；可传入本批股票，路演演示可用 5–10 只")
-    group.add_argument("--limit", type=int, default=50,
-                       help="未指定 --tickers 时，扫描当前默认股票池的前 N 只；正式运行默认每批 50 只，路演可显式缩小")
+    group.add_argument("--limit", type=int,
+                       help="本次扫描计划数量；未指定 --tickers 时，没有数量就先向人类确认")
     ap.add_argument("--tag", default="roadshow", help="本次输入的临时标记")
     ap.add_argument("--retry", type=int, default=1, help="完整日报失败后的自动重试次数")
     ap.add_argument("--retry-delay", type=float, default=60, help="重试间隔秒数")
@@ -40,6 +75,16 @@ def main() -> int:
 
     if args.limit is not None and args.limit <= 0 or args.retry < 0 or args.retry_delay < 0:
         ap.error("limit 必须大于 0；retry 和 retry-delay 不能为负数")
+
+    if args.tickers:
+        plan_count = len({item.strip().upper() for item in args.tickers.split(",") if item.strip()})
+        save_plan(plan_count, source="explicit_tickers")
+    elif args.limit is not None:
+        plan_count = args.limit
+        save_plan(plan_count, source="explicit_limit")
+    else:
+        plan_count = ask_plan_count()
+        save_plan(plan_count, source="human_prompt")
 
     if not load_twelve_data_key():
         raise SystemExit("未找到本地 API Key。请按 README 配置 .env 或项目外凭据文件。")
@@ -76,7 +121,7 @@ def main() -> int:
         if args.tickers:
             resonance_args += ["--tickers", args.tickers]
         else:
-            resonance_args += ["--limit", str(args.limit)]
+            resonance_args += ["--limit", str(plan_count)]
         resonance_args += ["--output-tag", run_tag]
         try:
             run(*resonance_args)
@@ -111,6 +156,11 @@ def main() -> int:
     manifest = json.loads(formal_resonance_manifest.read_text(encoding="utf-8"))
     manifest["report_date"] = market_date
     manifest["market_date"] = f"{market_date[:4]}-{market_date[4:6]}-{market_date[6:]}"
+    manifest["workflow_plan"] = {
+        "planned_batch_count": plan_count,
+        "human_confirmed": True,
+        "plan_file": str(PLAN_FILE),
+    }
     formal_resonance_manifest.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
