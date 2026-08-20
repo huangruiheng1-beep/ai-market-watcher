@@ -401,9 +401,10 @@ LAYER_COLOR = {
 }
 
 
-def gen_html(df, names, out_path):
+def gen_html(df, names, out_path, report_date=None):
     """生成交互式 HTML 日报"""
-    today = datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M ET")
+    generated_at = datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M ET")
+    report_date = report_date or generated_at.split()[0]
     total = len(df)
     summary = {l: int((df["分层"] == l).sum()) for l in LAYER_ORDER}
 
@@ -462,7 +463,7 @@ def gen_html(df, names, out_path):
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ND100 多周期共振扫描 · {today.split()[0]}</title>
+<title>ND100 多周期共振扫描 · 行情日 {report_date}</title>
 <style>
   :root {{--bg:#f7f7f4;--card:#fff;--txt:#1a1a1a;--mut:#666;--bd:#e5e5e0;
     --up:#c0392b;--dn:#1e8449;}}
@@ -506,7 +507,7 @@ def gen_html(df, names, out_path):
 </style></head>
 <body>
   <div class='hd'>
-    <div class='meta'>扫描时间<b><br>{today}</b><br>标的数<b> {total}</b></div>
+    <div class='meta'>行情日期<b><br>{report_date}</b><br>扫描时间<b><br>{generated_at}</b><br>标的数<b> {total}</b></div>
     <h1>ND100 多周期共振扫描</h1>
     <div class='sub'>60min / 日线 / 周线 · EMA(20/60) 排列方向 · 三周期同向 = 共振</div>
   </div>
@@ -618,7 +619,7 @@ def main():
 
     # HTML 日报
     html_path = OUTPUT_DIR / f"nd100_resonance_{today}{tag}.html"
-    gen_html(df, names, html_path)
+    gen_html(df, names, html_path, report_date=f"{output_date[:4]}-{output_date[4:6]}-{output_date[6:]}")
     print(f"[HTML] {html_path}")
 
     manifest_path = OUTPUT_DIR / f"nd100_resonance_{today}{tag}_manifest.json"

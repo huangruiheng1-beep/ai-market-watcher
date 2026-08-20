@@ -81,6 +81,8 @@ output/daily/<market_date>/
 
 `output/runs/<run_id>/` 只代表实际运行实例；其中的报告文件仍必须使用 `market_date` 命名。
 
+历史日期纠正必须先核对原始行情证据，再使用 `scripts/migrate_report_dates.py`。该工具只改报告引用、业务日期字段和标题，保留 `created_at`、`scan_date`、`run_id` 等执行事实；默认先审计，追加 `--apply` 才写入，并要求指定备份目录。
+
 ## 完整流程与验收
 
 ```text

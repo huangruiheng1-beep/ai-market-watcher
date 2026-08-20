@@ -747,9 +747,9 @@ def dir_tag(d):
     return "<span class='tag mid'>中</span>"
 
 
-def gen_html(rows, names, out_path, source_label="实时数据"):
+def gen_html(rows, names, out_path, source_label="实时数据", report_date=None):
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
-    today_date = today.split()[0]
+    today_date = report_date or today.split()[0]
     total = len(rows)
     by_rank = {r[0]: [] for r in RANKINGS}
     for r in rows:
@@ -855,7 +855,7 @@ def gen_html(rows, names, out_path, source_label="实时数据"):
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>五榜单日报 · {today_date}</title>
+<title>五榜单日报 · 行情日 {today_date}</title>
 <style>
   :root {{
     --bg:#f6f5f1; --card:#fff; --txt:#1a1a1a; --mut:#6b6b66; --bd:#e6e6e0;
@@ -1056,7 +1056,8 @@ def main():
 
     # HTML
     html_path = output_dir / f"five_rankings_{today}{tag}.html"
-    gen_html(rows, names, html_path, source_label=source_label)
+    gen_html(rows, names, html_path, source_label=source_label,
+             report_date=f"{output_date[:4]}-{output_date[4:6]}-{output_date[6:]}")
     print(f"[HTML] {html_path}")
 
     manifest_path = output_dir / f"five_rankings_{today}{tag}_manifest.json"

@@ -50,6 +50,7 @@ FILES = (
     "tests/test_run_daily.py",
     "tests/test_status_chain.py",
     "scripts/build_release.py",
+    "scripts/migrate_report_dates.py",
     "tests/validate_release.py",
 )
 

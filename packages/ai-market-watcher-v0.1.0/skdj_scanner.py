@@ -505,7 +505,7 @@ def _card_html(r):
   </div>"""
 
 
-def gen_html(rows, profile_name, out_path, source_label="真实/缓存"):
+def gen_html(rows, profile_name, out_path, source_label="真实/缓存", report_date=None):
     p = FORMULA_PROFILES[profile_name]
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     total = len(rows)
@@ -547,7 +547,7 @@ def gen_html(rows, profile_name, out_path, source_label="真实/缓存"):
     html = f"""<!DOCTYPE html>
 <html lang='zh-CN'><head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>SKDJ 超跌观察池 · {now.split()[0]}</title>
+<title>SKDJ 超跌观察池 · 行情日 {report_date or now.split()[0]}</title>
 <style>{CSS}</style></head>
 <body><div class='wrap'>
   <div class='hd'>
@@ -710,7 +710,8 @@ def main(argv=None):
     # HTML
     html_path = output_dir / f"skdj_{output_date}{tag}.html"
     source_label = "演示数据 · synthetic" if args.source == "synthetic" else "真实/缓存"
-    gen_html(rows, profile, html_path, source_label=source_label)
+    gen_html(rows, profile, html_path, source_label=source_label,
+             report_date=f"{output_date[:4]}-{output_date[4:6]}-{output_date[6:]}")
     print(f"[HTML] {html_path}")
     # manifest
     manifest_path = output_dir / f"skdj_{output_date}{tag}_manifest.json"
