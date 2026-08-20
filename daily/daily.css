@@ -458,9 +458,16 @@ button { font-family: inherit; }
   padding: 0.22rem 0.5rem;
   white-space: nowrap;
 }
-.pill-has { background: var(--cobalt); color: var(--bone); }
-.pill-warn { background: var(--vermillion); color: var(--bone); }
-.pill-st { background: var(--ink); color: var(--bone); }
+.pill-positive { background: var(--vermillion); color: var(--bone); }
+.pill-negative { background: #198754; color: var(--bone); }
+.pill-neutral { background: var(--cobalt); color: var(--bone); }
+.pill-stage-observe { background: #607d8b; color: var(--bone); }
+.pill-stage-base { background: #2563eb; color: var(--bone); }
+.pill-stage-trigger { background: #d97706; color: var(--bone); }
+.pill-stage-confirm { background: var(--vermillion); color: var(--bone); }
+.pill-stage-invalid { background: #991b1b; color: var(--bone); }
+.pill-stage-expired { background: #6b7280; color: var(--bone); }
+.pill-stage-noise { background: #7c6f9f; color: var(--bone); }
 .pill-empty {
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -514,6 +521,10 @@ button { font-family: inherit; }
   flex-direction: column;
   gap: 0.6rem;
 }
+.detail-head .detail-report-link { align-self: flex-start; margin-top: 0.55rem; }
+.btn-report { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+.btn-report:hover { background: var(--bone-2); border-color: var(--bone-2); }
+.detail-report-link.is-disabled { opacity: 0.6; pointer-events: none; }
 .detail-head-cobalt { background: var(--cobalt); }
 .detail-head-vermillion { background: var(--vermillion); }
 .detail-head-ink { background: var(--ink); }
@@ -851,11 +862,11 @@ button { font-family: inherit; }
 .report-frame {
   display: block;
   width: 100%;
-  min-height: 1120px;
-  height: 1120px;
+  min-height: 720px;
+  height: 720px;
   border: 0;
   background: var(--bone);
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* ============================================================

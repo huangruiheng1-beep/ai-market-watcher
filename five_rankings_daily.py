@@ -863,7 +863,7 @@ def gen_html(rows, names, out_path, source_label="实时数据", report_date=Non
   }}
   * {{ box-sizing:border-box; margin:0; padding:0 }}
   body {{ font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-    background:var(--bg); color:var(--txt); line-height:1.6; padding:22px; max-width:1180px; margin:0 auto }}
+    background:var(--bg); color:var(--txt); line-height:1.6; padding:22px; max-width:none; margin:0 auto }}
   .hd {{ border-bottom:2px solid #2b2b2b; padding-bottom:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:flex-end }}
   .hd h1 {{ font-size:23px; font-weight:700; letter-spacing:.5px }}
   .hd .src {{ font-size:11px; font-weight:600; color:#fff; background:#7F8C8D; padding:2px 8px; border-radius:10px; vertical-align:4px; margin-left:6px }}
@@ -910,10 +910,10 @@ def gen_html(rows, names, out_path, source_label="实时数据", report_date=Non
   .cnt {{ color:var(--mut); font-weight:400; font-size:13px }}
   .rdesc {{ font-size:12px; color:var(--mut); margin-bottom:12px }}
   .empty {{ color:var(--mut); font-size:13px; padding:10px 0 }}
-  table {{ width:100%; border-collapse:collapse; font-size:12.5px }}
-  th {{ text-align:left; color:var(--mut); font-weight:500; font-size:10.5px; padding:8px 8px;
+  table {{ width:100%; border-collapse:collapse; font-size:14px }}
+  th {{ text-align:left; color:var(--mut); font-weight:500; font-size:12px; padding:10px 8px;
     border-bottom:1px solid var(--bd); text-transform:uppercase; letter-spacing:.4px; white-space:nowrap }}
-  td {{ padding:9px 8px; border-bottom:1px solid #f0f0ec; vertical-align:middle }}
+  td {{ padding:11px 8px; border-bottom:1px solid #f0f0ec; vertical-align:middle }}
   tr:hover td {{ background:#fafaf7 }}
   .tk {{ font-weight:600; white-space:nowrap }}
   .tk b {{ margin-left:4px }}
