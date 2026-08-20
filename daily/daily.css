@@ -631,6 +631,18 @@ button { font-family: inherit; }
 }
 .btn-ghost:hover { background: var(--ink); color: var(--bone); }
 
+/* Report links live on colored headers, so their contrast must be explicit. */
+.detail-head .btn-report {
+  background: var(--bone);
+  color: var(--ink);
+  border-color: var(--bone);
+}
+.detail-head .btn-report:hover {
+  background: var(--bone-2);
+  color: var(--ink);
+  border-color: var(--bone-2);
+}
+
 /* ============================================================
    CALENDAR DRAWER
    ============================================================ */
@@ -859,14 +871,24 @@ button { font-family: inherit; }
   padding: 0;
   font-size: 0.92rem;
 }
+.detail-body > .detail-summary {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
 .report-frame {
   display: block;
   width: 100%;
+  max-width: none;
   min-height: 720px;
   height: 720px;
   border: 0;
   background: var(--bone);
-  overflow: auto;
+  overflow: hidden;
 }
 
 /* ============================================================
