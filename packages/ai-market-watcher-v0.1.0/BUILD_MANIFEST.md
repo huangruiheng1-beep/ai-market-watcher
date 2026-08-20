@@ -8,7 +8,7 @@ Local credentials, cache, SQLite, generated output and roadshow handoff files ar
 | `.env.example` | `8eb82ae51512431523ef551d4fba944821abbbaf91ef3ba1c5b2560b07197a3e` |
 | `.gitignore` | `b3b8f35a75d7c1f4be9024fcdb53e1b59a540d32ae84000503d0cbf77b16cee5` |
 | `DATE_POLICY.md` | `a34a770014743adf040f079f5ad814441acc54e81a0c360206614e2a3b9707c2` |
-| `PROJECT_CONTEXT.md` | `ae1bf4bc119049c2196cad6eea5d8ad69e0dde855a065ccaeec376cc727a0b9e` |
+| `PROJECT_CONTEXT.md` | `a17080d8b044acef3286030448646aa0147d75185a6b5b9be40f9006511bea11` |
 | `README.md` | `c6df6b32435c2bf13cc9c42b651c3090f2b827c7c75ad50a3c9b39dc17fa1d17` |
 | `demo_data/README.md` | `219a5eb7679524d7562c9b37175860e21fe25a203865e42c5c12a4e72e84eb18` |
 | `demo_data/divergence_td9_demo.csv` | `09842c93fd387db2f76ffa140e592b6ec901a02b7c82caced0fad7c559eb261f` |
