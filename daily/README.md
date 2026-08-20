@@ -1,6 +1,6 @@
 # 每日研究日报统一入口 · 文件说明
 
-本目录是「博士雷达 · 每日研究日报」的前端入口。页面沿用 `roadshow/index.html` 的 MOSAIC 设计系统；如果本地已经生成 `daily/data/daily_data.js`，页面会读取本地正式日报数据，否则自动退回演示占位状态。
+本目录是「博士雷达 · 每日研究日报」的前端入口。页面沿用 `roadshow/index.html` 的 MOSAIC 设计系统；当前默认展示一次 `2026-08-19` 公开案例，后续个人日报默认只留在本地。
 
 设计语言完全沿用 `../roadshow/index.html` 的 MOSAIC 设计系统（4 色：Ink / Bone / Cobalt / Vermillion），保持同一产品的视觉连续性。
 
@@ -11,7 +11,7 @@
 | `index.html` | 统一日报入口页面框架（顶部状态栏 + 工具导航 tab + 今日总览 + 跨工具对比表 + 5 个工具详情占位 + 历史日历抽屉 + 页脚） |
 | `daily.css` | 全部样式。`:root` 色彩 / 字体 / 间距 token 与 roadshow 完全一致 |
 | `daily.js` | 交互逻辑（tab 切换、对比表搜索/排序、日历抽屉）+ 数据加载占位函数 |
-| `data/daily_data.js` | 本地生成的当天日报数据层；默认不提交到 GitHub |
+| `data/daily_data.js` | 日报数据层；当前仅保留一次公开案例，后续个人数据默认不提交 |
 | `README.md` | 本文件 |
 
 ## 本地打开

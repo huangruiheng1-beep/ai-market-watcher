@@ -9,6 +9,7 @@
 - GitHub 仓库：<https://github.com/huangruiheng1-beep/ai-market-watcher>
 - 路演网页：<https://huangruiheng1-beep.github.io/ai-market-watcher/roadshow/>
 - 每日研究日报入口：<https://huangruiheng1-beep.github.io/ai-market-watcher/daily/>
+- 公开案例快照：日报入口默认展示 2026-08-19 的一次真实案例；后续个人日报默认不上传。
 - 第一版 ZIP：<https://github.com/huangruiheng1-beep/ai-market-watcher/releases>
 
 ## 它包含什么
@@ -113,14 +114,15 @@ Agent 启动 → 每批 50 只 → Twelve Data 真实行情 → 4 个扫描器 �
 
 ## 下一阶段路线图
 
-- **7 天复盘工具（规划中）**：基于连续状态链，汇总一周内的信号、状态变化、失效与人工复核记录，形成可回放的复盘报告。
-- 7 天复盘目前尚未包含在 v0.1.0 的可运行工具中；网站提前展示它，是为了说明产品后续扩展方向，不代表当前已经交付。
+- **7 天复盘工具**：工作区已提供 `seven_day_review.py`，可基于连续状态链汇总一周内的信号、状态变化、失效与人工复核记录，形成复盘报告。当前公开 v0.1.0 压缩包仍是此前快照，未随本次工作区改动重打包。
+
+本地个人使用时，Daily 入口位于 `本地/daily/index.html`，7 天复盘入口位于 `本地/review/index.html`。GitHub Pages 保持现有地址不变；公开页面只保留上述一次案例快照，不同步本地 SQLite、缓存或后续个人日报。
 
 ## 当前边界
 
 - SKDJ 参数、失效线容差、走远阈值等仍属候选规则，尚未完成充分历史验证。
 - 项目不连接券商，不自动下单，不承诺收益率或胜率。
-- 7 天复盘闭环仍在规划中，当前版本只提供单次扫描与跨日状态链基础能力。
+- 7 天复盘的有效性结论仍需积累真实记录；样本不足时工具会明确标记，不把部分数据当成完整验证。
 
 ## 项目资料
 

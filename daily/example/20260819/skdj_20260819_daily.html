@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang='zh-CN'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>SKDJ 超跌观察池 · 2026-08-19</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+         background: #f6f7f9; color: #1c2733; margin: 0; padding: 24px; }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  .hd { display:flex; justify-content:space-between; align-items:flex-end;
+        border-bottom: 3px solid #2c3e50; padding-bottom: 12px; margin-bottom: 18px; }
+  .hd h1 { font-size: 23px; margin:0; font-weight:800; }
+  .hd .sub { font-size: 12.5px; color:#6b7785; margin-top:6px; }
+  .hd .meta { text-align:right; font-size:12px; color:#6b7785; line-height:1.6; }
+  .hd .meta b { color:#1c2733; }
+  .src { font-size:11px; background:#eef2f7; color:#3b556f; padding:2px 8px;
+         border-radius:10px; margin-left:8px; vertical-align:middle; }
+  .unverified { font-size:11px; background:#fff4e0; color:#9a6b00; padding:2px 8px;
+                border-radius:10px; margin-left:6px; vertical-align:middle; }
+  .discipline { background:#fff8e6; border:1px solid #f3d98b; border-left:4px solid #e0a800;
+                border-radius:8px; padding:12px 16px; margin-bottom:18px; font-size:13px; line-height:1.7; }
+  .discipline b { color:#9a6b00; }
+  .stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  .stat { flex:1; min-width:110px; background:#fff; border-radius:10px; padding:14px 16px;
+          box-shadow:0 1px 3px rgba(0,0,0,.06); border-top:3px solid #cbd3dc; }
+  .stat .n { font-size:25px; font-weight:800; }
+  .stat .l { font-size:11.5px; color:#6b7785; margin-top:2px; }
+  .stat.s-oversold { border-top-color:#c0392b; } .stat.s-oversold .n { color:#c0392b; }
+  .stat.s-pullback { border-top-color:#2471a3; } .stat.s-pullback .n { color:#2471a3; }
+  .stat.s-overbought { border-top-color:#8e44ad; } .stat.s-overbought .n { color:#8e44ad; }
+  .stat.s-manual { border-top-color:#7f8c8d; } .stat.s-manual .n { color:#7f8c8d; }
+  .stat.s-quiet { border-top-color:#bdc3c7; } .stat.s-quiet .n { color:#7f8c8d; }
+  .stat.s-insuf { border-top-color:#bdc3c7; } .stat.s-insuf .n { color:#7f8c8d; }
+  .sec { margin:22px 0 10px; font-size:16px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .sec .tag { font-size:11px; font-weight:600; padding:2px 9px; border-radius:10px; color:#fff; }
+  .card { background:#fff; border-radius:10px; padding:13px 16px; margin-bottom:11px;
+          box-shadow:0 1px 3px rgba(0,0,0,.06); border-left:4px solid #cbd3dc; }
+  .card.s-oversold { border-left-color:#c0392b; }
+  .card.s-pullback { border-left-color:#2471a3; }
+  .card.s-overbought { border-left-color:#8e44ad; }
+  .card.s-manual { border-left-color:#7f8c8d; }
+  .card.s-quiet { border-left-color:#bdc3c7; }
+  .card .chd { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
+  .card .tk { font-size:17px; font-weight:800; }
+  .card .lab { font-size:11.5px; color:#9a6b00; background:#fff8e6; border-radius:6px;
+               padding:3px 9px; margin-left:8px; }
+  .card .vals { font-size:12.5px; color:#46535f; }
+  .card .vals b { color:#1c2733; }
+  .card .meta { font-size:11.5px; color:#8a96a3; margin-top:4px; }
+  .empty { color:#8a96a3; font-size:12.5px; padding:6px 2px; }
+  .foot { margin-top:26px; font-size:11.5px; color:#8a96a3; line-height:1.7;
+          border-top:1px solid #e2e7ec; padding-top:12px; }
+</style></head>
+<body><div class='wrap'>
+  <div class='hd'>
+    <div>
+      <h1>SKDJ 超跌观察池<span class='src'>真实/缓存</span><span class='unverified'>公式未验证</span></h1>
+      <div class='sub'>SKDJ 慢速随机指标 · 只输出"可能已经很热或很冷"的观察候选，不预测反转</div>
+    </div>
+    <div class='meta'>生成时间<b><br>2026-08-19 16:36</b><br>标的数<b> 100</b></div>
+  </div>
+
+  <div class='discipline'>
+    <b>核心纪律（照抄 PPT 第 6、19 页）：</b>20 以下为超卖观察区，80 以上为超买观察区；
+    低位 K 上穿 D 只代表"早期观察"，高位 K 下穿 D 只代表"动能转弱观察"。
+    SKDJ 必须叠加背离、价格关键位和多周期方向，<b>仅供观察，等待价格结构 / 背离 / 关键位确认，不构成任何交易指令</b>。
+  </div>
+
+  <div class='stats'>
+      <div class='stat s-oversold'>
+        <div class='n'>1</div><div class='l'>下跌超跌</div></div>
+      <div class='stat s-pullback'>
+        <div class='n'>0</div><div class='l'>上升回调</div></div>
+      <div class='stat s-overbought'>
+        <div class='n'>15</div><div class='l'>顶部超买</div></div>
+      <div class='stat s-manual'>
+        <div class='n'>4</div><div class='l'>待人工分类</div></div>
+      <div class='stat s-quiet'>
+        <div class='n'>80</div><div class='l'>普通区</div></div><div class='stat s-insuf'><div class='n'>2</div><div class='l'>数据不足</div></div></div>
+
+  <div class='sec'><span class='tag' style='background:#c0392b'>超跌</span>下跌超跌 · 1 只</div><div class='card s-oversold'>
+    <div class='chd'><span><span class='tk'>APP</span><span class='lab'>超卖区</span></span>
+      <span class='vals'>K <b>7.5</b> · D <b>7.51</b> · 前日 K 7.33 / D 7.68 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=空头共振; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='sec'><span class='tag' style='background:#8e44ad'>超买</span>顶部超买 · 15 只</div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>ABNB</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>87.85</b> · D <b>88.73</b> · 前日 K 87.97 / D 89.21 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>AMGN</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>89.65</b> · D <b>88.41</b> · 前日 K 88.44 / D 87.52 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>ASML</span><span class='lab'>超买区; 高位下穿</span></span>
+      <span class='vals'>K <b>81.35</b> · D <b>85.24</b> · 前日 K 88.28 / D 86.54 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>BKR</span><span class='lab'>超买区; 高位下穿</span></span>
+      <span class='vals'>K <b>83.69</b> · D <b>85.4</b> · 前日 K 86.58 / D 85.77 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>CMCSA</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>80.59</b> · D <b>85.08</b> · 前日 K 82.76 / D 89.47 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>DXCM</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>80.47</b> · D <b>85.16</b> · 前日 K 84.16 / D 89.8 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>FANG</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>89.4</b> · D <b>83.55</b> · 前日 K 84.08 / D 77.36 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>GILD</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>91.57</b> · D <b>87.47</b> · 前日 K 88.02 / D 81.51 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>LRCX</span><span class='lab'>超买区; 高位下穿</span></span>
+      <span class='vals'>K <b>81.62</b> · D <b>83.09</b> · 前日 K 85.55 / D 83.67 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>MU</span><span class='lab'>高位下穿</span></span>
+      <span class='vals'>K <b>77.4</b> · D <b>80.63</b> · 前日 K 83.94 / D 79.77 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>NBIS</span><span class='lab'>超买区; 高位下穿</span></span>
+      <span class='vals'>K <b>80.4</b> · D <b>80.63</b> · 前日 K 83.09 / D 76.94 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>REGN</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>83.31</b> · D <b>84.66</b> · 前日 K 84.49 / D 86.28 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>STX</span><span class='lab'>高位下穿</span></span>
+      <span class='vals'>K <b>76.33</b> · D <b>76.71</b> · 前日 K 80.57 / D 72.25 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>TER</span><span class='lab'>高位下穿</span></span>
+      <span class='vals'>K <b>78.78</b> · D <b>81.68</b> · 前日 K 86.26 / D 80.01 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-overbought'>
+    <div class='chd'><span><span class='tk'>WBD</span><span class='lab'>超买区</span></span>
+      <span class='vals'>K <b>92.0</b> · D <b>90.5</b> · 前日 K 90.09 / D 89.05 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='sec'><span class='tag' style='background:#7f8c8d'>人工</span>待人工分类 · 4 只</div><div class='card s-manual'>
+    <div class='chd'><span><span class='tk'>GOOGL</span><span class='lab'>超卖区</span></span>
+      <span class='vals'>K <b>14.96</b> · D <b>17.38</b> · 前日 K 16.06 / D 21.53 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-manual'>
+    <div class='chd'><span><span class='tk'>GOOG</span><span class='lab'>超卖区</span></span>
+      <span class='vals'>K <b>13.1</b> · D <b>15.69</b> · 前日 K 14.2 / D 20.24 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-manual'>
+    <div class='chd'><span><span class='tk'>CDNS</span><span class='lab'>超卖区</span></span>
+      <span class='vals'>K <b>11.76</b> · D <b>13.6</b> · 前日 K 14.42 / D 14.62 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-manual'>
+    <div class='chd'><span><span class='tk'>MNST</span><span class='lab'>超卖区</span></span>
+      <span class='vals'>K <b>3.35</b> · D <b>3.67</b> · 前日 K 3.28 / D 4.34 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='sec'><span class='tag' style='background:#bdc3c7'>普通</span>普通区 · 78 只</div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ADBE</span></span>
+      <span class='vals'>K <b>54.16</b> · D <b>62.87</b> · 前日 K 59.32 / D 70.65 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AMD</span></span>
+      <span class='vals'>K <b>55.71</b> · D <b>53.84</b> · 前日 K 57.91 / D 48.27 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ALNY</span></span>
+      <span class='vals'>K <b>67.87</b> · D <b>65.16</b> · 前日 K 64.4 / D 60.92 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AMZN</span></span>
+      <span class='vals'>K <b>15.53</b> · D <b>21.79</b> · 前日 K 20.86 / D 31.49 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AEP</span></span>
+      <span class='vals'>K <b>51.66</b> · D <b>43.56</b> · 前日 K 44.24 / D 35.22 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ADI</span></span>
+      <span class='vals'>K <b>60.46</b> · D <b>68.82</b> · 前日 K 72.8 / D 73.24 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AAPL</span></span>
+      <span class='vals'>K <b>36.38</b> · D <b>29.58</b> · 前日 K 27.54 / D 24.49 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AMAT</span></span>
+      <span class='vals'>K <b>45.68</b> · D <b>52.19</b> · 前日 K 53.55 / D 61.13 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ARM</span></span>
+      <span class='vals'>K <b>39.94</b> · D <b>53.4</b> · 前日 K 53.79 / D 62.92 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ALAB</span></span>
+      <span class='vals'>K <b>30.63</b> · D <b>36.71</b> · 前日 K 36.98 / D 43.08 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ADSK</span></span>
+      <span class='vals'>K <b>57.74</b> · D <b>68.77</b> · 前日 K 66.85 / D 77.67 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ADP</span></span>
+      <span class='vals'>K <b>45.65</b> · D <b>59.23</b> · 前日 K 56.86 / D 69.12 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AXON</span></span>
+      <span class='vals'>K <b>75.72</b> · D <b>74.95</b> · 前日 K 74.01 / D 74.39 · 交叉 <b>K 上穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>BKNG</span></span>
+      <span class='vals'>K <b>57.75</b> · D <b>72.1</b> · 前日 K 70.66 / D 82.32 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>AVGO</span></span>
+      <span class='vals'>K <b>29.08</b> · D <b>43.79</b> · 前日 K 42.65 / D 59.7 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CTAS</span></span>
+      <span class='vals'>K <b>20.46</b> · D <b>21.04</b> · 前日 K 19.24 / D 24.05 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CSCO</span></span>
+      <span class='vals'>K <b>26.83</b> · D <b>36.7</b> · 前日 K 36.0 / D 49.25 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CCEP</span></span>
+      <span class='vals'>K <b>46.56</b> · D <b>49.81</b> · 前日 K 47.34 / D 51.17 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CEG</span></span>
+      <span class='vals'>K <b>60.17</b> · D <b>68.66</b> · 前日 K 72.62 / D 71.57 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CPRT</span></span>
+      <span class='vals'>K <b>70.8</b> · D <b>65.06</b> · 前日 K 67.85 / D 55.54 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CRWV</span></span>
+      <span class='vals'>K <b>59.9</b> · D <b>70.22</b> · 前日 K 73.04 / D 78.05 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>COST</span></span>
+      <span class='vals'>K <b>65.44</b> · D <b>62.48</b> · 前日 K 62.5 / D 56.45 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CRWD</span></span>
+      <span class='vals'>K <b>62.34</b> · D <b>72.54</b> · 前日 K 72.25 / D 81.86 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>CSX</span></span>
+      <span class='vals'>K <b>34.61</b> · D <b>33.8</b> · 前日 K 35.41 / D 32.32 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>DDOG</span></span>
+      <span class='vals'>K <b>41.22</b> · D <b>38.48</b> · 前日 K 36.83 / D 36.38 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>DASH</span></span>
+      <span class='vals'>K <b>64.65</b> · D <b>68.6</b> · 前日 K 67.75 / D 71.2 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>EXC</span></span>
+      <span class='vals'>K <b>55.92</b> · D <b>54.25</b> · 前日 K 56.82 / D 47.75 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>FAST</span></span>
+      <span class='vals'>K <b>60.65</b> · D <b>71.14</b> · 前日 K 71.2 / D 80.2 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>FER</span></span>
+      <span class='vals'>K <b>15.03</b> · D <b>23.4</b> · 前日 K 22.54 / D 34.3 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>FTNT</span></span>
+      <span class='vals'>K <b>24.02</b> · D <b>31.77</b> · 前日 K 29.28 / D 41.32 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>GEHC</span></span>
+      <span class='vals'>K <b>78.76</b> · D <b>84.68</b> · 前日 K 84.32 / D 88.25 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>HON</span></span>
+      <span class='vals'>K <b>14.55</b> · D <b>20.87</b> · 前日 K 21.01 / D 25.8 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>IDXX</span></span>
+      <span class='vals'>K <b>19.3</b> · D <b>21.93</b> · 前日 K 20.0 / D 28.15 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>INTC</span></span>
+      <span class='vals'>K <b>56.6</b> · D <b>68.43</b> · 前日 K 72.69 / D 76.18 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>INTU</span></span>
+      <span class='vals'>K <b>70.44</b> · D <b>75.79</b> · 前日 K 72.78 / D 81.65 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ISRG</span></span>
+      <span class='vals'>K <b>72.52</b> · D <b>80.53</b> · 前日 K 80.12 / D 87.71 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>KDP</span></span>
+      <span class='vals'>K <b>42.87</b> · D <b>40.71</b> · 前日 K 40.64 / D 35.78 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>KLAC</span></span>
+      <span class='vals'>K <b>62.8</b> · D <b>71.55</b> · 前日 K 74.39 / D 77.67 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>KHC</span></span>
+      <span class='vals'>K <b>31.97</b> · D <b>30.38</b> · 前日 K 29.71 / D 26.71 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>LIN</span></span>
+      <span class='vals'>K <b>21.75</b> · D <b>26.06</b> · 前日 K 24.36 / D 30.72 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>LITE</span></span>
+      <span class='vals'>K <b>69.24</b> · D <b>74.03</b> · 前日 K 77.85 / D 75.69 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MAR</span></span>
+      <span class='vals'>K <b>54.6</b> · D <b>49.25</b> · 前日 K 49.71 / D 42.41 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MRVL</span></span>
+      <span class='vals'>K <b>67.52</b> · D <b>73.1</b> · 前日 K 76.95 / D 76.02 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MELI</span></span>
+      <span class='vals'>K <b>27.95</b> · D <b>36.87</b> · 前日 K 36.76 / D 43.76 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>META</span></span>
+      <span class='vals'>K <b>30.3</b> · D <b>45.49</b> · 前日 K 45.34 / D 58.98 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=空头共振; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MCHP</span></span>
+      <span class='vals'>K <b>45.12</b> · D <b>48.12</b> · 前日 K 49.18 / D 51.36 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MSFT</span></span>
+      <span class='vals'>K <b>35.54</b> · D <b>50.62</b> · 前日 K 49.25 / D 64.37 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MSTR</span></span>
+      <span class='vals'>K <b>27.99</b> · D <b>33.22</b> · 前日 K 35.5 / D 39.27 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=空头共振; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MDLZ</span></span>
+      <span class='vals'>K <b>61.44</b> · D <b>62.53</b> · 前日 K 62.4 / D 58.56 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>MPWR</span></span>
+      <span class='vals'>K <b>45.89</b> · D <b>48.03</b> · 前日 K 52.65 / D 46.38 · 交叉 <b>K 下穿 D</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>NFLX</span></span>
+      <span class='vals'>K <b>74.53</b> · D <b>77.28</b> · 前日 K 75.5 / D 78.21 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>NVDA</span></span>
+      <span class='vals'>K <b>70.95</b> · D <b>81.88</b> · 前日 K 85.65 / D 87.79 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>NXPI</span></span>
+      <span class='vals'>K <b>40.91</b> · D <b>45.25</b> · 前日 K 46.37 / D 47.03 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ORLY</span></span>
+      <span class='vals'>K <b>44.32</b> · D <b>55.73</b> · 前日 K 54.03 / D 66.71 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ODFL</span></span>
+      <span class='vals'>K <b>29.05</b> · D <b>35.79</b> · 前日 K 38.33 / D 39.96 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PCAR</span></span>
+      <span class='vals'>K <b>18.81</b> · D <b>23.08</b> · 前日 K 24.89 / D 25.81 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PLTR</span></span>
+      <span class='vals'>K <b>79.73</b> · D <b>84.81</b> · 前日 K 85.01 / D 88.55 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PANW</span></span>
+      <span class='vals'>K <b>68.78</b> · D <b>78.37</b> · 前日 K 78.21 / D 86.53 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PAYX</span></span>
+      <span class='vals'>K <b>51.65</b> · D <b>65.34</b> · 前日 K 65.03 / D 75.48 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PYPL</span></span>
+      <span class='vals'>K <b>71.33</b> · D <b>77.44</b> · 前日 K 77.77 / D 80.38 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PDD</span></span>
+      <span class='vals'>K <b>32.2</b> · D <b>33.16</b> · 前日 K 31.63 / D 39.29 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=空头共振; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>PEP</span></span>
+      <span class='vals'>K <b>59.54</b> · D <b>57.31</b> · 前日 K 55.13 / D 51.39 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>QCOM</span></span>
+      <span class='vals'>K <b>61.15</b> · D <b>70.32</b> · 前日 K 71.6 / D 75.75 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>RKLB</span></span>
+      <span class='vals'>K <b>62.69</b> · D <b>67.52</b> · 前日 K 68.68 / D 72.42 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ROP</span></span>
+      <span class='vals'>K <b>43.84</b> · D <b>53.39</b> · 前日 K 51.26 / D 60.69 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>ROST</span></span>
+      <span class='vals'>K <b>17.07</b> · D <b>24.02</b> · 前日 K 22.78 / D 31.58 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>SNDK</span></span>
+      <span class='vals'>K <b>80.48</b> · D <b>78.79</b> · 前日 K 81.65 / D 73.37 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>SHOP</span></span>
+      <span class='vals'>K <b>62.25</b> · D <b>77.4</b> · 前日 K 78.45 / D 87.08 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>SBUX</span></span>
+      <span class='vals'>K <b>60.64</b> · D <b>68.03</b> · 前日 K 70.36 / D 72.17 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>SNPS</span></span>
+      <span class='vals'>K <b>62.88</b> · D <b>73.8</b> · 前日 K 76.49 / D 79.39 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>TMUS</span></span>
+      <span class='vals'>K <b>79.14</b> · D <b>77.86</b> · 前日 K 77.24 / D 74.67 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>TTWO</span></span>
+      <span class='vals'>K <b>54.79</b> · D <b>57.79</b> · 前日 K 57.56 / D 59.88 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>TSLA</span></span>
+      <span class='vals'>K <b>72.57</b> · D <b>77.87</b> · 前日 K 78.31 / D 81.74 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>TXN</span></span>
+      <span class='vals'>K <b>43.01</b> · D <b>48.1</b> · 前日 K 51.26 / D 52.38 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>TRI</span></span>
+      <span class='vals'>K <b>38.44</b> · D <b>41.67</b> · 前日 K 39.24 / D 44.95 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏空; 日线_方向=多; 周线_方向=空　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>VRTX</span></span>
+      <span class='vals'>K <b>63.16</b> · D <b>63.58</b> · 前日 K 61.55 / D 66.64 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=多头共振; 日线_方向=多; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>WMT</span></span>
+      <span class='vals'>K <b>78.24</b> · D <b>80.22</b> · 前日 K 79.28 / D 80.74 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='card s-quiet'>
+    <div class='chd'><span><span class='tk'>WDC</span></span>
+      <span class='vals'>K <b>59.2</b> · D <b>51.43</b> · 前日 K 53.81 / D 42.23 · 交叉 <b>无交叉</b></span></div>
+    <div class='meta'>趋势上下文：分层=偏多; 日线_方向=空; 周线_方向=多　|　数据截至：2026-08-18 00:00 ET　|　公式 candidate_skdj_9_3_v1（N=9, M=3）</div>
+  </div><div class='sec'><span class='tag' style='background:#bdc3c7'>数据不足</span>数据不足 · 2 只</div><div class='card'><div class='chd'><span class='tk'>HONA</span></div><div class='empty'>数据不足，跳过（不产生观察标签）</div></div><div class='card'><div class='chd'><span class='tk'>SPCX</span></div><div class='empty'>数据不足，跳过（不产生观察标签）</div></div>
+
+  <div class='foot'>
+    方法学：SKDJ(N=9, M=3) 基于日线；RAW=100*(C-LOWV)/(HIGHV-LOWV)，
+    RSV/K 用 EMA(M) 平滑，D=MA(K, M)；边界按 PPT 文字使用 <= 20 / >= 80。
+    分类按 PPT 第 19 页：下跌超跌 / 上升回调 / 顶部超买；无趋势上下文进"待人工分类"。
+    <b>公式状态：candidate_unverified</b> —— PPT 未给出精确公式/参数，本 profile 为候选，
+    未经与原系统逐根核对，不宣称已复刻博士原系统。本工具为 PPT 工作流的代码复刻，
+    仅供观察与复盘，不构成任何投资建议。
+  </div>
+</div></body></html>

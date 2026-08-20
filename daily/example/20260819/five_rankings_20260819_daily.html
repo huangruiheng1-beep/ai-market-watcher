@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>五榜单日报 · 2026-08-19</title>
+<style>
+  :root {
+    --bg:#f6f5f1; --card:#fff; --txt:#1a1a1a; --mut:#6b6b66; --bd:#e6e6e0;
+    --up:#c0392b; --dn:#1e8449;  /* 涨红跌绿（中国习惯） */
+  }
+  * { box-sizing:border-box; margin:0; padding:0 }
+  body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--txt); line-height:1.6; padding:22px; max-width:1180px; margin:0 auto }
+  .hd { border-bottom:2px solid #2b2b2b; padding-bottom:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:flex-end }
+  .hd h1 { font-size:23px; font-weight:700; letter-spacing:.5px }
+  .hd .src { font-size:11px; font-weight:600; color:#fff; background:#7F8C8D; padding:2px 8px; border-radius:10px; vertical-align:4px; margin-left:6px }
+  .hd .src.live { background:#1e8449 }
+  .hd .sub { color:var(--mut); font-size:13px; margin-top:4px }
+  .hd .meta { text-align:right; color:var(--mut); font-size:12px }
+  .hd .meta b { color:var(--txt); font-weight:600 }
+
+  /* 漏斗 */
+  .funnel { display:flex; gap:0; margin:16px 0 22px; background:var(--card); border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04) }
+  .fstep { flex:1; padding:14px 16px; border-right:1px solid var(--bd); text-align:center }
+  .fstep:last-child { border-right:none }
+  .fnum { font-size:26px; font-weight:700; line-height:1 }
+  .flab { font-size:11px; color:var(--mut); margin-top:5px }
+  .fstep.s1 .fnum { color:#555 } .fstep.s2 .fnum { color:#8E44AD } .fstep.s3 .fnum { color:#c0392b }
+
+  /* 30秒先看谁 */
+  .callout { background:linear-gradient(135deg,#fff5f3,#fff); border:1px solid #f3d9d2; border-left:5px solid #c0392b;
+    border-radius:12px; padding:18px 20px; margin-bottom:24px; box-shadow:0 2px 6px rgba(192,57,43,.06) }
+  .callout.empty { border-left-color:#7F8C8D; background:linear-gradient(135deg,#f7f7f5,#fff); border-color:#e0e0d8 }
+  .co-hd { font-size:18px; font-weight:700 }
+  .co-bolt { margin-right:6px }
+  .co-sub { color:var(--mut); font-size:12px; margin:4px 0 12px }
+  .co-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px }
+  .pitem { background:#fff; border:1px solid #f0e6e2; border-radius:8px; padding:10px 12px }
+  .pti { font-size:14px; font-weight:600 }
+  .pnm { font-weight:400; font-size:11px; color:var(--mut); margin-left:4px }
+  .pch { font-family:ui-monospace,monospace; font-weight:700; font-size:13px; margin-top:2px }
+  .prs { font-size:11px; color:var(--mut); margin-top:3px }
+  .up { color:var(--up) } .down { color:var(--dn) }
+
+  /* 概览卡片 */
+  .summary { display:grid; grid-template-columns:repeat(5,1fr); gap:11px; margin:0 0 26px }
+  .card { background:var(--card); border-radius:10px; padding:15px 13px; border-left:4px solid #ccc;
+    box-shadow:0 1px 3px rgba(0,0,0,.04); cursor:default; transition:transform .12s }
+  .card:hover { transform:translateY(-2px) }
+  .cnum { font-size:30px; font-weight:700; line-height:1 }
+  .cname { font-size:13.5px; font-weight:600; margin-top:6px }
+  .cdesc { font-size:10.5px; color:var(--mut); margin-top:4px; line-height:1.45 }
+
+  /* 榜单区 */
+  .rsec { background:var(--card); border-radius:10px; padding:18px 20px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,.04) }
+  .rsec h2 { font-size:17px; font-weight:700; margin-bottom:4px }
+  .cnt { color:var(--mut); font-weight:400; font-size:13px }
+  .rdesc { font-size:12px; color:var(--mut); margin-bottom:12px }
+  .empty { color:var(--mut); font-size:13px; padding:10px 0 }
+  table { width:100%; border-collapse:collapse; font-size:12.5px }
+  th { text-align:left; color:var(--mut); font-weight:500; font-size:10.5px; padding:8px 8px;
+    border-bottom:1px solid var(--bd); text-transform:uppercase; letter-spacing:.4px; white-space:nowrap }
+  td { padding:9px 8px; border-bottom:1px solid #f0f0ec; vertical-align:middle }
+  tr:hover td { background:#fafaf7 }
+  .tk { font-weight:600; white-space:nowrap }
+  .tk b { margin-left:4px }
+  .nm { display:block; font-weight:400; font-size:10.5px; color:var(--mut); margin-left:30px; margin-top:0 }
+  .num { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; color:#444; white-space:nowrap }
+  .chg { font-family:ui-monospace,monospace; font-weight:700; white-space:nowrap }
+  .rs { font-size:11.5px; color:#555 }
+  .dims { white-space:nowrap }
+  .dimlab { display:none }
+
+  /* 五维徽章 */
+  .db { display:inline-block; width:20px; height:20px; line-height:20px; text-align:center;
+    border-radius:4px; font-size:10.5px; font-weight:700; margin-right:2px; font-family:ui-monospace,monospace }
+  .dp { background:#eaf3de; color:#1e6b1e }   /* 强正 绿 */
+  .dl { background:#f0f5e8; color:#4a7a2a }   /* 弱正 */
+  .d0 { background:#eeece4; color:#888780 }   /* 中性 */
+  .sl { background:#fbeee0; color:#9a5a12 }   /* 弱负 */
+  .sp { background:#fce5dc; color:#9a2a12 }   /* 强负 红 */
+
+  /* 方向标签 */
+  .tag { display:inline-block; width:30px; height:18px; line-height:18px; text-align:center;
+    border-radius:4px; font-size:10px; font-weight:700; margin-right:4px; vertical-align:1px }
+  .long { background:#fdecea; color:#c0392b }
+  .short { background:#e8f5ee; color:#1e8449 }
+  .mid { background:#eeece4; color:#888780 }
+
+  .ft { margin-top:22px; padding-top:14px; border-top:1px solid var(--bd); color:var(--mut); font-size:11px; line-height:1.75 }
+  .ft b { color:var(--txt) }
+  @media(max-width:760px){
+    .summary { grid-template-columns:repeat(2,1fr) }
+    .funnel { flex-direction:column }
+    .fstep { border-right:none; border-bottom:1px solid var(--bd) }
+  }
+</style></head>
+<body>
+  <div class='hd'>
+    <div>
+      <h1>五榜单日报 · ND100 <span class='src '>真实行情（API/缓存） · 指定ND100输入 nd100_resonance_20260819.csv, nd100_resonance_20260819_batch02.csv</span></h1>
+      <div class='sub'>五维盘面检查 · 左/右侧分离打分 · 自动分发 5 榜单 · 只输出"查看顺序"，不预测涨跌</div>
+    </div>
+    <div class='meta'>生成时间<b><br>2026-08-19 16:27</b><br>标的数<b> 100</b></div>
+  </div>
+
+  <div class='funnel'>
+    <div class='fstep s1'><div class='fnum'>100</div><div class='flab'>扫描总数</div></div>
+    <div class='fstep s2'><div class='fnum'>98</div><div class='flab'>进入五维评分</div></div>
+    <div class='fstep s3'><div class='fnum'>1</div><div class='flab'>已确认优先复核</div></div>
+  </div>
+
+
+        <div class='callout'>
+          <div class='co-hd'><span class='co-bolt'>⚡</span> 今天 30 秒先看这些</div>
+          <div class='co-sub'>右侧已确认 · 突破+共振+量能 · 共 1 只</div>
+          <div class='co-list'>
+            <div class='pitem'>
+              <div class='pti'><span class='tag long'>多</span> <b>WBD</b> <span class='pnm'></span></div>
+              <div class='pch up'>+1.97%</div>
+              <div class='prs'>突破+多头共振+量能配合</div>
+            </div></div>
+        </div>
+
+  <div class='summary'>
+        <div class='card' style='border-left-color:#C0392B' data-rk='1'>
+          <div class='cnum' style='color:#C0392B'>1</div>
+          <div class='cname'>已确认优先复核</div>
+          <div class='cdesc'>右侧确认：突破+共振+量能。今天 30 秒先看这些。</div>
+        </div>
+        <div class='card' style='border-left-color:#8E44AD' data-rk='2'>
+          <div class='cnum' style='color:#8E44AD'>16</div>
+          <div class='cname'>背离观察池</div>
+          <div class='cdesc'>左侧观察：背离/超卖超买。只提醒，等价格确认。</div>
+        </div>
+        <div class='card' style='border-left-color:#1F6FB0' data-rk='3'>
+          <div class='cnum' style='color:#1F6FB0'>14</div>
+          <div class='cname'>强趋势等待触发</div>
+          <div class='cdesc'>多周期共振已就位，等突破/放量触发。</div>
+        </div>
+        <div class='card' style='border-left-color:#B9770E' data-rk='4'>
+          <div class='cnum' style='color:#B9770E'>24</div>
+          <div class='cname'>C级高潜力</div>
+          <div class='cdesc'>底部结构形成中，左+右部分信号叠加。</div>
+        </div>
+        <div class='card' style='border-left-color:#7F8C8D' data-rk='5'>
+          <div class='cnum' style='color:#7F8C8D'>45</div>
+          <div class='cname'>风险与噪音</div>
+          <div class='cdesc'>已走远/周期打架/数据不足/无信号。先避开。</div>
+        </div></div>
+
+
+        <section class='rsec' id='rk1'>
+          <h2 style='color:#C0392B'>① 已确认优先复核 <span class='cnt'>(1)</span></h2>
+          <div class='rdesc'>右侧确认：突破+共振+量能。今天 30 秒先看这些。</div>
+
+          <table class='rtab'>
+            <thead><tr>
+              <th>标的</th><th>日涨跌</th><th>五维</th><th>共振</th>
+              <th>左·右</th><th>RSI</th><th>偏离EMA</th><th>入榜理由</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>WBD</b><span class='nm'></span></td>
+              <td class='chg up'>+1.97%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dp'>+2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L1·R5</td>
+              <td class='num'>72</td>
+              <td class='num'>+5.5%</td>
+              <td class='rs'>突破+多头共振+量能配合</td>
+            </tr></tbody>
+          </table>
+        </section>
+        <section class='rsec' id='rk2'>
+          <h2 style='color:#8E44AD'>② 背离观察池 <span class='cnt'>(16)</span></h2>
+          <div class='rdesc'>左侧观察：背离/超卖超买。只提醒，等价格确认。</div>
+
+          <table class='rtab'>
+            <thead><tr>
+              <th>标的</th><th>日涨跌</th><th>五维</th><th>共振</th>
+              <th>左·右</th><th>RSI</th><th>偏离EMA</th><th>入榜理由</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>REGN</b><span class='nm'></span></td>
+              <td class='chg up'>+0.53%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L3·R5</td>
+              <td class='num'>79</td>
+              <td class='num'>+6.6%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>PANW</b><span class='nm'></span></td>
+              <td class='chg down'>-0.43%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L2·R5</td>
+              <td class='num'>60</td>
+              <td class='num'>+3.4%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>AMGN</b><span class='nm'></span></td>
+              <td class='chg up'>+1.41%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L1·R5</td>
+              <td class='num'>74</td>
+              <td class='num'>+6.1%</td>
+              <td class='rs'>RSI超买，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>PYPL</b><span class='nm'></span></td>
+              <td class='chg down'>-0.07%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L3·R3</td>
+              <td class='num'>69</td>
+              <td class='num'>+4.3%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>ASML</b><span class='nm'></span></td>
+              <td class='chg down'>-4.26%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L2·R3</td>
+              <td class='num'>54</td>
+              <td class='num'>+2.0%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>CRWD</b><span class='nm'></span></td>
+              <td class='chg down'>-0.46%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L2·R3</td>
+              <td class='num'>58</td>
+              <td class='num'>+2.6%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>TER</b><span class='nm'></span></td>
+              <td class='chg down'>-8.77%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L2·R3</td>
+              <td class='num'>54</td>
+              <td class='num'>+4.2%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>ABNB</b><span class='nm'></span></td>
+              <td class='chg up'>+2.21%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L1·R3</td>
+              <td class='num'>71</td>
+              <td class='num'>+9.7%</td>
+              <td class='rs'>RSI超买，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>NFLX</b><span class='nm'></span></td>
+              <td class='chg up'>+2.30%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L3·R2</td>
+              <td class='num'>59</td>
+              <td class='num'>+3.9%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>PEP</b><span class='nm'></span></td>
+              <td class='chg up'>+1.37%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dl'>+1</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L3·R2</td>
+              <td class='num'>52</td>
+              <td class='num'>+0.6%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>WDC</b><span class='nm'></span></td>
+              <td class='chg down'>-7.43%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L3·R2</td>
+              <td class='num'>48</td>
+              <td class='num'>-0.8%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>PDD</b><span class='nm'></span></td>
+              <td class='chg up'>+0.38%</td>
+              <td class='dims'>
+                <span class='db sp'>-3</span><span class='db dl'>+1</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>空头共振</td>
+              <td class='num'>L2·R2</td>
+              <td class='num'>50</td>
+              <td class='num'>-0.2%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>AAPL</b><span class='nm'></span></td>
+              <td class='chg up'>+1.45%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L3·R1</td>
+              <td class='num'>48</td>
+              <td class='num'>-0.6%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>MELI</b><span class='nm'></span></td>
+              <td class='chg down'>-0.47%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L3·R1</td>
+              <td class='num'>45</td>
+              <td class='num'>-2.9%</td>
+              <td class='rs'>顶背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>ORLY</b><span class='nm'></span></td>
+              <td class='chg up'>+0.59%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L3·R1</td>
+              <td class='num'>52</td>
+              <td class='num'>+0.1%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>ODFL</b><span class='nm'></span></td>
+              <td class='chg down'>-1.87%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L2·R1</td>
+              <td class='num'>40</td>
+              <td class='num'>-3.8%</td>
+              <td class='rs'>底背离，等待价格确认</td>
+            </tr></tbody>
+          </table>
+        </section>
+        <section class='rsec' id='rk3'>
+          <h2 style='color:#1F6FB0'>③ 强趋势等待触发 <span class='cnt'>(14)</span></h2>
+          <div class='rdesc'>多周期共振已就位，等突破/放量触发。</div>
+
+          <table class='rtab'>
+            <thead><tr>
+              <th>标的</th><th>日涨跌</th><th>五维</th><th>共振</th>
+              <th>左·右</th><th>RSI</th><th>偏离EMA</th><th>入榜理由</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>MSTR</b><span class='nm'></span></td>
+              <td class='chg down'>-5.28%</td>
+              <td class='dims'>
+                <span class='db sp'>-3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>空头共振</td>
+              <td class='num'>L1·R3</td>
+              <td class='num'>44</td>
+              <td class='num'>-4.1%</td>
+              <td class='rs'>空头共振，等待跌破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>AMD</b><span class='nm'></span></td>
+              <td class='chg down'>-4.27%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>48</td>
+              <td class='num'>-2.0%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>FANG</b><span class='nm'></span></td>
+              <td class='chg up'>+1.81%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>63</td>
+              <td class='num'>+5.9%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>FAST</b><span class='nm'></span></td>
+              <td class='chg up'>+0.08%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>64</td>
+              <td class='num'>+2.8%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>KDP</b><span class='nm'></span></td>
+              <td class='chg up'>+1.68%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db sp'>-2</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>51</td>
+              <td class='num'>+0.7%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>LRCX</b><span class='nm'></span></td>
+              <td class='chg down'>-4.63%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>52</td>
+              <td class='num'>+2.5%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>LITE</b><span class='nm'></span></td>
+              <td class='chg down'>-9.87%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>53</td>
+              <td class='num'>+4.0%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>MRVL</b><span class='nm'></span></td>
+              <td class='chg down'>-7.82%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>50</td>
+              <td class='num'>+0.9%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>MU</b><span class='nm'></span></td>
+              <td class='chg down'>-7.02%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>52</td>
+              <td class='num'>+2.6%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>STX</b><span class='nm'></span></td>
+              <td class='chg down'>-9.16%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>53</td>
+              <td class='num'>+3.1%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>SBUX</b><span class='nm'></span></td>
+              <td class='chg down'>-1.77%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>52</td>
+              <td class='num'>+0.1%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>VRTX</b><span class='nm'></span></td>
+              <td class='chg up'>+2.45%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dp'>+2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>65</td>
+              <td class='num'>+5.3%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>TTWO</b><span class='nm'></span></td>
+              <td class='chg up'>+0.33%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>50</td>
+              <td class='num'>-0.2%</td>
+              <td class='rs'>多头共振，等待突破触发</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>META</b><span class='nm'></span></td>
+              <td class='chg down'>-4.45%</td>
+              <td class='dims'>
+                <span class='db sp'>-3</span><span class='db sp'>-2</span>
+                <span class='db sp'>-2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>空头共振</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>36</td>
+              <td class='num'>-7.5%</td>
+              <td class='rs'>空头共振，等待跌破触发</td>
+            </tr></tbody>
+          </table>
+        </section>
+        <section class='rsec' id='rk4'>
+          <h2 style='color:#B9770E'>④ C级高潜力 <span class='cnt'>(24)</span></h2>
+          <div class='rdesc'>底部结构形成中，左+右部分信号叠加。</div>
+
+          <table class='rtab'>
+            <thead><tr>
+              <th>标的</th><th>日涨跌</th><th>五维</th><th>共振</th>
+              <th>左·右</th><th>RSI</th><th>偏离EMA</th><th>入榜理由</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>GEHC</b><span class='nm'></span></td>
+              <td class='chg up'>+0.36%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L2·R4</td>
+              <td class='num'>62</td>
+              <td class='num'>+3.7%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>SNDK</b><span class='nm'></span></td>
+              <td class='chg down'>-9.01%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R4</td>
+              <td class='num'>55</td>
+              <td class='num'>+11.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>HON</b><span class='nm'></span></td>
+              <td class='chg down'>-0.76%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L3·R2</td>
+              <td class='num'>42</td>
+              <td class='num'>-3.5%</td>
+              <td class='rs'>左侧信号+部分确认</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ALNY</b><span class='nm'></span></td>
+              <td class='chg up'>+1.79%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>41</td>
+              <td class='num'>-3.8%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>AEP</b><span class='nm'></span></td>
+              <td class='chg down'>-0.14%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>43</td>
+              <td class='num'>-1.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ADI</b><span class='nm'></span></td>
+              <td class='chg down'>-3.50%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>47</td>
+              <td class='num'>-1.3%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ARM</b><span class='nm'></span></td>
+              <td class='chg down'>-6.67%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>42</td>
+              <td class='num'>-7.1%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CPRT</b><span class='nm'></span></td>
+              <td class='chg down'>-0.60%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dp'>+2</span>
+                <span class='db dp'>+2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>64</td>
+              <td class='num'>+5.8%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CRWV</b><span class='nm'></span></td>
+              <td class='chg down'>-12.10%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>52</td>
+              <td class='num'>+2.1%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>COST</b><span class='nm'></span></td>
+              <td class='chg up'>+0.82%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dp'>+2</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>55</td>
+              <td class='num'>+1.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>INTC</b><span class='nm'></span></td>
+              <td class='chg down'>-6.58%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>45</td>
+              <td class='num'>-3.4%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ISRG</b><span class='nm'></span></td>
+              <td class='chg up'>+0.22%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>54</td>
+              <td class='num'>+2.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>KLAC</b><span class='nm'></span></td>
+              <td class='chg down'>-5.33%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>45</td>
+              <td class='num'>-3.7%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>MAR</b><span class='nm'></span></td>
+              <td class='chg up'>+0.21%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>46</td>
+              <td class='num'>-0.8%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>MCHP</b><span class='nm'></span></td>
+              <td class='chg down'>-2.58%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>46</td>
+              <td class='num'>-2.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>MPWR</b><span class='nm'></span></td>
+              <td class='chg down'>-5.85%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>46</td>
+              <td class='num'>-2.8%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>NXPI</b><span class='nm'></span></td>
+              <td class='chg down'>-1.79%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>36</td>
+              <td class='num'>-6.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>QCOM</b><span class='nm'></span></td>
+              <td class='chg down'>-1.23%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>43</td>
+              <td class='num'>-3.0%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>RKLB</b><span class='nm'></span></td>
+              <td class='chg down'>-3.56%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>51</td>
+              <td class='num'>+2.4%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>SNPS</b><span class='nm'></span></td>
+              <td class='chg down'>-2.13%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>47</td>
+              <td class='num'>-0.7%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>TMUS</b><span class='nm'></span></td>
+              <td class='chg up'>+1.46%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dl'>+1</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>52</td>
+              <td class='num'>+1.4%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>TSLA</b><span class='nm'></span></td>
+              <td class='chg down'>-0.72%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>46</td>
+              <td class='num'>-0.4%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>TXN</b><span class='nm'></span></td>
+              <td class='chg down'>-3.77%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>43</td>
+              <td class='num'>-3.1%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>WMT</b><span class='nm'></span></td>
+              <td class='chg up'>+0.76%</td>
+              <td class='dims'>
+                <span class='db sl'>-1</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>56</td>
+              <td class='num'>+1.5%</td>
+              <td class='rs'>底部结构形成中</td>
+            </tr></tbody>
+          </table>
+        </section>
+        <section class='rsec' id='rk5'>
+          <h2 style='color:#7F8C8D'>⑤ 风险与噪音 <span class='cnt'>(45)</span></h2>
+          <div class='rdesc'>已走远/周期打架/数据不足/无信号。先避开。</div>
+
+          <table class='rtab'>
+            <thead><tr>
+              <th>标的</th><th>日涨跌</th><th>五维</th><th>共振</th>
+              <th>左·右</th><th>RSI</th><th>偏离EMA</th><th>入榜理由</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>BKR</b><span class='nm'></span></td>
+              <td class='chg down'>-0.71%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>63</td>
+              <td class='num'>+4.0%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>DXCM</b><span class='nm'></span></td>
+              <td class='chg up'>+0.95%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>66</td>
+              <td class='num'>+6.5%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>GILD</b><span class='nm'></span></td>
+              <td class='chg up'>+3.25%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dp'>+2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>69</td>
+              <td class='num'>+6.3%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>NBIS</b><span class='nm'></span></td>
+              <td class='chg down'>-7.60%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>57</td>
+              <td class='num'>+11.1%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>NVDA</b><span class='nm'></span></td>
+              <td class='chg down'>-2.34%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>57</td>
+              <td class='num'>+2.1%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>PLTR</b><span class='nm'></span></td>
+              <td class='chg down'>-0.59%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>66</td>
+              <td class='num'>+9.7%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>SHOP</b><span class='nm'></span></td>
+              <td class='chg down'>-1.39%</td>
+              <td class='dims'>
+                <span class='db dp'>+3</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>多头共振</td>
+              <td class='num'>L0·R5</td>
+              <td class='num'>59</td>
+              <td class='num'>+4.7%</td>
+              <td class='rs'>无明显共振信号</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>APP</b><span class='nm'></span></td>
+              <td class='chg down'>-1.51%</td>
+              <td class='dims'>
+                <span class='db sp'>-3</span><span class='db sp'>-2</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>空头共振</td>
+              <td class='num'>L3·R4</td>
+              <td class='num'>29</td>
+              <td class='num'>-15.5%</td>
+              <td class='rs'>已走远(下方偏离-16%)，追单风险</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>CMCSA</b><span class='nm'></span></td>
+              <td class='chg up'>+2.46%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db sp'>-2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R4</td>
+              <td class='num'>63</td>
+              <td class='num'>+4.9%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>INTU</b><span class='nm'></span></td>
+              <td class='chg up'>+4.41%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R4</td>
+              <td class='num'>63</td>
+              <td class='num'>+7.6%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>MNST</b><span class='nm'></span></td>
+              <td class='chg up'>+4.09%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db sl'>-1</span><span class='db dp'>2</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L3·R3</td>
+              <td class='num'>16</td>
+              <td class='num'>-32.7%</td>
+              <td class='rs'>已走远(下方偏离-33%)，追单风险</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag long'>多</span><b>KHC</b><span class='nm'></span></td>
+              <td class='chg up'>+0.28%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dp'>+2</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R3</td>
+              <td class='num'>46</td>
+              <td class='num'>-2.0%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag short'>空</span><b>CDNS</b><span class='nm'></span></td>
+              <td class='chg down'>-2.15%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L0·R3</td>
+              <td class='num'>33</td>
+              <td class='num'>-5.3%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>PCAR</b><span class='nm'></span></td>
+              <td class='chg down'>-2.16%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R2</td>
+              <td class='num'>46</td>
+              <td class='num'>-1.9%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>AMAT</b><span class='nm'></span></td>
+              <td class='chg down'>-3.92%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>47</td>
+              <td class='num'>-3.1%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ALAB</b><span class='nm'></span></td>
+              <td class='chg down'>-5.23%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>44</td>
+              <td class='num'>-5.7%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>AXON</b><span class='nm'></span></td>
+              <td class='chg up'>+2.57%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>59</td>
+              <td class='num'>+7.1%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CEG</b><span class='nm'></span></td>
+              <td class='chg down'>-4.09%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>49</td>
+              <td class='num'>-1.1%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>DASH</b><span class='nm'></span></td>
+              <td class='chg up'>+1.71%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>65</td>
+              <td class='num'>+5.7%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>MDLZ</b><span class='nm'></span></td>
+              <td class='chg up'>+0.77%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db dl'>+1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R2</td>
+              <td class='num'>54</td>
+              <td class='num'>+0.9%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ADBE</b><span class='nm'></span></td>
+              <td class='chg up'>+3.58%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>57</td>
+              <td class='num'>+3.8%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>AMZN</b><span class='nm'></span></td>
+              <td class='chg down'>-0.71%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>51</td>
+              <td class='num'>-0.4%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ADSK</b><span class='nm'></span></td>
+              <td class='chg up'>+2.13%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>58</td>
+              <td class='num'>+3.2%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ADP</b><span class='nm'></span></td>
+              <td class='chg up'>+1.22%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>58</td>
+              <td class='num'>+1.6%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>BKNG</b><span class='nm'></span></td>
+              <td class='chg up'>+1.70%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>62</td>
+              <td class='num'>+3.4%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>AVGO</b><span class='nm'></span></td>
+              <td class='chg down'>-3.17%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>41</td>
+              <td class='num'>-5.0%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CTAS</b><span class='nm'></span></td>
+              <td class='chg up'>+0.82%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>51</td>
+              <td class='num'>-0.6%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CSCO</b><span class='nm'></span></td>
+              <td class='chg down'>-1.14%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>42</td>
+              <td class='num'>-4.0%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CCEP</b><span class='nm'></span></td>
+              <td class='chg up'>+1.83%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dl'>+1</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>53</td>
+              <td class='num'>+0.5%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>CSX</b><span class='nm'></span></td>
+              <td class='chg down'>-0.67%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>52</td>
+              <td class='num'>-0.1%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>DDOG</b><span class='nm'></span></td>
+              <td class='chg down'>-0.53%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>47</td>
+              <td class='num'>-2.8%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>FTNT</b><span class='nm'></span></td>
+              <td class='chg up'>+1.39%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>50</td>
+              <td class='num'>-0.9%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>IDXX</b><span class='nm'></span></td>
+              <td class='chg up'>+1.32%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>45</td>
+              <td class='num'>-2.2%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>MSFT</b><span class='nm'></span></td>
+              <td class='chg up'>+0.27%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>63</td>
+              <td class='num'>+3.5%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>PAYX</b><span class='nm'></span></td>
+              <td class='chg up'>+1.17%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>57</td>
+              <td class='num'>+1.6%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ROP</b><span class='nm'></span></td>
+              <td class='chg up'>+1.14%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db sp'>-2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>58</td>
+              <td class='num'>+1.7%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>ROST</b><span class='nm'></span></td>
+              <td class='chg up'>+0.47%</td>
+              <td class='dims'>
+                <span class='db dl'>+1</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>43</td>
+              <td class='num'>-3.0%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>TRI</b><span class='nm'></span></td>
+              <td class='chg up'>+1.85%</td>
+              <td class='dims'>
+                <span class='db dp'>+2</span><span class='db dp'>+2</span>
+                <span class='db sp'>-2</span><span class='db dl'>1</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L1·R1</td>
+              <td class='num'>53</td>
+              <td class='num'>+0.9%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>GOOGL</b><span class='nm'></span></td>
+              <td class='chg up'>+0.06%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L0·R1</td>
+              <td class='num'>46</td>
+              <td class='num'>-1.4%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>GOOG</b><span class='nm'></span></td>
+              <td class='chg down'>-0.05%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db dl'>+1</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L0·R1</td>
+              <td class='num'>45</td>
+              <td class='num'>-1.8%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>EXC</b><span class='nm'></span></td>
+              <td class='chg down'>-0.57%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏多</td>
+              <td class='num'>L0·R1</td>
+              <td class='num'>45</td>
+              <td class='num'>-1.0%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>FER</b><span class='nm'></span></td>
+              <td class='chg down'>-0.81%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db sp'>-2</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L0·R1</td>
+              <td class='num'>41</td>
+              <td class='num'>-2.2%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>LIN</b><span class='nm'></span></td>
+              <td class='chg up'>+0.92%</td>
+              <td class='dims'>
+                <span class='db sp'>-2</span><span class='db sp'>-2</span>
+                <span class='db sl'>-1</span><span class='db d0'>0</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>偏空</td>
+              <td class='num'>L0·R1</td>
+              <td class='num'>38</td>
+              <td class='num'>-2.6%</td>
+              <td class='rs'>周期打架</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>HONA</b><span class='nm'></span></td>
+              <td class='chg '>-</td>
+              <td class='dims'>
+                <span class='db d0'>·</span><span class='db d0'>·</span>
+                <span class='db d0'>·</span><span class='db d0'>·</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>待定</td>
+              <td class='num'>L0·R0</td>
+              <td class='num'>-</td>
+              <td class='num'>-</td>
+              <td class='rs'>日线数据不足</td>
+            </tr>
+            <tr>
+              <td class='tk'><span class='tag mid'>中</span><b>SPCX</b><span class='nm'></span></td>
+              <td class='chg '>-</td>
+              <td class='dims'>
+                <span class='db d0'>·</span><span class='db d0'>·</span>
+                <span class='db d0'>·</span><span class='db d0'>·</span>
+                <span class='dimlab'>趋/结/动/量</span>
+              </td>
+              <td class='num'>待定</td>
+              <td class='num'>L0·R0</td>
+              <td class='num'>-</td>
+              <td class='num'>-</td>
+              <td class='rs'>日线数据不足</td>
+            </tr></tbody>
+          </table>
+        </section>
+
+  <div class='ft'>
+    <b>五维读图</b>：趋=趋势(EMA20/60位置+多周期共振) ｜ 结=结构(高低点抬升/降低+突破) ｜
+    动=动能(MACD柱体增强/衰减+RSI) ｜ 量=量能(突破有无量配合) ｜ 风险=已走远/周期打架/数据不足。<br>
+    <b>左·右</b>：左侧=提前观察(超跌/衰竭/底背离)，右侧=确认触发(突破/共振/量能)。两者不混在一个分数里。<br>
+    <b>使用方式</b>：先看榜单①（30秒确定今天先看谁）→ 再扫榜单②③等价格确认/触发 → 榜单④低频观察 → 榜单⑤先避开。<br>
+    <b>涨跌色</b>：红涨绿跌（中国习惯）。<b>风险提示</b>：本报告只整理"查看顺序"，不构成买卖建议；
+    均线共振只反映趋势现状，追入已走远的标的需配合结构、量能与风险维度复核。失效位优先于预测。<br>
+    生成自 five_rankings_daily.py · 对应 PPT《数字资产市场观察助手》第 3/14/15/16 页
+  </div>
+</body></html>
