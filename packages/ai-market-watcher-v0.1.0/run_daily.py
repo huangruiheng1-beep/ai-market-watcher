@@ -27,6 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "output"
 DATE_RE = re.compile(r"20\d{6}")
+EXPECTED_ND100_COUNT = 102
 
 
 class WorkflowError(RuntimeError):
@@ -50,6 +51,11 @@ def input_tickers(paths: list[Path]) -> list[str]:
             tickers.append(ticker)
     if not tickers:
         raise WorkflowError("ND100 输入没有可用 ticker")
+    if len(tickers) != EXPECTED_ND100_COUNT:
+        raise WorkflowError(
+            f"ND100 输入不完整：当前 {len(tickers)}/{EXPECTED_ND100_COUNT} 只；"
+            "partial universe 只能继续扫描，禁止进入正式日报"
+        )
     return tickers
 
 

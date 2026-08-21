@@ -67,6 +67,7 @@ nd100_resonance_scanner.py --limit 50
 - 默认优先使用有效缓存。
 - 不要自动使用 `--no-cache`。
 - 已有 ND100 CSV 时，默认读取 CSV 后继续五榜单、T9、SKDJ，不重新扫描 ND100。
+- 已有 ND100 CSV 时，先核对实际唯一 ticker 集合是否完整覆盖 ND100 universe；50/102 等 partial universe 必须先补齐剩余批次，禁止进入正式日报或被标记为 complete。
 - 只有用户明确要求重新扫描 ND100 时，才允许启动 ND100 扫描器。
 - 不读取、打印、复制、汇报或提交 API Key。
 - 数据不足必须标记为数据不足并跳过，不能解释成“没有信号”。
@@ -111,6 +112,11 @@ manifest.report_date == market_date 的 YYYYMMDD 格式
 manifest.market_date == 真实最新完整行情日
 报告文件名日期 == market_date
 统一日报日期 == market_date
+
+输入完整性还必须满足：
+
+实际唯一 ticker 数 == ND100 universe 声明数量
+partial universe == 阻断下游，不生成正式日报
 ```
 
 任何一项不一致，都必须停止后续流程并报告错误，不得继续生成日报。

@@ -22,6 +22,13 @@ def test_csv_market_date_reads_real_asof(tmp_path: Path) -> None:
     assert run_daily.csv_market_date(path) == "20260819"
 
 
+def test_partial_nd100_input_is_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "input.csv"
+    write_csv(path, ["2026-08-19"] * 50)
+    with pytest.raises(run_daily.WorkflowError, match="ND100 输入不完整"):
+        run_daily.input_tickers([path])
+
+
 def test_csv_market_date_rejects_mixed_dates(tmp_path: Path) -> None:
     path = tmp_path / "input.csv"
     write_csv(path, ["2026-08-19", "2026-08-18"])
